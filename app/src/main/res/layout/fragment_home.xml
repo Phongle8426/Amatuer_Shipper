@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/multiple_actions_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            app:fab_addButtonColorNormal="@color/white"
+            app:fab_addButtonColorPressed="@color/white_pressed"
+            app:fab_addButtonPlusIconColor="@color/colorText"
+            app:fab_expandDirection="up"
+            app:fab_labelStyle="@style/menu_labels_style"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp">
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/white"
+                app:fab_colorPressed="@color/white_pressed"
+                app:fab_icon="@drawable/ic_baseline_location"
+                app:fab_title="Đơn Gần Bạn"/>
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/white"
+                app:fab_colorPressed="@color/white_pressed"
+                app:fab_icon="@drawable/neworder"
+                app:fab_title="Đơn Mới Nhất"/>
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/white"
+                app:fab_colorPressed="@color/white_pressed"
+                app:fab_icon="@drawable/ic_baseline_reload"
+                app:fab_title="Làm Mới Trang Đơn"/>
+
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+    </RelativeLayout>
+
+</FrameLayout>
