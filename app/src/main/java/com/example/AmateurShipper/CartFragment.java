@@ -3,10 +3,15 @@ package com.example.AmateurShipper;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +28,10 @@ public class CartFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private TabItem tab_nhan,tab_chua_nhan,tab_lichsu;
+    public PageAdapter pagerAdapter;
 
     public CartFragment() {
         // Required empty public constructor
@@ -58,7 +67,42 @@ public class CartFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_cart,container,false);
+        tabLayout = view.findViewById(R.id.tablayout);
+        tab_nhan = view.findViewById(R.id.tab_nhan);
+        tab_chua_nhan = view.findViewById(R.id.tab_chua_nhan);
+        tab_lichsu = view.findViewById(R.id.tab_lich_su);
+        viewPager = view.findViewById(R.id.viewpage);
+
+        pagerAdapter = new PageAdapter(getChildFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(pagerAdapter);
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+                if (tab.getPosition() == 0 ){
+                    pagerAdapter.notifyDataSetChanged();
+                } else if (tab.getPosition() == 1 ){
+                    pagerAdapter.notifyDataSetChanged();
+                } else if (tab.getPosition() == 2 ){
+                    pagerAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cart, container, false);
+        return view;
     }
 }
