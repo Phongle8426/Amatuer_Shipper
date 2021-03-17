@@ -77,10 +77,10 @@
                         style="@style/parent"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
-                            android:id="@+id/editTextMobile"
+                            android:id="@+id/editTextPassword"
                             style="@style/modifiedEditText"
-                            android:hint="Mobile Number"
-                            android:inputType="phone"
+                            android:hint="Password"
+                            android:inputType="textPassword"
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
@@ -88,7 +88,7 @@
                         style="@style/parent"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
-                            android:id="@+id/editTextPassword"
+                            android:id="@+id/editTextRePassword"
                             style="@style/modifiedEditText"
                             android:hint="@string/login_password_hint"
                             android:inputType="textPassword"
@@ -100,7 +100,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/loginViewsMargin"
                         android:text="Register"
-                        android:onClick="onLoginClick1"
+
                         app:initialCornerAngle="27dp"
                         app:spinning_bar_color="#FFF"
                         app:spinning_bar_padding="6dp"

@@ -27,4 +27,12 @@
     <color name="followingBg">#303963</color>
     <color name="grey">#E5E5E5</color>
     <color name="background1">#3C4673</color>
+
+    <color name="cPrimary">#536DFE</color>
+    <color name="cPrimaryDark">#536DFE</color>
+    <color name="cAccent">#F44336</color>
+    <color name="cTextPrimary">#212121</color>
+    <color name="cTextSecondary">#757575</color>
+    <color name="colorDivider">#BDBDBD</color>
+    <color name="cWhite">#FFFFFF</color>
 </resources>

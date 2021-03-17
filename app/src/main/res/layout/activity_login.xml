@@ -14,7 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
+    android:layout_centerInParent="true"
         android:paddingTop="50dp">
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,22 +53,35 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputEmail"
                 style="@style/parent"
-                android:layout_marginTop="@dimen/loginViewsMargin">
+                android:layout_marginTop="@dimen/loginViewsMargin"
+
+
+                >
                 <EditText
-                    android:id="@+id/editTextEmail"
+                    android:id="@+id/editTextPhoneNumber"
                     style="@style/modifiedEditText"
                     android:hint="@string/login_email_hint"
+                    android:clickable="true"
+                    android:focusableInTouchMode="true"
+
+
                     android:inputType="textEmailAddress"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputPassword"
                 style="@style/parent"
-                android:layout_marginTop="@dimen/loginViewsMargin">
+                android:layout_marginTop="@dimen/loginViewsMargin"
+
+                android:clickable="true">
                 <EditText
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:clickable="true"
                     android:id="@+id/editTextPassword"
                     style="@style/modifiedEditText"
                     android:hint="@string/login_password_hint"
+
                     android:inputType="textPassword"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
