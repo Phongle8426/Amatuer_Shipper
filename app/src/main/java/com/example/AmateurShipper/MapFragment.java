@@ -14,10 +14,10 @@ import com.google.android.material.tabs.TabLayout;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
+ * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment {
+public class MapFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,7 +33,7 @@ public class ProfileFragment extends Fragment {
     private TabItem tab_profile, tab_statis;
     public PageAdapterProfile pagerAdapterProfile;
 
-    public ProfileFragment() {
+    public MapFragment() {
         // Required empty public constructor
     }
 
@@ -46,8 +46,8 @@ public class ProfileFragment extends Fragment {
      * @return A new instance of fragment ProfileFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
+    public static MapFragment newInstance(String param1, String param2) {
+        MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -69,37 +69,6 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile,container,false);
-        tabLayout = view.findViewById(R.id.tablayout_profile);
-        tab_profile = view.findViewById(R.id.profile_tab);
-        tab_statis = view.findViewById(R.id.statis_tab);
-        viewPager = view.findViewById(R.id.viewpage_profile);
-
-        pagerAdapterProfile = new PageAdapterProfile(getChildFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(pagerAdapterProfile);
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-                if (tab.getPosition() == 0 ){
-                    pagerAdapterProfile.notifyDataSetChanged();
-                }else if (tab.getPosition() == 1 ){
-                    pagerAdapterProfile.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         return view;
     }
 }

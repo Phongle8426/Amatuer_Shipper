@@ -50,6 +50,13 @@
                 android:textColor="@color/white"
                 android:textSize="32sp" />
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_edit"
+                android:layout_toRightOf="@+id/tv_name"
+                android:layout_marginTop="187dp"
+                android:layout_marginLeft="5dp"/>
 
             <TextView
                 android:id="@+id/tv_address"
@@ -68,6 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_address"
                 android:layout_centerHorizontal="true"
+                android:isIndicator="true"
                 android:numStars="5"
                 android:stepSize="0.5" />
 
@@ -90,6 +98,10 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/linlay1"
             android:background="@color/background1">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -214,10 +226,19 @@
 
                 </LinearLayout>
 
-
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/button_background"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Cap nhat"/>
             </LinearLayout>
 
+            </ScrollView>
         </RelativeLayout>
+
     </LinearLayout>
 
 </FrameLayout>

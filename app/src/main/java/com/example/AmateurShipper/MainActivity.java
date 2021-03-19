@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new CartFragment();
                         break;
                     case R.id.profile:
-                        fragment = new ProfileFragment();
+                        fragment = new MapFragment();
                         break;
                     case R.id.canhan:
                         fragment = new CaNhanFragment();

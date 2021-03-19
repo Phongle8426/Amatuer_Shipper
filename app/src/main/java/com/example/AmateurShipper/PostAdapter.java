@@ -3,6 +3,7 @@ package com.example.AmateurShipper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +26,7 @@ public class PostAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post_1,parent,false);
         ViewAdapterClass viewAdapterClass = new ViewAdapterClass(view);
         return viewAdapterClass;
     }
@@ -39,7 +40,7 @@ public class PostAdapter extends RecyclerView.Adapter {
         viewAdapterClass.start_post.setText(postObject.getStart_post());
         viewAdapterClass.end_post.setText(postObject.getEnd_post());
         viewAdapterClass.distance.setText(postObject.getDistance());
-        viewAdapterClass.quantity.setText(String.valueOf(postObject.getQuantity_order()));
+    //    viewAdapterClass.quantity.setText(String.valueOf(postObject.getQuantity_order()));
         viewAdapterClass.fee.setText(String.valueOf(postObject.getFee()));
         viewAdapterClass.payment.setText(String.valueOf(postObject.getPayment()));
         viewAdapterClass.note.setText(postObject.getNote());
@@ -54,7 +55,7 @@ public class PostAdapter extends RecyclerView.Adapter {
     public class ViewAdapterClass extends RecyclerView.ViewHolder{
         TextView name_poster,time,start_post,end_post,distance,quantity,fee,payment,note;
         CircleImageView image_poster;
-        ImageView get_order,attach_image;
+        Button get_order,attach_image;
         public ViewAdapterClass(@NonNull final View itemView) {
             super(itemView);
             name_poster = itemView.findViewById(R.id.name_poster);
@@ -62,13 +63,13 @@ public class PostAdapter extends RecyclerView.Adapter {
             start_post = itemView.findViewById(R.id.txt_start_place);
             end_post = itemView.findViewById(R.id.txt_end_place);
             distance = itemView.findViewById(R.id.txt_distance);
-            quantity = itemView.findViewById(R.id.txt_quantity);
+          //  quantity = itemView.findViewById(R.id.txt_quantity);
             fee = itemView.findViewById(R.id.txt_fee);
             payment = itemView.findViewById(R.id.txt_payment);
             note = itemView.findViewById(R.id.txt_note);
             image_poster = itemView.findViewById(R.id.img_poster);
             get_order = itemView.findViewById(R.id.img_getOrder);
-            attach_image = itemView.findViewById(R.id.img_attachment_image);
+           // attach_image = itemView.findViewById(R.id.img_attachment_image);
 
             get_order.setOnClickListener(new View.OnClickListener() {
                 @Override

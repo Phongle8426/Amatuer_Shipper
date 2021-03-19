@@ -1,7 +1,11 @@
 package com.example.AmateurShipper;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +40,7 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     RecyclerView NewsRecyclerview;
-
+    com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment;
     List<PostObject> mData;
 
     public HomeFragment() {
@@ -75,6 +86,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home,container,false);
+        btn_filter_location = view.findViewById(R.id.btn_filter_location);
+        btn_filter_payment = view.findViewById(R.id.btn_filter_payment);
         NewsRecyclerview = view.findViewById(R.id.rcv_post);
         List<PostObject> mData;
         mData = new ArrayList<>();
@@ -88,6 +101,82 @@ public class HomeFragment extends Fragment {
         PostAdapter postAdapter = new PostAdapter(mData);
         NewsRecyclerview.setAdapter(postAdapter);
         NewsRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        btn_filter_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+            }
+        });
+
+        btn_filter_payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialogPaymen();
+            }
+        });
         return view;
     }
+
+//    public void AnhXa(){
+//        btn_filter_location = getView().findViewById(R.id.btn_filter_location);
+//        btn_filter_payment = getView().findViewById(R.id.btn_filter_payment);
+//    }
+
+    public void showDialogPaymen(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        final SeekBar seek = new SeekBar(getContext());
+        builder.setTitle("Lọc theo tiền Ứng");
+        seek.setMax(255);
+        seek.setKeyProgressIncrement(10);
+        builder.setView(seek);
+
+        seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                Toast.makeText(getContext(), "Ứng <= "+ i+"K", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        AlertDialog mDialog = builder.create();
+        mDialog.show();
+    }
+
+    public void showDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Lọc theo vị trí");
+
+        final String[] location = {"Hai Chau","Thanh Khe","Cam Le","Hoa Khanh"};
+        builder.setSingleChoiceItems(location, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                switch (i){
+                    case 0:
+                        Toast.makeText(getContext(),location[0], Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        Toast.makeText(getContext(),location[1], Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+                        Toast.makeText(getContext(),location[2], Toast.LENGTH_SHORT).show();
+                        break;
+                    case 3:
+                        Toast.makeText(getContext(),location[3], Toast.LENGTH_SHORT).show();
+                        break;
+                    default: break;
+                }
+            }
+        });
+        AlertDialog mDialog = builder.create();
+        mDialog.show();
+    }
+
 }
