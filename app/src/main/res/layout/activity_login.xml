@@ -32,7 +32,6 @@
                     android:layout_centerVertical="true"
                     android:text="Already \nhave an \nAccount?" />
 
-
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/animation_view"
                     android:layout_width="220dp"
@@ -86,6 +85,7 @@
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
             <TextView
+                android:id="@+id/tv_forgotpassword"
                 style="@style/viewParent"
                 android:layout_gravity="end"
                 android:layout_marginTop="10dp"

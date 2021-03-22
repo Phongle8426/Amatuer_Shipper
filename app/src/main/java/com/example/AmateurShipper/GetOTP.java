@@ -81,14 +81,6 @@ public class GetOTP extends AppCompatActivity {
             inputMobile.requestFocus();
             return;
         }
-//        PhoneAuthOptions options =
-//                PhoneAuthOptions.newBuilder(mAuth)
-//                        .setPhoneNumber("+84 " + phone)       // Phone number to verify
-//                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-//                        .setActivity(this)                 // Activity (for callback binding)
-//                        .setCallbacks(mCallBacks)          // OnVerificationStateChangedCallbacks
-//                        .build();
-//        PhoneAuthProvider.verifyPhoneNumber(options);
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
 
                 "+84" + phone,

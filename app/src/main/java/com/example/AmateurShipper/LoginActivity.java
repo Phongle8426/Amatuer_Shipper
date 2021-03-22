@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseDatabase rootNode;
     DatabaseReference databaseReference;
     CircularProgressButton loginButton;
-
+    TextView forgotPassword;
     // private FirebaseAuth mFirebaseAuth;
     //private CallbackManager mCallbackManager;
     @Override
@@ -59,8 +60,16 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.cirLoginButton);
         editTextPhonenumber = findViewById(R.id.editTextPhoneNumber);
         editTextPassword = findViewById(R.id.editTextPassword);
+        forgotPassword = findViewById(R.id.tv_forgotpassword);
 
-
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, ForgotPassword.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_mid_left);
+            }
+        });
 
         editTextPassword.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View view, int keyCode, KeyEvent event) {
@@ -74,8 +83,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-
-
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +109,6 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Datasnapshot is not exist!!!!", Toast.LENGTH_SHORT).show();
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
@@ -137,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     public void onLoginClick(View View){
         startActivity(new Intent(this,RegisterActivity.class));
-        overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
+        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_in_left);
     }
 
 
