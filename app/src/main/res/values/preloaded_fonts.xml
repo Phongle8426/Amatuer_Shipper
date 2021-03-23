@@ -2,6 +2,8 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/archivo_narrow</item>
+        <item>@font/muli</item>
+        <item>@font/muli_black</item>
         <item>@font/muli_semibold</item>
     </array>
 </resources>

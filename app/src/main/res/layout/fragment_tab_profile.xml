@@ -201,31 +201,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:orientation="vertical">
-
+                    android:orientation="horizontal">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Facebook"
+                        android:text="Identification ID"
                         android:textColor="#00BCD4"
                         android:textSize="13sp" />
-
-                    <EditText
+                    <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:fontFamily="sans-serif-light"
-                        android:text="facebook.com/joeytrib"
-                        android:textColor="@color/whiteTextColor"
-                        android:textSize="18sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/grey" />
+                        android:layout_marginLeft="200dp"
+                      android:background="@drawable/ic_baseline_image_24"></ImageButton>
 
                 </LinearLayout>
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey" />
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -53,8 +53,6 @@
                 android:id="@+id/textInputEmail"
                 style="@style/parent"
                 android:layout_marginTop="@dimen/loginViewsMargin"
-
-
                 >
                 <EditText
                     android:id="@+id/editTextPhoneNumber"

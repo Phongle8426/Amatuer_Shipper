@@ -18,5 +18,9 @@
     <string name="didn_t_receive_the_otp">Didn\'t receive the otp</string>
     <string name="verify">Verify</string>
     <string name="phone_number">Phone number</string>
+    <string name="new_credentials">NEW CREDENTIALS</string>
+    <string name="new_password">New Password</string>
+    <string name="password">Password</string>
+    <string name="repassword">Repassword</string>
 
 </resources>
