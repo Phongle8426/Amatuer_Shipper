@@ -1,8 +1,11 @@
 package com.example.AmateurShipper;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,9 +21,11 @@ public class PostAdapter extends RecyclerView.Adapter {
 
     //private RecyclerViewClickInterface recyclerViewClickInterface;
     List<PostObject> postList;
+    Context mContext;
 
-    public PostAdapter(List<PostObject> postList){
+    public PostAdapter(List<PostObject> postList,Context context){
         this.postList = postList;
+        mContext = context;
     }
 
     @NonNull
@@ -45,6 +50,9 @@ public class PostAdapter extends RecyclerView.Adapter {
         viewAdapterClass.payment.setText(String.valueOf(postObject.getPayment()));
         viewAdapterClass.note.setText(postObject.getNote());
         viewAdapterClass.image_poster.setImageResource(postObject.imgage_poster);
+
+        Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.slide_in_right);
+        holder.itemView.startAnimation(animation);
     }
 
     @Override

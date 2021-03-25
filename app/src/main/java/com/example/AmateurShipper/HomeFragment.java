@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +21,12 @@ import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +47,11 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     RecyclerView NewsRecyclerview;
+   public List<PostObject> mData;
+
     com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment;
-    List<PostObject> mData;
+    private DatabaseReference mDatabase;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -89,7 +99,8 @@ public class HomeFragment extends Fragment {
         btn_filter_location = view.findViewById(R.id.btn_filter_location);
         btn_filter_payment = view.findViewById(R.id.btn_filter_payment);
         NewsRecyclerview = view.findViewById(R.id.rcv_post);
-        List<PostObject> mData;
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
         mData = new ArrayList<>();
         mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
         mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
@@ -98,7 +109,7 @@ public class HomeFragment extends Fragment {
         mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
         mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
 
-        PostAdapter postAdapter = new PostAdapter(mData);
+        PostAdapter postAdapter = new PostAdapter(mData,getContext());
         NewsRecyclerview.setAdapter(postAdapter);
         NewsRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
         btn_filter_location.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +132,39 @@ public class HomeFragment extends Fragment {
 //        btn_filter_location = getView().findViewById(R.id.btn_filter_location);
 //        btn_filter_payment = getView().findViewById(R.id.btn_filter_payment);
 //    }
+
+    public void getListNewsFeed(){
+        mDatabase.child("Newsfeed").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    PostObject ds =dataSnapshot.getValue(PostObject.class);
+                    mData.add(ds);
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     public void showDialogPaymen(){
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
