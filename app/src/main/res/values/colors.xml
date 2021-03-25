@@ -27,7 +27,7 @@
     <color name="followingBg">#303963</color>
     <color name="grey">#E5E5E5</color>
     <color name="background1">#3C4673</color>
-
+    <color name="amber">#FFC107</color>
     <color name="cPrimary">#536DFE</color>
     <color name="cPrimaryDark">#536DFE</color>
     <color name="cAccent">#F44336</color>

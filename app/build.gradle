@@ -41,7 +41,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
     implementation "com.airbnb.android:lottie:3.5.0"
-
+    implementation 'androidx.browser:browser:1.2.0'
     implementation 'br.com.simplepass:loading-button-android:1.14.0'
     implementation "androidx.cardview:cardview:1.0.0"
 

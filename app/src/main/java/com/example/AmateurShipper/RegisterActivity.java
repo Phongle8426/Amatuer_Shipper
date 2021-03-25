@@ -1,5 +1,4 @@
 package com.example.AmateurShipper;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,8 +31,7 @@ import java.nio.charset.IllegalCharsetNameException;
 import java.util.concurrent.TimeUnit;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
-
-public class RegisterActivity extends AppCompatActivity{
+public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseDatabase rootNode;
     DatabaseReference databaseReference;
@@ -42,6 +40,7 @@ public class RegisterActivity extends AppCompatActivity{
     SharedPreferences sharedPreferences;
     String save_phonenumber;
     private String iName, iEmail, iRePassword, iPassword, codeSent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,73 +49,69 @@ public class RegisterActivity extends AppCompatActivity{
 
         name = findViewById(R.id.editTextName);
         email = findViewById(R.id.editTextEmail);
-        repassword = findViewById(R.id.editTextRePassword);
+        repassword = findViewById(R.id.editTextRepassword);
         password = findViewById(R.id.editTextPassword);
         loginButton = findViewById(R.id.cirRegisterButton);
-
 
         iEmail = email.getText().toString();
 //        iPhonen = phonenumber.getText().toString();
         iPassword = password.getText().toString();
-
         sharedPreferences = getSharedPreferences(GetOTP.MyPREFERENCES_GETOTP, Context.MODE_PRIVATE);
         loadData();
-
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!validateName() | !validateEmail() | !validatePassword() | !validateRePassword()){
+                if (!validateName() | !validateEmail() | !validatePassword() | !validateRePassword()) {
                     return;
                 }
-                FirebaseApp.initializeApp(getApplicationContext());
-                rootNode= FirebaseDatabase.getInstance();
-                databaseReference = rootNode.getReference("users");
-                user_register ur = new user_register(name.getText().toString(), email.getText().toString(), password.getText().toString(), repassword.getText().toString());
-                databaseReference.child(save_phonenumber).setValue(ur);
+                    FirebaseApp.initializeApp(getApplicationContext());
+                    rootNode = FirebaseDatabase.getInstance();
+                    databaseReference = rootNode.getReference("users");
+                    user_register ur = new user_register(name.getText().toString(), email.getText().toString(), password.getText().toString(), repassword.getText().toString());
+                    databaseReference.child(save_phonenumber).setValue(ur);
+                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
+                    mAuth = FirebaseAuth.getInstance();
+                }
+            });
+        }
 
-                startActivity(new Intent(RegisterActivity.this,GetOTP.class));
-                overridePendingTransition(R.anim.slide_in_right,android.R.anim.slide_in_left);
-                mAuth = FirebaseAuth.getInstance();
-            }
-        });
-    }
-    public void loadData(){
+    public void loadData() {
         save_phonenumber = sharedPreferences.getString(GetOTP.PHONENUMBER_GETOTP, "");
     }
-    private boolean validateName(){
+
+    private boolean validateName() {
         String noWhiteSpace = "(?=\\S+$)";
         iName = name.getText().toString();
-        if(iName.isEmpty()){
+        if (iName.isEmpty()) {
             name.setError("Field cannot be empty");
             return false;
-        }
-        else if(iName.length() >= 15){
+        } else if (iName.length() >= 15) {
             name.setError("Username too long");
             return false;
-        }
-        else{
+        } else {
             name.setError(null);
             return true;
         }
     }
-    private boolean validateEmail(){
+
+    private boolean validateEmail() {
         iEmail = email.getText().toString();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
-        if(iEmail.isEmpty()){
+        if (iEmail.isEmpty()) {
             email.setError("Field cannot be empty");
             return false;
-        }
-        else if(!iEmail.matches(emailPattern)){
+        } else if (!iEmail.matches(emailPattern)) {
             email.setError("Invalid email address");
             return false;
-        }
-        else{
+        } else {
             email.setError(null);
             return true;
         }
     }
+
     //    private boolean validatePhone(){
 //        iPhonen = phonenumber.getText().toString();
 //        if(iPhonen.isEmpty()){
@@ -128,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity{
 //            return true;
 //        }
 //    }
-    private boolean validatePassword(){
+    private boolean validatePassword() {
         String passwordVal = "^" +
                 //"(?=.*[0-9])" +         //at least 1 digit
                 //"(?=.*[a-z])" +         //at least 1 lower case letter
@@ -139,20 +134,19 @@ public class RegisterActivity extends AppCompatActivity{
                 ".{4,}" +               //at least 4 characters
                 "$";
         iPassword = password.getText().toString();
-        if(iName.isEmpty()){
+        if (iName.isEmpty()) {
             password.setError("Field cannot be empty");
             return false;
-        }
-        else if (!iPassword.matches(passwordVal)) {
+        } else if (!iPassword.matches(passwordVal)) {
             password.setError("Password is too weak");
             return false;
-        }
-        else{
+        } else {
             password.setError(null);
             return true;
         }
     }
-    private boolean validateRePassword(){
+
+    private boolean validateRePassword() {
         String passwordVal = "^" +
                 //"(?=.*[0-9])" +         //at least 1 digit
                 //"(?=.*[a-z])" +         //at least 1 lower case letter
@@ -163,15 +157,13 @@ public class RegisterActivity extends AppCompatActivity{
                 ".{4,}" +               //at least 4 characters
                 "$";
         iRePassword = repassword.getText().toString();
-        if(iRePassword.isEmpty()){
+        if (iRePassword.isEmpty()) {
             repassword.setError("Field cannot be empty");
             return false;
-        }
-        else if (!iRePassword.matches(passwordVal)) {
+        } else if (!iRePassword.matches(passwordVal)) {
             repassword.setError("Password is too weak");
             return false;
-        }
-        else{
+        } else {
             repassword.setError(null);
             return true;
         }
@@ -185,11 +177,9 @@ public class RegisterActivity extends AppCompatActivity{
             window.setStatusBarColor(getResources().getColor(R.color.register_bk_color));
         }
     }
-    public void onLoginClick(View view){
-        startActivity(new Intent(this,LoginActivity.class));
-        overridePendingTransition(R.anim.slide_in_left,android.R.anim.slide_out_right);
+
+    public void onLoginClick(View view) {
+        startActivity(new Intent(this, LoginActivity.class));
+        overridePendingTransition(R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
-
-
-
 }

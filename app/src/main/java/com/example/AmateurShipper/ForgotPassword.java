@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.concurrent.TimeUnit;
 
@@ -86,22 +87,55 @@ public class ForgotPassword extends AppCompatActivity {
 
             }
         });
+        btn_verifyOTP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(inputCode1.getText().toString().trim().isEmpty()
+                        || inputCode2.getText().toString().trim().isEmpty()
+                        || inputCode3.getText().toString().trim().isEmpty()
+                        || inputCode4.getText().toString().trim().isEmpty()
+                        || inputCode5.getText().toString().trim().isEmpty()
+                        || inputCode6.getText().toString().trim().isEmpty()){
+                    Toast.makeText(ForgotPassword.this, "Please enter valid code", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String code =
+                        inputCode1.getText().toString()
+                                + inputCode2.getText().toString()
+                                + inputCode3.getText().toString()
+                                + inputCode4.getText().toString()
+                                + inputCode5.getText().toString()
+                                + inputCode6.getText().toString();
+                if (code != null) {
+                    PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(codesent, code);
+                    FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                    if(task.isSuccessful()){
+                                        Intent intent = new Intent(getApplicationContext(), InputNewPassword.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_mid_left);
+//                                        rootNode = FirebaseDatabase.getInstance();
+//                                        databaseReference = rootNode.getReference().child("users");
+//                                        databaseReference.setValue(save_phonenumber);
+                                    }
+                                    else{
+                                        Toast.makeText(ForgotPassword.this, "The verification code entered was invalid", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
+                else{
+                    Toast.makeText(ForgotPassword.this, "verificationcode " + codesent, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            //here you can open new activity
-                            Intent intent = new Intent(ForgotPassword.this, InputNewPassword.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(ForgotPassword.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-    }
+
     public void sendVerificationCode(String phone) {
         phone = inputMobile.getText().toString();
         if (phone.isEmpty()) {
@@ -121,13 +155,6 @@ public class ForgotPassword extends AppCompatActivity {
                 new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     @Override
                     public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                        String SMScode = phoneAuthCredential.getSmsCode();
-                        Toast.makeText(ForgotPassword.this, "SMS code: " + SMScode, Toast.LENGTH_SHORT).show();
-                        if (SMScode != null){
-                            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codesent, SMScode);
-                            signInWithPhoneAuthCredential(credential);
-                        }
-                        Toast.makeText(ForgotPassword.this, "Happy new year-COMPLETED", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -141,34 +168,9 @@ public class ForgotPassword extends AppCompatActivity {
                         super.onCodeSent(verificationID, forceResendingToken);
                         codesent = verificationID;
                        // Toast.makeText(ForgotPassword.this, "Happy new year-CODESENT", Toast.LENGTH_SHORT).show();
-                        btn_verifyOTP.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if(inputCode1.getText().toString().trim().isEmpty()
-                                        || inputCode2.getText().toString().trim().isEmpty()
-                                        || inputCode3.getText().toString().trim().isEmpty()
-                                        || inputCode4.getText().toString().trim().isEmpty()
-                                        || inputCode5.getText().toString().trim().isEmpty()
-                                        || inputCode6.getText().toString().trim().isEmpty()){
-                                    Toast.makeText(ForgotPassword.this, "Please enter valid code", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                 code =
-                                        inputCode1.getText().toString()
-                                                + inputCode2.getText().toString()
-                                                + inputCode3.getText().toString()
-                                                + inputCode4.getText().toString()
-                                                + inputCode5.getText().toString()
-                                                + inputCode6.getText().toString();
-                                if(codesent.isEmpty())return;
-                                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codesent, code);
-                                signInWithPhoneAuthCredential(credential);
-                            }
-                        });
                     }
                 }
         );
-
     }
 
 

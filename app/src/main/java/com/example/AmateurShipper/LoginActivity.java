@@ -83,7 +83,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                             if(password.equals(editTextPassword.getText().toString())){
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                 startActivity(intent);
-                                overridePendingTransition(R.anim.slide_in_right,android.R.anim.slide_in_left);
+                                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_mid_left);
                             }
                         }
                         else{
@@ -142,8 +141,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     public void onLoginClick(View View){
-        startActivity(new Intent(this,RegisterActivity.class));
-        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_in_left);
+        startActivity(new Intent(this,GetOTP.class));
+        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_mid_left);
     }
 
 

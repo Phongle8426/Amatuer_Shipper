@@ -112,6 +112,7 @@ public class GetOTP extends AppCompatActivity {
                         intent.putExtra("mobile", inputMobile.getText().toString());
                         intent.putExtra("verificationID", verificationID);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_mid_left);
                     }
                 }
         );

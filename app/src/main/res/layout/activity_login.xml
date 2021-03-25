@@ -60,8 +60,6 @@
                     android:hint="@string/login_email_hint"
                     android:clickable="true"
                     android:focusableInTouchMode="true"
-
-
                     android:inputType="textEmailAddress"
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -88,7 +86,7 @@
                 android:layout_gravity="end"
                 android:layout_marginTop="10dp"
                 android:text="Forgot Password?"
-                android:textColor="@color/primaryTextColor"
+                android:textColor="@color/colorText"
                 android:textSize="@dimen/newsMoreTextSize" />
             <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
                 android:id="@+id/cirLoginButton"
@@ -106,7 +104,7 @@
                 android:onClick="onLoginClick"
                 android:text="New user? Register Now"
                 android:textAlignment="center"
-                android:textColor="@color/themeColor"
+                android:textColor="@color/colorText"
                 android:textSize="17sp"
                 android:textStyle="bold" />
             <LinearLayout
@@ -132,7 +130,7 @@
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_weight="3"
-                    android:background="@color/colorPrimaryDark" />
+                    android:background="@color/colorText" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

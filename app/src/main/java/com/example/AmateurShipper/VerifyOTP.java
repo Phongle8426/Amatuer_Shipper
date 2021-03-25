@@ -41,7 +41,6 @@ public class VerifyOTP extends AppCompatActivity {
 
         phone = getIntent().getStringExtra("mobile");
 
-
         inputCode1 = findViewById(R.id.inputCode1);
         inputCode2 = findViewById(R.id.inputCode2);
         inputCode3 = findViewById(R.id.inputCode3);
@@ -55,7 +54,7 @@ public class VerifyOTP extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(GetOTP.MyPREFERENCES_GETOTP, Context.MODE_PRIVATE);
         loadData();
         verificationID = getIntent().getStringExtra("verificationID");
-        Toast.makeText(this, "verification iddddddd" + verificationID, Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(this, "verification iddddddd" + verificationID, Toast.LENGTH_SHORT).show();
         buttonVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,7 +86,7 @@ public class VerifyOTP extends AppCompatActivity {
                                     progressBar.setVisibility(View.GONE);
                                     buttonVerify.setVisibility(View.VISIBLE);
                                     if(task.isSuccessful()){
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                        Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                         rootNode = FirebaseDatabase.getInstance();
@@ -105,7 +104,6 @@ public class VerifyOTP extends AppCompatActivity {
                 }
             }
         });
-
     }
     public void loadData(){
         save_phonenumber = sharedPreferences.getString(GetOTP.PHONENUMBER_GETOTP, "");

@@ -4,7 +4,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorText</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
@@ -20,7 +20,7 @@
         <!-- Add attributes here -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorText</item>
         <item name="textAppearanceButton">@style/AppTextAppearance.Button</item>
     </style>
     <!--To fix rendering in preview -->
@@ -51,20 +51,26 @@
     </style>
     <style name="modifiedEditText" parent="parent">
         <item name="android:textSize">@dimen/newsMoreTextSize</item>
-        <item name="android:backgroundTint">@color/primaryTextColor</item>
+        <item name="android:backgroundTint">@color/colorText</item>
     </style>
     <style name="modifiedEditText1" parent="parent">
         <item name="android:textSize">@dimen/newsMoreTextSize</item>
         <item name="android:backgroundTint">@color/white_pressed</item>
+        <item name="android:textColor">@color/colorText</item>
     </style>
     <style name="loginButton" parent="viewParent">
-        <item name="android:background">@drawable/button_background_blue</item>
+        <item name="android:background">@drawable/button_background_blue_1</item>
         <item name="android:textColor">@color/whiteTextColor</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="loginButton1" parent="viewParent">
+        <item name="android:background">@drawable/button_background_blue</item>
+        <item name="android:textColor">@color/colorText</item>
         <item name="android:textStyle">bold</item>
     </style>
     <style name="spinnerHintText" parent="parent">
         <item name="android:textSize">@dimen/newsMoreTextSize</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorText</item>
         <item name="android:paddingLeft">5dp</item>
     </style>
 </resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/register_bk_color"
+    android:background="@color/solidCircle"
     android:focusableInTouchMode="true"
     android:gravity="center"
     tools:context=".RegisterActivity">
@@ -27,7 +27,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="Here’s\nyour first\nstep with \nus! "
-                    android:textColor="@color/whiteTextColor" />
+                    android:textColor="@color/colorText" />
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/animation_view"
                     android:layout_width="600px"
@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:cardBackgroundColor="@color/whiteTextColor"
+                app:cardBackgroundColor="@color/colorText"
                 app:cardCornerRadius="10dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -51,56 +51,71 @@
                     android:layout_margin="10dp"
                     android:orientation="vertical">
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputName"
+                        android:id="@+id/textInputLayoutName"
                         style="@style/parent"
+                        app:hintTextColor="@color/white_pressed"
+                        android:textColorHint="@color/white_pressed"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
                             android:id="@+id/editTextName"
-                            style="@style/modifiedEditText"
+                            style="@style/modifiedEditText1"
                             android:hint="Name"
-                            android:inputType="textPersonName"
+                            android:textColorHint="@color/white_pressed"
+                            android:textColor="@color/white_pressed"
+                            android:inputType="text"
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputEmail"
                         style="@style/parent"
+                        app:hintTextColor="@color/white_pressed"
+                        android:textColorHint="@color/white_pressed"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
                             android:id="@+id/editTextEmail"
-                            style="@style/modifiedEditText"
+                            style="@style/modifiedEditText1"
                             android:hint="@string/login_email_hint"
+                            android:textColorHint="@color/white_pressed"
+                            android:textColor="@color/white_pressed"
                             android:inputType="textEmailAddress"
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputMobile"
+                        android:id="@+id/textInputLayoutPassword"
                         style="@style/parent"
+                        app:hintTextColor="@color/white_pressed"
+                        android:textColorHint="@color/white_pressed"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
                             android:id="@+id/editTextPassword"
-                            style="@style/modifiedEditText"
+                            style="@style/modifiedEditText1"
                             android:hint="Password"
+                            android:textColorHint="@color/white_pressed"
+                            android:textColor="@color/white_pressed"
                             android:inputType="textPassword"
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputPassword"
+                        android:id="@+id/textInputLayoutRepassword"
                         style="@style/parent"
+                        app:hintTextColor="@color/white_pressed"
+                        android:textColorHint="@color/white_pressed"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
-                            android:id="@+id/editTextRePassword"
-                            style="@style/modifiedEditText"
-                            android:hint="@string/login_password_hint"
+                            android:id="@+id/editTextRepassword"
+                            style="@style/modifiedEditText1"
+                            android:hint="Repassword"
+                            android:textColorHint="@color/white_pressed"
+                            android:textColor="@color/white_pressed"
                             android:inputType="textPassword"
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
                     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
                         android:id="@+id/cirRegisterButton"
-                        style="@style/loginButton"
+                        style="@style/loginButton1"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/loginViewsMargin"
                         android:text="Register"
-
                         app:initialCornerAngle="27dp"
                         app:spinning_bar_color="#FFF"
                         app:spinning_bar_padding="6dp"
@@ -111,7 +126,7 @@
                         android:onClick="onLoginClick"
                         android:text="Already have an account?"
                         android:textAlignment="center"
-                        android:textColor="@color/themeColor"
+                        android:textColor="@color/whiteTextColor"
                         android:textSize="17sp"
                         android:textStyle="bold" />
                 </LinearLayout>
