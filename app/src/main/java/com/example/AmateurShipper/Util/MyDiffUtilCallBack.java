@@ -1,19 +1,21 @@
 package com.example.AmateurShipper.Util;
 
+import androidx.recyclerview.widget.DiffUtil;
+
 import com.example.AmateurShipper.PostObject;
 
 import java.util.List;
 
-import androidx.recyclerview.widget.DiffUtil;
-
-public class PostDiffUtilCallback extends DiffUtil.Callback {
+public class MyDiffUtilCallBack extends DiffUtil.Callback {
 
     private List<PostObject> oldList;
     private List<PostObject> newList;
 
-    public PostDiffUtilCallback(List<PostObject> oldList, List<PostObject> newList) {
+    public MyDiffUtilCallBack(List<PostObject> oldList, List<PostObject> newList) {
         this.oldList = oldList;
         this.newList = newList;
+    }
+    public MyDiffUtilCallBack() {
     }
 
     @Override

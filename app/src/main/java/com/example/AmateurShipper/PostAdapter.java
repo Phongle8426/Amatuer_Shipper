@@ -1,13 +1,13 @@
 package com.example.AmateurShipper;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +20,9 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PostAdapter extends RecyclerView.Adapter {
+import static android.content.ContentValues.TAG;
+
+public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterClass> {
 
     //private RecyclerViewClickInterface recyclerViewClickInterface;
     List<PostObject> postList;
@@ -34,20 +36,22 @@ public class PostAdapter extends RecyclerView.Adapter {
     public void insertData(List<PostObject> insertList){
         PostDiffUtilCallback postDiffUtilCallback = new PostDiffUtilCallback(postList,insertList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(postDiffUtilCallback);
+        postList.clear();
         postList.addAll(insertList);
-        diffResult.dispatchUpdatesTo(this);
+        diffResult.dispatchUpdatesTo(PostAdapter.this);
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewAdapterClass onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post_1,parent,false);
         ViewAdapterClass viewAdapterClass = new ViewAdapterClass(view);
         return viewAdapterClass;
     }
 
+
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewAdapterClass holder, int position) {
         ViewAdapterClass viewAdapterClass = (ViewAdapterClass)holder;
         PostObject postObject =postList.get(position);
         viewAdapterClass.name_poster.setText(postObject.getTen_nguoi_gui());
@@ -59,11 +63,10 @@ public class PostAdapter extends RecyclerView.Adapter {
         viewAdapterClass.payment.setText(String.valueOf(postObject.getPhi_ung()));
         viewAdapterClass.note.setText(postObject.getGhi_chu());
        // viewAdapterClass.image_poster.setImageResource(postObject.imgage_poster);
-
         Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.slide_in_right);
         holder.itemView.startAnimation(animation);
+        Toast.makeText(mContext, ""+viewAdapterClass.name_poster.getText().toString(), Toast.LENGTH_SHORT).show();
     }
-
     @Override
     public int getItemCount() {
         return postList.size();
