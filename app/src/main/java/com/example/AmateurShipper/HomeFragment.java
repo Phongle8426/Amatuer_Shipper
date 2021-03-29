@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
@@ -47,6 +50,7 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     RecyclerView NewsRecyclerview;
+     PostAdapter postAdapter;
    public List<PostObject> mData;
 
     com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment;
@@ -102,16 +106,22 @@ public class HomeFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mData = new ArrayList<>();
-        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
+//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
+//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
+//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
+//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
+//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
+//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
 
-        PostAdapter postAdapter = new PostAdapter(mData,getContext());
-        NewsRecyclerview.setAdapter(postAdapter);
+     //   PostAdapter postAdapter = new PostAdapter(mData,getContext());
+//        NewsRecyclerview.setAdapter(postAdapter);
+       // newPostAdapter();
         NewsRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        postAdapter = new PostAdapter(mData, getContext());
+        NewsRecyclerview.setAdapter(postAdapter);
+
+        getListNewsFeed();
+        //getList();
         btn_filter_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,21 +135,74 @@ public class HomeFragment extends Fragment {
                 showDialogPaymen();
             }
         });
+
+
         return view;
     }
 
-//    public void AnhXa(){
-//        btn_filter_location = getView().findViewById(R.id.btn_filter_location);
-//        btn_filter_payment = getView().findViewById(R.id.btn_filter_payment);
+
+
+//    public void newPostAdapter(){
+//        postAdapter = new PostAdapter(mData, getContext());
 //    }
+    public void getList(){
+        mDatabase.child("newsfeed").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (snapshot.exists()){
+//                    Toast.makeText(getContext(), "ok", Toast.LENGTH_SHORT).show();
+//                    PostObject data = snapshot.getValue(PostObject.class);
+//                    mData.add(data);
+//                    postAdapter.insertData(mData);
+//                }else{
+//                    Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
+//                }
+                if (snapshot.exists()) {
+                    Toast.makeText(getContext(), "ok", Toast.LENGTH_LONG).show();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        PostObject data = dataSnapshot.getValue(PostObject.class);
+//                        String ghichu = dataSnapshot.child("ghi_chu").getValue(String.class);
+//                        String idshop = dataSnapshot.child("id_shop").getValue(String.class);
+//                        String nguoigui = dataSnapshot.child("ten_nguoi_gui").getValue(String.class);
+//                        String sdtnguoigui = dataSnapshot.child("sdt_nguoi_gui").getValue(String.class);
+//                        String nguoinhan = dataSnapshot.child("ten_nguoi_nhan").getValue(String.class);
+//                        String sdtnguoinhan = dataSnapshot.child("sdt_nguoi_nhan").getValue(String.class);
+//                        String noigiao = dataSnapshot.child("noi_giao").getValue(String.class);
+//                        String noinhan = dataSnapshot.child("noi_nhan").getValue(String.class);
+//                        String phigiao = dataSnapshot.child("phi_giao").getValue(String.class);
+//                        String phiung = dataSnapshot.child("phi_ung").getValue(String.class);
+//                        String thoigian = dataSnapshot.child("thoi_gian").getValue(String.class);
+//                        String km = dataSnapshot.child("km").getValue(String.class);
+//
+//                        PostObject data = new PostObject(nguoigui,sdtnguoigui,noinhan,noigiao,sdtnguoinhan,
+//                                nguoinhan,ghichu,thoigian,idshop,phigiao,phiung,km);
+                        mData.add(data);
+                    }
+//                    newPostAdapter();
+//                    NewsRecyclerview.setAdapter(postAdapter);
+                    postAdapter.insertData(mData);
+                }else{
+                    Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     public void getListNewsFeed(){
-        mDatabase.child("Newsfeed").addChildEventListener(new ChildEventListener() {
+        mDatabase.child("newsfeed").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    PostObject ds =dataSnapshot.getValue(PostObject.class);
-                    mData.add(ds);
+                    if (snapshot.exists()){
+                        PostObject data = snapshot.getValue(PostObject.class);
+                        mData.add(data);
+                        postAdapter.insertData(mData);
+                    }else{
+                    Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
                 }
 
             }

@@ -27,6 +27,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -64,7 +66,7 @@ public class tab_profile extends Fragment {
     ImageButton img_cmnd;
     Button update;
     RatingBar star;
-    public String getname, getphone, getemail, getaddress, getUriAvatar, getUriCMND;
+    public String getname, getphone, getemail, getaddress, getUriAvatar, getUriCMND,uid;
 
 
     public tab_profile() {
@@ -114,6 +116,7 @@ public class tab_profile extends Fragment {
         avata = view.findViewById(R.id.img_poster);
         mStorage = FirebaseStorage.getInstance().getReference();
         mFireStore = FirebaseFirestore.getInstance();
+        getIdShipper();
         readProfile();
         avata.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +135,15 @@ public class tab_profile extends Fragment {
 
         return view;
     }
-
+    // lấy ID của shipper hiện tại
+    public void getIdShipper(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user!=null) {
+            uid = user.getUid();
+        }else{
+            Toast.makeText(getContext(), "Get UID Failed", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     // Update the profile
     public void updateProfile() {
@@ -166,7 +177,7 @@ public class tab_profile extends Fragment {
 
                                     // Update the profile
                                     ProfileObject profileObject = new ProfileObject(getname, getphone, getaddress, getemail, getUriAvatar, getUriCMND);
-                                    mFireStore.collection("ProfileShipper").document("userid1")
+                                    mFireStore.collection("ProfileShipper").document(uid)
                                             .set(profileObject)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
@@ -203,7 +214,7 @@ public class tab_profile extends Fragment {
                     });
         }else{
             ProfileObject profileObject1 = new ProfileObject(getname, getphone, getaddress, getemail, getUriAvatar, getUriCMND);
-            mFireStore.collection("ProfileShipper").document("userid1")
+            mFireStore.collection("ProfileShipper").document(uid)
                     .set(profileObject1)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -241,7 +252,7 @@ public class tab_profile extends Fragment {
 
     // read the profie
     public void readProfile() {
-        DocumentReference docRef = mFireStore.collection("ProfileShipper").document("userid1");
+        DocumentReference docRef = mFireStore.collection("ProfileShipper").document(uid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

@@ -2,112 +2,121 @@ package com.example.AmateurShipper;
 
 
 public class PostObject {
-    String name_poster,time,start_post,end_post,distance,note;
-    int imgage_poster,attach_image,quantity_order;
-    double fee,payment;
+    String ten_nguoi_gui,sdt_nguoi_gui,noi_nhan,noi_giao,sdt_nguoi_nhan,ten_nguoi_nhan,ghi_chu,thoi_gian,id_shop,phi_giao,phi_ung,km;
 
     public PostObject() {
     }
 
-    public PostObject(String name_poster, String time, String start_post, String end_post, String distance, String note, int imgage_poster, int attach_image, int quantity_order, double fee, double payment) {
-        this.name_poster = name_poster;
-        this.time = time;
-        this.start_post = start_post;
-        this.end_post = end_post;
-        this.distance = distance;
-        this.note = note;
-        this.imgage_poster = imgage_poster;
-        this.attach_image = attach_image;
-        this.quantity_order = quantity_order;
-        this.fee = fee;
-        this.payment = payment;
+    public PostObject(String ten_nguoi_gui, String sdt_nguoi_gui, String noi_nhan, String noi_giao,
+                      String sdt_nguoi_nhan, String ten_nguoi_nhan, String ghi_chu, String thoi_gian,
+                      String id_shop,String phi_giao,String phi_ung,String km) {
+        this.ten_nguoi_gui = ten_nguoi_gui;
+        this.sdt_nguoi_gui = sdt_nguoi_gui;
+        this.noi_nhan = noi_nhan;
+        this.noi_giao = noi_giao;
+        this.sdt_nguoi_nhan = sdt_nguoi_nhan;
+        this.ten_nguoi_nhan = ten_nguoi_nhan;
+        this.ghi_chu = ghi_chu;
+        this.thoi_gian = thoi_gian;
+        this.id_shop = id_shop;
+        this.phi_giao = phi_giao;
+        this.phi_ung = phi_ung;
+        this.km = km;
     }
 
-    public String getNote() {
-        return note;
+    public String getTen_nguoi_gui() {
+        return ten_nguoi_gui;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setTen_nguoi_gui(String ten_nguoi_gui) {
+        this.ten_nguoi_gui = ten_nguoi_gui;
     }
 
-    public int getAttach_image() {
-        return attach_image;
+    public String getSdt_nguoi_gui() {
+        return sdt_nguoi_gui;
     }
 
-    public void setAttach_image(int attach_image) {
-        this.attach_image = attach_image;
+    public void setSdt_nguoi_gui(String sdt_nguoi_gui) {
+        this.sdt_nguoi_gui = sdt_nguoi_gui;
     }
 
-    public String getName_poster() {
-        return name_poster;
+    public String getNoi_nhan() {
+        return noi_nhan;
     }
 
-    public void setName_poster(String name_poster) {
-        this.name_poster = name_poster;
+    public void setNoi_nhan(String noi_nhan) {
+        this.noi_nhan = noi_nhan;
     }
 
-    public String getTime() {
-        return time;
+    public String getNoi_giao() {
+        return noi_giao;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setNoi_giao(String noi_giao) {
+        this.noi_giao = noi_giao;
     }
 
-    public String getStart_post() {
-        return start_post;
+    public String getSdt_nguoi_nhan() {
+        return sdt_nguoi_nhan;
     }
 
-    public void setStart_post(String start_post) {
-        this.start_post = start_post;
+    public void setSdt_nguoi_nhan(String sdt_nguoi_nhan) {
+        this.sdt_nguoi_nhan = sdt_nguoi_nhan;
     }
 
-    public String getEnd_post() {
-        return end_post;
+    public String getTen_nguoi_nhan() {
+        return ten_nguoi_nhan;
     }
 
-    public void setEnd_post(String end_post) {
-        this.end_post = end_post;
+    public void setTen_nguoi_nhan(String ten_nguoi_nhan) {
+        this.ten_nguoi_nhan = ten_nguoi_nhan;
     }
 
-    public String getDistance() {
-        return distance;
+    public String getGhi_chu() {
+        return ghi_chu;
     }
 
-    public void setDistance(String distance) {
-        this.distance = distance;
+    public void setGhi_chu(String ghi_chu) {
+        this.ghi_chu = ghi_chu;
     }
 
-    public int getImgage_poster() {
-        return imgage_poster;
+    public String getThoi_gian() {
+        return thoi_gian;
     }
 
-    public void setImgage_poster(int imgage_poster) {
-        this.imgage_poster = imgage_poster;
+    public void setThoi_gian(String thoi_gian) {
+        this.thoi_gian = thoi_gian;
     }
 
-    public int getQuantity_order() {
-        return quantity_order;
+    public String getId_shop() {
+        return id_shop;
     }
 
-    public void setQuantity_order(int quantity_order) {
-        this.quantity_order = quantity_order;
+    public void setId_shop(String id_shop) {
+        this.id_shop = id_shop;
     }
 
-    public double getFee() {
-        return fee;
+    public String getPhi_giao() {
+        return phi_giao;
     }
 
-    public void setFee(double fee) {
-        this.fee = fee;
+    public void setPhi_giao(String phi_giao) {
+        this.phi_giao = phi_giao;
     }
 
-    public double getPayment() {
-        return payment;
+    public String getPhi_ung() {
+        return phi_ung;
     }
 
-    public void setPayment(double payment) {
-        this.payment = payment;
+    public void setPhi_ung(String phi_ung) {
+        this.phi_ung = phi_ung;
+    }
+
+    public String getKm() {
+        return km;
+    }
+
+    public void setKm(String km) {
+        this.km = km;
     }
 }

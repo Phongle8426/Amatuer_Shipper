@@ -35,9 +35,9 @@ public class DaNhanAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DaNhanAdapter.ViewAdapterClass viewAdapterClass = (DaNhanAdapter.ViewAdapterClass)holder;
         PostObject postObject =orderDaNhan.get(position);
-        viewAdapterClass.name_poster.setText(postObject.getName_poster());
-        viewAdapterClass.start_post.setText(postObject.getStart_post());
-        viewAdapterClass.end_post.setText(postObject.getEnd_post());
+        viewAdapterClass.name_poster.setText(postObject.getTen_nguoi_gui());
+        viewAdapterClass.start_post.setText(postObject.getNoi_nhan());
+        viewAdapterClass.end_post.setText(postObject.getNoi_giao());
 
     }
 

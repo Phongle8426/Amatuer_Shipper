@@ -11,12 +11,26 @@
         android:orientation="vertical"
         android:layout_height="wrap_content">
         <EditText
+            android:id="@+id/editTextIdShop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="ID Shop" />
+        <EditText
             android:id="@+id/editTextTenNguoiGui"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:hint="Ten nguoi gui" />
+        <EditText
+            android:id="@+id/editTextSdtNguoiGui"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="SDT nguoi gui" />
         <EditText
             android:id="@+id/editTextTenNguoiNhan"
             android:layout_width="match_parent"

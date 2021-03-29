@@ -11,9 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.AmateurShipper.Util.PostDiffUtilCallback;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -28,6 +31,13 @@ public class PostAdapter extends RecyclerView.Adapter {
         mContext = context;
     }
 
+    public void insertData(List<PostObject> insertList){
+        PostDiffUtilCallback postDiffUtilCallback = new PostDiffUtilCallback(postList,insertList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(postDiffUtilCallback);
+        postList.addAll(insertList);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,16 +50,15 @@ public class PostAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ViewAdapterClass viewAdapterClass = (ViewAdapterClass)holder;
         PostObject postObject =postList.get(position);
-        viewAdapterClass.name_poster.setText(postObject.getName_poster());
-        viewAdapterClass.time.setText(postObject.getTime());
-        viewAdapterClass.start_post.setText(postObject.getStart_post());
-        viewAdapterClass.end_post.setText(postObject.getEnd_post());
-        viewAdapterClass.distance.setText(postObject.getDistance());
-    //    viewAdapterClass.quantity.setText(String.valueOf(postObject.getQuantity_order()));
-        viewAdapterClass.fee.setText(String.valueOf(postObject.getFee()));
-        viewAdapterClass.payment.setText(String.valueOf(postObject.getPayment()));
-        viewAdapterClass.note.setText(postObject.getNote());
-        viewAdapterClass.image_poster.setImageResource(postObject.imgage_poster);
+        viewAdapterClass.name_poster.setText(postObject.getTen_nguoi_gui());
+        viewAdapterClass.time.setText(postObject.getThoi_gian());
+        viewAdapterClass.start_post.setText(postObject.getNoi_nhan());
+        viewAdapterClass.end_post.setText(postObject.getNoi_giao());
+        viewAdapterClass.distance.setText(String.valueOf(postObject.getKm()));
+        viewAdapterClass.fee.setText(String.valueOf(postObject.getPhi_giao()));
+        viewAdapterClass.payment.setText(String.valueOf(postObject.getPhi_ung()));
+        viewAdapterClass.note.setText(postObject.getGhi_chu());
+       // viewAdapterClass.image_poster.setImageResource(postObject.imgage_poster);
 
         Animation animation = AnimationUtils.loadAnimation(mContext,R.anim.slide_in_right);
         holder.itemView.startAnimation(animation);
@@ -61,7 +70,7 @@ public class PostAdapter extends RecyclerView.Adapter {
     }
 
     public class ViewAdapterClass extends RecyclerView.ViewHolder{
-        TextView name_poster,time,start_post,end_post,distance,quantity,fee,payment,note;
+        TextView name_poster,time,start_post,end_post,distance,fee,payment,note;
         CircleImageView image_poster;
         Button get_order,attach_image;
         public ViewAdapterClass(@NonNull final View itemView) {
@@ -82,7 +91,7 @@ public class PostAdapter extends RecyclerView.Adapter {
             get_order.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(), "tin an dau buoi", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(), "tina", Toast.LENGTH_SHORT).show();
                 }
             });
         }
