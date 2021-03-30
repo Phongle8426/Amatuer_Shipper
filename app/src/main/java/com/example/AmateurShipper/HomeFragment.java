@@ -3,6 +3,8 @@ package com.example.AmateurShipper;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -41,7 +43,7 @@ import static android.content.ContentValues.TAG;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements PostAdapter.OnPostListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,13 +55,12 @@ public class HomeFragment extends Fragment {
     private String mParam2;
     RecyclerView NewsRecyclerview;
     PostAdapter postAdapter;
-   public List<PostObject> mData = new ArrayList<>();
-
+    SharedPreferences sharedPreferences;
+   private List<PostObject> mData = new ArrayList<>();
     com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment;
     private DatabaseReference mDatabase;
-
-
     public HomeFragment() {
+
         // Required empty public constructor
     }
 
@@ -80,7 +81,10 @@ public class HomeFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
+public static HomeFragment newInstance(){
+        HomeFragment fragment = new HomeFragment();
+        return fragment;
+}
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,22 +101,12 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_home,container,false);
         btn_filter_location = view.findViewById(R.id.btn_filter_location);
         btn_filter_payment = view.findViewById(R.id.btn_filter_payment);
         NewsRecyclerview = view.findViewById(R.id.rcv_post);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
-//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-//
-//        PostAdapter postAdapter = new PostAdapter(mData,getContext());
-//        NewsRecyclerview.setAdapter(postAdapter);
-//        newPostAdapter();
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setReverseLayout(true);
@@ -120,7 +114,7 @@ public class HomeFragment extends Fragment {
         mLayoutManager.setStackFromEnd(true);
         NewsRecyclerview.setLayoutManager(mLayoutManager);
         getList();
-        postAdapter = new PostAdapter(mData, getContext());
+        postAdapter = new PostAdapter(mData, getContext(), this);
         NewsRecyclerview.setAdapter(postAdapter);
         NewsRecyclerview.smoothScrollToPosition(0);
         btn_filter_location.setOnClickListener(new View.OnClickListener() {
@@ -139,39 +133,22 @@ public class HomeFragment extends Fragment {
     }
 
 
-//    public void newPostAdapter(){
-//        postAdapter = new PostAdapter(mData, getContext());
-//    }
     public void getList(){
-        mDatabase.child("newsfeed").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("nsf").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 if (snapshot.exists()) {
-                    Toast.makeText(getContext(), "ok", Toast.LENGTH_LONG).show();
-                    List<PostObject> insertList = new ArrayList<>();
+
+                    mData = new ArrayList<>();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                         PostObject data = dataSnapshot.getValue(PostObject.class);
-                        Toast.makeText(getContext(), "ten guoi gui" + data.getTen_nguoi_gui(), Toast.LENGTH_SHORT).show();
-//                        String ghichu = dataSnapshot.child("ghi_chu").getValue(String.class);
-//                        String idshop = dataSnapshot.child("id_shop").getValue(String.class);
-//                        String nguoigui = dataSnapshot.child("ten_nguoi_gui").getValue(String.class);
-//                        String sdtnguoigui = dataSnapshot.child("sdt_nguoi_gui").getValue(String.class);
-//                        String nguoinhan = dataSnapshot.child("ten_nguoi_nhan").getValue(String.class);
-//                        String sdtnguoinhan = dataSnapshot.child("sdt_nguoi_nhan").getValue(String.class);
-//                        String noigiao = dataSnapshot.child("noi_giao").getValue(String.class);
-//                        String noinhan = dataSnapshot.child("noi_nhan").getValue(String.class);
-//                        String phigiao = dataSnapshot.child("phi_giao").getValue(String.class);
-//                        String phiung = dataSnapshot.child("phi_ung").getValue(String.class);
-//                        String thoigian = dataSnapshot.child("thoi_gian").getValue(String.class);
-//                        String km = dataSnapshot.child("km").getValue(String.class);
-//                        Toast.makeText(getContext(), "thoi gian" + thoigian, Toast.LENGTH_SHORT).show();
-//                        PostObject data = new PostObject(nguoigui,sdtnguoigui,noinhan,noigiao,sdtnguoinhan,
-//                                nguoinhan,ghichu,thoigian,idshop,phigiao,phiung,km);
-                        insertList.add(data);
+                        mData.add(data);
                     }
-                    postAdapter.insertData(insertList);
+
+                    postAdapter.insertData(mData);
+
                 }else{
                     Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
                 }
@@ -184,42 +161,42 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public void getListNewsFeed(){
-        mDatabase.child("newsfeed").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                    if (snapshot.exists()){
-                        PostObject data = snapshot.getValue(PostObject.class);
-                        Log.i(TAG, "onChildAdded: " + data.getSdt_nguoi_gui());
-                        mData.add(data);
-                        postAdapter.insertData(mData);
-                    }else{
-                    Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
-                }
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
+//    public void getListNewsFeed(){
+//        mDatabase.child("newsfeed").addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                    if (snapshot.exists()){
+//                        PostObject data = snapshot.getValue(PostObject.class);
+//                        Log.i(TAG, "onChildAdded: " + data.getSdt_nguoi_gui());
+//                        mData.add(data);
+//                        postAdapter.insertData(mData);
+//                    }else{
+//                    Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
 
     public void showDialogPaymen(){
         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -278,4 +255,11 @@ public class HomeFragment extends Fragment {
         mDialog.show();
     }
 
+    @Override
+    public void onPostClick(int position) {
+        mData.get(position);
+        getList();
+
+
+    }
 }

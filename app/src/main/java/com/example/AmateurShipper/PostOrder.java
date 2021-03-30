@@ -48,12 +48,13 @@ public class PostOrder extends AppCompatActivity {
                idshop=idshopi.getText().toString();
                sdtnguoigui = sdtnguoiguii.getText().toString();
                // tao doi tuong
-               PostObject postOrder = new PostObject(tennguoigui,sdtnguoigui,diemdi,diemden,sdtnguoinhan, tennguoinhan,ghichu, phut,idshop,tienphi,tienung, km);
+               PostObject postOrder = new PostObject("tennguoigui","tennguoigui","tennguoigui","tennguoigui","tennguoigui", "tennguoigui","tennguoigui", "tennguoigui","tennguoigui","tennguoigui","tennguoigui", "tennguoigui","keyvalue2");
 
                 //up data to firebase
                rootNode = FirebaseDatabase.getInstance();
-               databaseReference = rootNode.getReference().child("newsfeed");
-               databaseReference.push().setValue(postOrder);
+               databaseReference = rootNode.getReference().child("nsf");
+               databaseReference.child("keyvalue2").setValue(postOrder);
+
            }
        });
     }

@@ -9,23 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
-import org.eazegraph.lib.charts.BarChart;
-import org.eazegraph.lib.communication.IOnBarClickedListener;
-import org.eazegraph.lib.models.BarModel;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import io.grpc.okhttp.internal.Util;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +26,7 @@ public class tab_statis extends Fragment {
     private static final int MIN_Y_VALUE = 5;
     private static final String SET_LABEL = "App Downloads";
     private static final String[] DAYS = { "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT" };
-    private HorizontalBarChart chart;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -80,48 +68,5 @@ public class tab_statis extends Fragment {
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tab_statis, container, false);
-
-        chart = view.findViewById(R.id.fragment_horizontalbarchart_chart);
-
-        BarData data = createChartData();
-        configureChartAppearance();
-        prepareChartData(data);
-        return view;
-    }
-    private void prepareChartData(BarData data) {
-        data.setValueTextSize(12f);
-        chart.setData(data);
-        chart.invalidate();
-    }
-    private void configureChartAppearance() {
-        chart.getDescription().setEnabled(false);
-
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                return DAYS[(int) value];
-            }
-        });
-    }
-    private BarData createChartData() {
-        ArrayList<BarEntry> values = new ArrayList<>();
-        for (int i = 0; i < MAX_X_VALUE; i++) {
-            float x = i;
-            int y = new Random().nextInt(300);
-            values.add(new BarEntry(x, y));
-        }
-        BarDataSet set1 = new BarDataSet(values, SET_LABEL);
-
-        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1);
-
-        BarData data = new BarData(dataSets);
-        return data;
-    }
 
 }

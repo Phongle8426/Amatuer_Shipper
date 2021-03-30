@@ -10,13 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ApplicationIntroduce">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".PostOrder"></activity>
+        <activity android:name=".PostOrder">
+
+        </activity>
         <activity android:name=".InputNewPassword" />
         <activity android:name=".ForgotPasswordVerifyOTP" />
         <activity android:name=".ForgotPassword" />

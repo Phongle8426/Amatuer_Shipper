@@ -98,18 +98,25 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView {
     }
 
     public void getListStatusReceived(){
-        Query query = mDatabase.child("Status").orderByChild("status").equalTo("0");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("nsf").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                        PostObject ds =dataSnapshot.getValue(PostObject.class);
-                        mData.add(ds);
+
+                if (snapshot.exists()) {
+
+                    mData = new ArrayList<>();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                        PostObject data = dataSnapshot.getValue(PostObject.class);
+                        mData.add(data);
                     }
+
+                    //postAdapter.insertData(mData);
+
+                }else{
+                    Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
