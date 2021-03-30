@@ -14,7 +14,8 @@
         android:id="@+id/tablayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background1"
+        android:background="@color/colorText"
+        app:tabTextColor="@color/half_black"
         app:tabSelectedTextColor="@color/cardview_light_background">
 
         <com.google.android.material.tabs.TabItem

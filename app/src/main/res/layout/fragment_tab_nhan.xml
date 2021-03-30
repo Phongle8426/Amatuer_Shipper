@@ -9,6 +9,6 @@
         android:id="@+id/rcv_tab_nhan"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background1"/>
+        android:background="@color/whiteTextColor"/>
 
 </FrameLayout>

@@ -9,17 +9,19 @@ import com.google.firebase.database.FirebaseDatabase;
 public class PostOrder extends AppCompatActivity {
     FirebaseDatabase rootNode;
     DatabaseReference databaseReference;
-    EditText tennguoiguii, tennguoinhani, sdtnguoinhani, phuti, kmi, diemdii, diemdeni, tienungi, tienphii, ghichui;
-    String tennguoigui, tennguoinhan, sdtnguoinhan, phut, km, diemdi, diemden, tienung, tienphi, ghichu;
+    EditText idshopi,tennguoiguii, tennguoinhani,sdtnguoiguii, sdtnguoinhani, phuti, kmi, diemdii, diemdeni, tienungi, tienphii, ghichui;
+    String idshop,tennguoigui, tennguoinhan,sdtnguoigui, sdtnguoinhan, phut, diemdi, diemden, ghichu,km,tienung, tienphi;
     Button submit_btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_order);
 
+        idshopi = findViewById(R.id.editTextIdShop);
         tennguoiguii = findViewById(R.id.editTextTenNguoiGui);
         tennguoinhani = findViewById(R.id.editTextTenNguoiNhan);
         sdtnguoinhani = findViewById(R.id.editTextTextSDTNGuoiNhan);
+        sdtnguoiguii= findViewById(R.id.editTextSdtNguoiGui);
         phuti = findViewById(R.id.editTextTextPhut);
         kmi = findViewById(R.id.editTextTextKm);
         diemdii = findViewById(R.id.editTextTextDiemdi);
@@ -43,13 +45,15 @@ public class PostOrder extends AppCompatActivity {
                tienung = tienungi.getText().toString();
                tienphi = tienphii.getText().toString();
                ghichu = ghichui.getText().toString();
+               idshop=idshopi.getText().toString();
+               sdtnguoigui = sdtnguoiguii.getText().toString();
                // tao doi tuong
-               PostOrderModel postOrder = new PostOrderModel(tennguoigui, tennguoinhan, sdtnguoinhan, phut, km, diemdi, diemden, tienung, tienphi, ghichu);
+               PostObject postOrder = new PostObject(tennguoigui,sdtnguoigui,diemdi,diemden,sdtnguoinhan, tennguoinhan,ghichu, phut,idshop,tienphi,tienung, km);
 
                 //up data to firebase
                rootNode = FirebaseDatabase.getInstance();
-               databaseReference = rootNode.getReference().child("newsfeed").child("userID1");
-               databaseReference.setValue(postOrder);
+               databaseReference = rootNode.getReference().child("newsfeed");
+               databaseReference.push().setValue(postOrder);
            }
        });
     }

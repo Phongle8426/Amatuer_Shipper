@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -15,9 +17,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DaNhanAdapter extends RecyclerView.Adapter {
     List<PostObject> orderDaNhan;
+    private statusInterfaceRecyclerView statusInterfaceRecyclerView;
 
-    public DaNhanAdapter(List<PostObject> orderDaNhan){
+    public DaNhanAdapter(List<PostObject> orderDaNhan,statusInterfaceRecyclerView statusInterfaceRecyclerView){
         this.orderDaNhan = orderDaNhan;
+        this.statusInterfaceRecyclerView = statusInterfaceRecyclerView;
     }
     @NonNull
     @Override
@@ -31,9 +35,9 @@ public class DaNhanAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         DaNhanAdapter.ViewAdapterClass viewAdapterClass = (DaNhanAdapter.ViewAdapterClass)holder;
         PostObject postObject =orderDaNhan.get(position);
-        viewAdapterClass.name_poster.setText(postObject.getName_poster());
-        viewAdapterClass.start_post.setText(postObject.getStart_post());
-        viewAdapterClass.end_post.setText(postObject.getEnd_post());
+        viewAdapterClass.name_poster.setText(postObject.getTen_nguoi_gui());
+        viewAdapterClass.start_post.setText(postObject.getNoi_nhan());
+        viewAdapterClass.end_post.setText(postObject.getNoi_giao());
 
     }
 
@@ -49,6 +53,14 @@ public class DaNhanAdapter extends RecyclerView.Adapter {
             name_poster = itemView.findViewById(R.id.name_poster_tab_nhan);
             start_post = itemView.findViewById(R.id.txt_start_place_tab_nhan);
             end_post = itemView.findViewById(R.id.txt_end_place_tab_nhan);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getLayoutPosition();
+                    statusInterfaceRecyclerView.onItemClick(position);
+                }
+            });
         }
     }
 }
