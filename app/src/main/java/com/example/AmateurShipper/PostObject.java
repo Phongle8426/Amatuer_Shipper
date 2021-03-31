@@ -2,14 +2,22 @@ package com.example.AmateurShipper;
 
 
 public class PostObject {
-    String ten_nguoi_gui,sdt_nguoi_gui,noi_nhan,noi_giao,sdt_nguoi_nhan,ten_nguoi_nhan,ghi_chu,thoi_gian,id_shop,phi_giao,phi_ung,km;
+    String ten_nguoi_gui,sdt_nguoi_gui,noi_nhan,noi_giao,sdt_nguoi_nhan,ten_nguoi_nhan,ghi_chu,thoi_gian,id_shop,phi_giao,phi_ung,km, keypush;
 
     public PostObject() {
     }
 
+    public String getKeypush() {
+        return keypush;
+    }
+
+    public void setKeypush(String keypush) {
+        this.keypush = keypush;
+    }
+
     public PostObject(String ten_nguoi_gui, String sdt_nguoi_gui, String noi_nhan, String noi_giao,
                       String sdt_nguoi_nhan, String ten_nguoi_nhan, String ghi_chu, String thoi_gian,
-                      String id_shop,String phi_giao,String phi_ung,String km) {
+                      String id_shop, String phi_giao, String phi_ung, String km, String keypush) {
         this.ten_nguoi_gui = ten_nguoi_gui;
         this.sdt_nguoi_gui = sdt_nguoi_gui;
         this.noi_nhan = noi_nhan;
@@ -22,6 +30,7 @@ public class PostObject {
         this.phi_giao = phi_giao;
         this.phi_ung = phi_ung;
         this.km = km;
+        this.keypush = keypush;
     }
 
     public String getTen_nguoi_gui() {

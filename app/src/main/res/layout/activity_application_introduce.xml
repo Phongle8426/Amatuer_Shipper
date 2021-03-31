@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cWhite"
+    android:orientation="vertical"
+    tools:context=".ApplicationIntroduce">
+
+    <ImageView
+        android:id="@+id/image_owl"
+        android:layout_width="wrap_content"
+        android:layout_height="316dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="124dp"
+        android:src="@drawable/thnow_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></ImageView>
+
+    <TextView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/muli_semibold"
+        android:text="Amature Shipping for Machents"
+        android:textColor="@color/colorText"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_owl" />
+
+    <TextView
+        android:id="@+id/tv_slogan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/image_owl"
+        android:layout_marginStart="118dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="118dp"
+        android:fontFamily="@font/archivo_narrow"
+        android:text="Delivering happiness to you."
+        android:textColor="@color/colorText"
+
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_owl"></TextView>
+</androidx.constraintlayout.widget.ConstraintLayout>
