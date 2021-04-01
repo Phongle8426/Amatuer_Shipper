@@ -23,6 +23,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.AmateurShipper.Dialog.FilterPaymentDialog;
 import com.example.AmateurShipper.Util.PostDiffUtilCallback;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,7 +44,7 @@ import static android.content.ContentValues.TAG;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment implements PostAdapter.OnPostListener {
+public class HomeFragment extends Fragment implements PostAdapter.OnPostListener,FilterPaymentDialog.OnInputSelected {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,6 +60,7 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostListener
    private List<PostObject> mData = new ArrayList<>();
     com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment;
     private DatabaseReference mDatabase;
+    public int filter_payment = 0;
     public HomeFragment() {
 
         // Required empty public constructor
@@ -126,29 +128,37 @@ public static HomeFragment newInstance(){
         btn_filter_payment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDialogPaymen();
+                FilterPaymentDialog filterPaymentDialog = new FilterPaymentDialog();
+                filterPaymentDialog.setTargetFragment(HomeFragment.this,1);
+                filterPaymentDialog.show(getFragmentManager(),"filter by payment");
             }
         });
         return view;
     }
 
 
+
     public void getList(){
-        mDatabase.child("nsf").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("newsfeed").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 if (snapshot.exists()) {
-
-                    mData = new ArrayList<>();
+                    Toast.makeText(getContext(), "ok", Toast.LENGTH_LONG).show();
+                    List<PostObject> insertList = new ArrayList<>();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                         PostObject data = dataSnapshot.getValue(PostObject.class);
-                        mData.add(data);
+                        if(filter_payment !=0){
+                            if(filter_payment >= Integer.parseInt(data.getPhi_ung())){
+                                insertList.add(data);
+                            }
+                        }else insertList.add(data);
+                        //Toast.makeText(getContext(), "ten guoi gui" + data.getTen_nguoi_gui(), Toast.LENGTH_SHORT).show();
+
+
                     }
-
-                    postAdapter.insertData(mData);
-
+                    postAdapter.insertData(insertList);
                 }else{
                     Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
                 }
@@ -161,96 +171,36 @@ public static HomeFragment newInstance(){
 
     }
 
-//    public void getListNewsFeed(){
-//        mDatabase.child("newsfeed").addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//                    if (snapshot.exists()){
-//                        PostObject data = snapshot.getValue(PostObject.class);
-//                        Log.i(TAG, "onChildAdded: " + data.getSdt_nguoi_gui());
-//                        mData.add(data);
-//                        postAdapter.insertData(mData);
-//                    }else{
-//                    Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
-
-    public void showDialogPaymen(){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        final SeekBar seek = new SeekBar(getContext());
-        builder.setTitle("Lọc theo tiền Ứng");
-        seek.setMax(255);
-        seek.setKeyProgressIncrement(10);
-        builder.setView(seek);
-
-        seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                Toast.makeText(getContext(), "Ứng <= "+ i+"K", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-        AlertDialog mDialog = builder.create();
-        mDialog.show();
-    }
-
     public void showDialog(){
+        final int countItem = 0;
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Lọc theo vị trí");
-
+        final ArrayList<Integer> mLocationItem = new ArrayList<>();
         final String[] location = {"Hai Chau","Thanh Khe","Cam Le","Hoa Khanh"};
-        builder.setSingleChoiceItems(location, -1, new DialogInterface.OnClickListener() {
+        final boolean[] checkedItems = new boolean[location.length];
+
+        builder.setMultiChoiceItems(location, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int position, boolean ischecked) {
+                if (ischecked){
+                    if (countItem <= 3){
+                        if (!mLocationItem.contains(position)){
+                            mLocationItem.add(position);
+                        }
+                    }
+                }else mLocationItem.remove(position);
+            }
+        }).setPositiveButton("Lọc", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                switch (i){
-                    case 0:
-                        Toast.makeText(getContext(),location[0], Toast.LENGTH_SHORT).show();
-                        break;
-                    case 1:
-                        Toast.makeText(getContext(),location[1], Toast.LENGTH_SHORT).show();
-                        break;
-                    case 2:
-                        Toast.makeText(getContext(),location[2], Toast.LENGTH_SHORT).show();
-                        break;
-                    case 3:
-                        Toast.makeText(getContext(),location[3], Toast.LENGTH_SHORT).show();
-                        break;
-                    default: break;
+                String item ="";
+                for (int a = 0; a< mLocationItem.size() ;a++){
+                        item = item + location[mLocationItem.get(a)] + ",";
                 }
+                Toast.makeText(getContext(), item, Toast.LENGTH_SHORT).show();
             }
         });
+
         AlertDialog mDialog = builder.create();
         mDialog.show();
     }
@@ -260,6 +210,11 @@ public static HomeFragment newInstance(){
         mData.get(position);
         getList();
 
+    }
 
+    @Override
+    public void sendInput(String dialog_payment) {
+        getList();
+        filter_payment = Integer.parseInt(dialog_payment);
     }
 }

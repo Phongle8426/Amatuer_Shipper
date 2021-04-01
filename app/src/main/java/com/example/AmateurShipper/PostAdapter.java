@@ -43,7 +43,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
     public void insertData(List<PostObject> insertList) {
         PostDiffUtilCallback postDiffUtilCallback = new PostDiffUtilCallback(postList, insertList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(postDiffUtilCallback);
-        //postList.clear();
+        postList.clear();
         postList.addAll(insertList);
         diffResult.dispatchUpdatesTo(PostAdapter.this);
     }
