@@ -58,6 +58,9 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostListener
     PostAdapter postAdapter;
     SharedPreferences sharedPreferences;
    private List<PostObject> mData = new ArrayList<>();
+   final ArrayList<String> mLocationItem = new ArrayList<>();
+   final String[] location = {"Hai Chau","Thanh Khe","Cam Le","Hoa Khanh"};
+   boolean selected[] = new boolean[]{false, false, false, false};
     com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment;
     private DatabaseReference mDatabase;
     public int filter_payment = 0;
@@ -110,7 +113,7 @@ public static HomeFragment newInstance(){
         NewsRecyclerview = view.findViewById(R.id.rcv_post);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setReverseLayout(true);
         NewsRecyclerview.setHasFixedSize(true);
         mLayoutManager.setStackFromEnd(true);
@@ -119,9 +122,11 @@ public static HomeFragment newInstance(){
         postAdapter = new PostAdapter(mData, getContext(), this);
         NewsRecyclerview.setAdapter(postAdapter);
         NewsRecyclerview.smoothScrollToPosition(0);
+
         btn_filter_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mLocationItem.clear();
                 showDialog();
             }
         });
@@ -136,31 +141,31 @@ public static HomeFragment newInstance(){
         return view;
     }
 
-
-
+    // Tải đơn được cập nhật vào newfeed
     public void getList(){
         mDatabase.child("newsfeed").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                // Nếu có tin mới thì newfeed sẽ cập nhật
                 if (snapshot.exists()) {
-                    Toast.makeText(getContext(), "ok", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), "ok", Toast.LENGTH_LONG).show();
                     List<PostObject> insertList = new ArrayList<>();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-
                         PostObject data = dataSnapshot.getValue(PostObject.class);
-                        if(filter_payment !=0){
+                        if(filter_payment !=0){ // kiểm tra giá trị lọc theo tiền ứng có lớn hơn 0 hay ko, nếu ko thì kiểm tra điều kiện lọc vị trí
                             if(filter_payment >= Integer.parseInt(data.getPhi_ung())){
                                 insertList.add(data);
                             }
-                        }else insertList.add(data);
-                        //Toast.makeText(getContext(), "ten guoi gui" + data.getTen_nguoi_gui(), Toast.LENGTH_SHORT).show();
-
-
+                        }else if (mLocationItem.size()>0){ // kiểm tra list lọc vị trí có trống hay không, nếu k thì bỏ qua lọc
+                            for (int k = 0;k<mLocationItem.size();k++){
+                                if(data.getNoi_nhan().contains(mLocationItem.get(k)))
+                                    insertList.add(data);
+                            }
+                        } else insertList.add(data);
                     }
                     postAdapter.insertData(insertList);
                 }else{
-                    Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Không thể tải", Toast.LENGTH_LONG).show();
                 }
             }
             @Override
@@ -168,39 +173,45 @@ public static HomeFragment newInstance(){
 
             }
         });
-
     }
 
     public void showDialog(){
-        final int countItem = 0;
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Lọc theo vị trí");
-        final ArrayList<Integer> mLocationItem = new ArrayList<>();
-        final String[] location = {"Hai Chau","Thanh Khe","Cam Le","Hoa Khanh"};
         final boolean[] checkedItems = new boolean[location.length];
 
         builder.setMultiChoiceItems(location, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            int count= 0;
             @Override
             public void onClick(DialogInterface dialogInterface, int position, boolean ischecked) {
                 if (ischecked){
-                    if (countItem <= 3){
-                        if (!mLocationItem.contains(position)){
-                            mLocationItem.add(position);
+                        if (mLocationItem.size()<3){
+                            mLocationItem.add(String.valueOf(location[position]));
+                            checkedItems[position]=true;
+                            count++;
+                        }else{
+                            ((AlertDialog) dialogInterface).getListView().setItemChecked(position, false);
+                            checkedItems[position]=false;
+                            Toast.makeText(getContext(), "can't add", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                }else mLocationItem.remove(position);
+                }else {
+                    count--;
+                    mLocationItem.remove(String.valueOf(location[position]));
+                    checkedItems[position]=false;
+                }
             }
         }).setPositiveButton("Lọc", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                String item ="";
-                for (int a = 0; a< mLocationItem.size() ;a++){
-                        item = item + location[mLocationItem.get(a)] + ",";
-                }
-                Toast.makeText(getContext(), item, Toast.LENGTH_SHORT).show();
+                filter_payment = 0; // xóa đi điều kiện lọc theo tiền
+                getList();
+            }
+        }).setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
             }
         });
-
         AlertDialog mDialog = builder.create();
         mDialog.show();
     }
@@ -208,13 +219,13 @@ public static HomeFragment newInstance(){
     @Override
     public void onPostClick(int position) {
         mData.get(position);
-        getList();
-
+        getList(); // lọc lại
     }
 
     @Override
     public void sendInput(String dialog_payment) {
-        getList();
+        mLocationItem.clear(); // xóa đi điều kiện lọc theo vị trí
+        getList(); // lọc lại
         filter_payment = Integer.parseInt(dialog_payment);
     }
 }
