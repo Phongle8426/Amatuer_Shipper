@@ -31,6 +31,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
     List<PostObject> postList;
     Context mContext;
     int get_position;
+    public MainActivity mainActivity;
     private OnPostListener mOnPostListener;
     FirebaseDatabase rootDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = rootDatabase.getReference();
@@ -76,10 +77,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
         viewAdapterClass.fee.setText(String.valueOf(postObject.getPhi_giao()));
         viewAdapterClass.payment.setText(String.valueOf(postObject.getPhi_ung()));
         viewAdapterClass.note.setText(postObject.getGhi_chu());
+
         // viewAdapterClass.image_poster.setImageResource(postObject.imgage_poster);
         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_in_right);
         holder.itemView.startAnimation(animation);
-        Toast.makeText(mContext, "position" + get_position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mContext, "position" + get_position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -95,6 +97,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
 
         public ViewAdapterClass(@NonNull final View itemView, OnPostListener onPostListener) {
             super(itemView);
+            mainActivity = (MainActivity) itemView.getContext();
             name_poster = itemView.findViewById(R.id.name_poster);
             time = itemView.findViewById(R.id.time_post);
             start_post = itemView.findViewById(R.id.txt_start_place);
@@ -124,12 +127,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                     String phi_giao = postList.get(getAdapterPosition()).phi_giao;
                     String phi_ung = postList.get(getAdapterPosition()).phi_ung;
                     String km = postList.get(getAdapterPosition()).km;
-                    PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan, ten_nguoi_nhan, ghi_chu, thoi_gian, id_shop, phi_giao, phi_ung, km, "keyvalue2");
-                    databaseReference.child("received_order_status").child(postObject.getKeypush()).setValue(postObject);
-                    databaseReference.child("nsf").setValue(null);
-                    postList.remove(get_position);
-                    notifyItemRemoved(get_position);
-
+                    String id_post = postList.get(getAdapterPosition()).id_post;
+                    PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan, ten_nguoi_nhan, ghi_chu, thoi_gian, id_shop, phi_giao, phi_ung, km, id_post);
+                    databaseReference.child("received_order_status").child(postObject.getId_post()).setValue(postObject);
+                    databaseReference.child("newsfeed").child(postObject.getId_post()).setValue(null);
+                    postList.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
+                    mainActivity.setCountOrder(mainActivity.getmCountOrder()+1);
                 }
             });
         }

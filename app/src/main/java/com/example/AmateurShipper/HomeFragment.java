@@ -140,7 +140,6 @@ public static HomeFragment newInstance(){
         });
         return view;
     }
-
     // Tải đơn được cập nhật vào newfeed
     public void getList(){
         mDatabase.child("newsfeed").addValueEventListener(new ValueEventListener() {
@@ -165,7 +164,7 @@ public static HomeFragment newInstance(){
                     }
                     postAdapter.insertData(insertList);
                 }else{
-                    Toast.makeText(getContext(), "Không thể tải", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Khong co bai dang", Toast.LENGTH_LONG).show();
                 }
             }
             @Override

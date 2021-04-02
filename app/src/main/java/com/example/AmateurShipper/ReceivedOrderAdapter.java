@@ -134,18 +134,18 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                             .setGravity(Gravity.CENTER)
                             .create();
                     View myview_dia = dialogPlus.getHolderView();
-                    EditText tng =myview_dia.findViewById(R.id.editTextTenNguoiGui);
-                    EditText sdtnguoigui =myview_dia.findViewById(R.id.editTextSdtNguoiGui);
-                    EditText noinhan =myview_dia.findViewById(R.id.editTextTextDiemdi);
-                    EditText noigiao =myview_dia.findViewById(R.id.editTextTextDiemden);
-                    EditText sdtnguoinhan =myview_dia.findViewById(R.id.editTextTextSDTNGuoiNhan    );
-                    EditText tennguoinhan =myview_dia.findViewById(R.id.editTextTenNguoiNhan);
-                    EditText ghichu =myview_dia.findViewById(R.id.editTextTextGhiChu);
-                    EditText thoigian =myview_dia.findViewById(R.id.editTextTextPhut);
-                    EditText idshop =myview_dia.findViewById(R.id.editTextIdShop);
-                    EditText phigiao =myview_dia.findViewById(R.id.editTextTextTienPhi);
-                    EditText phiung=myview_dia.findViewById(R.id.editTextTextTienUng);
-                    EditText sokm =myview_dia.findViewById(R.id.editTextTextKm);
+                    TextView tng =  (TextView)myview_dia.findViewById(R.id.editTextTenNguoiGui);
+                    TextView sdtnguoigui =(TextView)myview_dia.findViewById(R.id.editTextSdtNguoiGui);
+                    TextView noinhan =(TextView)myview_dia.findViewById(R.id.editTextTextDiemdi);
+                    TextView noigiao =(TextView)myview_dia.findViewById(R.id.editTextTextDiemden);
+                    TextView sdtnguoinhan =(TextView)myview_dia.findViewById(R.id.editTextTextSDTNGuoiNhan    );
+                    TextView tennguoinhan =(TextView)myview_dia.findViewById(R.id.editTextTextTenNGuoiNhan);
+                    TextView ghichu =(TextView)myview_dia.findViewById(R.id.editTextTextGhiChu);
+                    TextView thoigian =(TextView)myview_dia.findViewById(R.id.editTextTextPhut);
+                    //TextView idshop =(TextView)myview_dia.findViewById(R.id.editTextIdShop);
+                    TextView phigiao =(TextView)myview_dia.findViewById(R.id.editTextTextTienPhi);
+                    TextView phiung=(TextView)myview_dia.findViewById(R.id.editTextTextTienUng);
+                    TextView sokm =(TextView)myview_dia.findViewById(R.id.editTextTextKm);
 
                     tng.setText(ten_nguoi_gui);
                     sdtnguoigui.setText(sdt_nguoi_gui);
@@ -156,7 +156,7 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                     tennguoinhan.setText(ten_nguoi_nhan);
                     ghichu.setText(ghi_chu);
                     thoigian.setText(thoi_gian);
-                    idshop.setText(id_shop);
+                   // idshop.setText(id_shop);
                     phigiao.setText(phi_giao);
                     phiung.setText(phi_ung);
                     sokm.setText(km);

@@ -1,124 +1,244 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_margin="5dp"
+    android:orientation="vertical"
+android:padding="5dp">
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="30dp"
-    tools:context=".PostOrder">
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_item">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="vertical">
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/img_poster"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/anhhhhh"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#FF000000"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:id="@+id/editTextTenNguoiGui"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Aron Shini"
+            android:fontFamily="@font/archivo_narrow"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_gravity="center_horizontal"/>
+        <EditText
+            android:id="@+id/editTextSdtNguoiGui"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/archivo_narrow"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_gravity="center_horizontal"
+            android:ems="10"
+          />
+        <TextView
+            android:id="@+id/editTextTextPhut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center_horizontal"
+            android:text="11 phut"
+            android:fontFamily="@font/archivo_narrow"
+            android:textColor="@color/colorText"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/editTextTextKm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center_horizontal"
+            android:text="5km"
+            android:fontFamily="@font/archivo_narrow"
+            android:textColor="@color/colorText"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/editTextIdShop"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="ID Shop" />
-            <EditText
-                android:id="@+id/editTextTenNguoiGui"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Ten nguoi gui" />
-            <EditText
-                android:id="@+id/editTextSdtNguoiGui"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="SDT nguoi gui" />
-            <EditText
-                android:id="@+id/editTextTenNguoiNhan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Ten nguoi nhan" />
-            <EditText
-                android:id="@+id/editTextTextSDTNGuoiNhan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="So dien thoai nguoi nhan" />
-            <EditText
-                android:id="@+id/editTextTextPhut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Phut" />
-            <EditText
-                android:id="@+id/editTextTextKm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-                android:hint="Km" />
-            <EditText
-                android:id="@+id/editTextTextDiemdi"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-                android:hint="Diem di" />
-            <EditText
-                android:id="@+id/editTextTextDiemden"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Diem den" />
-            <EditText
-                android:id="@+id/editTextTextTienUng"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
+                android:layout_marginLeft="3dp"
+                android:orientation="vertical">
 
-                android:hint="Tien ung" />
-            <EditText
-                android:id="@+id/editTextTextTienPhi"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
-                android:hint="Tien phi" />
-            <EditText
-                android:id="@+id/editTextTextGhiChu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:hint="Ghi chu" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_baseline_archive_24"/>
+
+                    <TextView
+                        android:id="@+id/editTextTextDiemdi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="285 Tran Cao Van"
+                        android:fontFamily="@font/archivo_narrow"
+                        android:textColor="@color/colorText"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_baseline_delivery_24"/>
+                    <TextView
+                        android:id="@+id/editTextTextDiemden"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="285 Nui Thanh"
+                        android:fontFamily="@font/archivo_narrow"
+                        android:textColor="@color/colorText"
+                        android:textSize="18sp"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/call_btn"
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_money_phi" />
+
+                    <TextView
+                        android:id="@+id/editTextTextTienPhi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="15.000"
+                        android:fontFamily="@font/archivo_narrow"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_money_ung"/>
+                    <TextView
+                        android:id="@+id/editTextTextTienUng"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="15.000"
+                        android:fontFamily="@font/archivo_narrow"
+                        android:textStyle="bold"
+                        android:textColor="#000000"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <EditText
+                    android:id="@+id/editTextTextTenNGuoiNhan"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tran trong Tin"
+                    android:fontFamily="@font/archivo_narrow"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
 
-                android:background="@drawable/ic_baseline_call_24"></ImageButton>
+                <EditText
+                    android:id="@+id/editTextTextSDTNGuoiNhan"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0827342755"
+                    android:fontFamily="@font/archivo_narrow"
+                    android:textStyle="bold"
+                    android:textColor="#000000" />
 
-            <ImageButton
-
-                android:id="@+id/message_btn"
+            </LinearLayout>
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_baseline_message_24"
-               ></ImageButton>
+                android:layout_marginTop="5dp"
+                android:text="Ghi chú"
+                android:textStyle="bold"
+                android:textColor="#000000"/>
+            <TextView
+                android:id="@+id/editTextTextGhiChu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ngay lap tuc"
+                android:textColor="@color/colorText"/>
         </LinearLayout>
     </LinearLayout>
+</LinearLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:orientation="horizontal"
+    android:layout_gravity="center_horizontal"
+    android:layout_height="wrap_content">
+    <ImageButton
+        android:id="@+id/message_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_baseline_message_24"
+        ></ImageButton>
+    <ImageButton
+        android:id="@+id/call_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_baseline_call_24"></ImageButton>
+</LinearLayout>
 
-
-</ScrollView>
+</LinearLayout>

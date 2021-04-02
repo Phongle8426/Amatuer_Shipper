@@ -60,7 +60,7 @@ public class PostOrder extends AppCompatActivity {
 
                 //up data to firebase
                 rootNode = FirebaseDatabase.getInstance();
-                databaseReference = rootNode.getReference().child("nsf");
+                databaseReference = rootNode.getReference().child("newsfeed");
                 databaseReference.child(keyvalue).setValue(postOrder);
 
             }
