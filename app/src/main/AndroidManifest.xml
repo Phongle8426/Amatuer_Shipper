@@ -13,7 +13,6 @@
 
         </activity>
         <activity android:name=".PostOrder">
-
         </activity>
         <activity android:name=".InputNewPassword" />
         <activity android:name=".ForgotPasswordVerifyOTP" />
@@ -24,7 +23,6 @@
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

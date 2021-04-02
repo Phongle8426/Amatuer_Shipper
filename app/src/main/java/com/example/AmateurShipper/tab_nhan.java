@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +24,15 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link tab_nhan#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class tab_nhan extends Fragment implements statusInterfaceRecyclerView {
+public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, ReceivedOrderAdapter.OnReceivedOderListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,9 +43,11 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView {
     private String mParam1;
     private String mParam2;
     RecyclerView NewsRecyclerview;
+    MainActivity mainActivity;
+    FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
     private DatabaseReference mDatabase;
-    List<PostObject> mData;
-
+    List<PostObject> mData = new ArrayList<>();
+    ReceivedOrderAdapter receivedOrderAdapter;
 
     public tab_nhan() {
         // Required empty public constructor
@@ -81,9 +86,18 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_nhan,container,false);
         NewsRecyclerview = view.findViewById(R.id.rcv_tab_nhan);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        mLayoutManager.setReverseLayout(true);
+        NewsRecyclerview.setHasFixedSize(true);
+        mLayoutManager.setStackFromEnd(true);
+        NewsRecyclerview.setLayoutManager(mLayoutManager);
+        getListStatusReceived();
+        receivedOrderAdapter = new ReceivedOrderAdapter(mData, getContext(),this);
+        mainActivity = (MainActivity) getActivity();
+        NewsRecyclerview.setAdapter(receivedOrderAdapter);
+        NewsRecyclerview.smoothScrollToPosition(0);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mData = new ArrayList<>();
+        //mData = new ArrayList<>();
 //        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
 //        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
 //        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
@@ -91,28 +105,24 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView {
 //        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
 //        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
 
-        DaNhanAdapter daNhanAdapter = new DaNhanAdapter(mData,this);
-        NewsRecyclerview.setAdapter(daNhanAdapter);
-        NewsRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
         return view;
     }
 
     public void getListStatusReceived(){
-        mDatabase.child("nsf").addValueEventListener(new ValueEventListener() {
+        mDatabase = rootNode.getReference();
+        mDatabase.child("received_order_status").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                 if (snapshot.exists()) {
-
                     mData = new ArrayList<>();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-
                         PostObject data = dataSnapshot.getValue(PostObject.class);
+                        //String get = dataSnapshot.child("ten_nguoi_gui").getValue(String.class);
+                       // Toast.makeText(getContext(), "ten nguoi gui" + get, Toast.LENGTH_SHORT).show();
                         mData.add(data);
                     }
-
-                    //postAdapter.insertData(mData);
-
+                    receivedOrderAdapter.insertData(mData);
+                  //  mainActivity.setCountOrder(mainActivity.getmCountOrder()+1);
                 }else{
                     Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
                 }
@@ -126,11 +136,19 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView {
 
     @Override
     public void onItemClick(int position) {
+
         Toast.makeText(getContext(), "Tina muon an shit", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onLongItemClick(int position) {
 
+    }
+
+
+
+    @Override
+    public void onReceivedItem(int position){
+        Toast.makeText(getContext(), "hello con cac", Toast.LENGTH_SHORT).show();
     }
 }

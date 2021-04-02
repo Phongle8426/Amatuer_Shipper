@@ -100,7 +100,13 @@
             android:ems="10"
 
             android:hint="Ghi chu" />
-
+        <EditText
+            android:id="@+id/editTextTextKeyvalue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="Keyvalue" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
