@@ -64,6 +64,7 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostListener
     com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment;
     private DatabaseReference mDatabase;
     public int filter_payment = 0;
+    List<PostObject> insertList1 = new ArrayList<>();
     public HomeFragment() {
 
         // Required empty public constructor
@@ -113,12 +114,12 @@ public static HomeFragment newInstance(){
         NewsRecyclerview = view.findViewById(R.id.rcv_post);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         mLayoutManager.setReverseLayout(true);
         NewsRecyclerview.setHasFixedSize(true);
         mLayoutManager.setStackFromEnd(true);
         NewsRecyclerview.setLayoutManager(mLayoutManager);
-        getList();
+        getChildList();
         postAdapter = new PostAdapter(mData, getContext(), this);
         NewsRecyclerview.setAdapter(postAdapter);
         NewsRecyclerview.smoothScrollToPosition(0);
@@ -141,32 +142,75 @@ public static HomeFragment newInstance(){
         return view;
     }
     // Tải đơn được cập nhật vào newfeed
-    public void getList(){
-        mDatabase.child("newsfeed").addValueEventListener(new ValueEventListener() {
+//    public void getList(){
+//        mDatabase.child("newsfeed").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                // Nếu có tin mới thì newfeed sẽ cập nhật
+//                if (snapshot.exists()) {
+//                    //Toast.makeText(getContext(), "ok", Toast.LENGTH_LONG).show();
+//                    List<PostObject> insertList = new ArrayList<>();
+//                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                        PostObject data = dataSnapshot.getValue(PostObject.class);
+////                        if(filter_payment !=0){ // kiểm tra giá trị lọc theo tiền ứng có lớn hơn 0 hay ko, nếu ko thì kiểm tra điều kiện lọc vị trí
+////                            if(filter_payment >= Integer.parseInt(data.getPhi_ung())){
+////                                insertList.add(data);
+////                            }
+////                        }else if (mLocationItem.size()>0){ // kiểm tra list lọc vị trí có trống hay không, nếu k thì bỏ qua lọc
+////                            for (int k = 0;k<mLocationItem.size();k++){
+////                                if(data.getNoi_nhan().contains(mLocationItem.get(k)))
+//                                    insertList.add(data);
+////                            }
+////                        } else insertList.add(data);
+//                        postAdapter.addItem(insertList.size(),data);
+//                    }
+//                   // postAdapter.insertData(insertList);
+//                }else{
+//                    Toast.makeText(getContext(), "Khong co bai dang", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
+
+    public void getChildList(){
+        mDatabase.child("newsfeed").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Nếu có tin mới thì newfeed sẽ cập nhật
-                if (snapshot.exists()) {
-                    //Toast.makeText(getContext(), "ok", Toast.LENGTH_LONG).show();
-                    List<PostObject> insertList = new ArrayList<>();
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        PostObject data = dataSnapshot.getValue(PostObject.class);
-                        if(filter_payment !=0){ // kiểm tra giá trị lọc theo tiền ứng có lớn hơn 0 hay ko, nếu ko thì kiểm tra điều kiện lọc vị trí
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if (snapshot.exists()){
+                    PostObject data = snapshot.getValue(PostObject.class);
+                    if(filter_payment !=0){ // kiểm tra giá trị lọc theo tiền ứng có lớn hơn 0 hay ko, nếu ko thì kiểm tra điều kiện lọc vị trí
                             if(filter_payment >= Integer.parseInt(data.getPhi_ung())){
-                                insertList.add(data);
+                                insertList1.add(data);
                             }
                         }else if (mLocationItem.size()>0){ // kiểm tra list lọc vị trí có trống hay không, nếu k thì bỏ qua lọc
                             for (int k = 0;k<mLocationItem.size();k++){
                                 if(data.getNoi_nhan().contains(mLocationItem.get(k)))
-                                    insertList.add(data);
+                                    insertList1.add(data);
                             }
-                        } else insertList.add(data);
-                    }
-                    postAdapter.insertData(insertList);
-                }else{
-                    Toast.makeText(getContext(), "Khong co bai dang", Toast.LENGTH_LONG).show();
+                        } else insertList1.add(data);
+                    postAdapter.addItem(insertList1.size()-1,data);
                 }
             }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -203,7 +247,7 @@ public static HomeFragment newInstance(){
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 filter_payment = 0; // xóa đi điều kiện lọc theo tiền
-                getList();
+                getChildList();
             }
         }).setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
             @Override
@@ -218,13 +262,13 @@ public static HomeFragment newInstance(){
     @Override
     public void onPostClick(int position) {
         mData.get(position);
-        getList(); // lọc lại
+        getChildList(); // lọc lại
     }
 
     @Override
     public void sendInput(String dialog_payment) {
         mLocationItem.clear(); // xóa đi điều kiện lọc theo vị trí
-        getList(); // lọc lại
+        getChildList(); // lọc lại
         filter_payment = Integer.parseInt(dialog_payment);
     }
 }

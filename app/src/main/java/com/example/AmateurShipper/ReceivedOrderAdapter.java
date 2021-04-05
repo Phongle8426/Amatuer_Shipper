@@ -138,17 +138,16 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                     TextView sdtnguoigui =(TextView)myview_dia.findViewById(R.id.editTextSdtNguoiGui);
                     TextView noinhan =(TextView)myview_dia.findViewById(R.id.editTextTextDiemdi);
                     TextView noigiao =(TextView)myview_dia.findViewById(R.id.editTextTextDiemden);
-                    TextView sdtnguoinhan =(TextView)myview_dia.findViewById(R.id.editTextTextSDTNGuoiNhan    );
-                    TextView tennguoinhan =(TextView)myview_dia.findViewById(R.id.editTextTextTenNGuoiNhan);
+                    TextView sdtnguoinhan =(TextView)myview_dia.findViewById(R.id.tv_sdt_nguoi_nhan);
+                    TextView tennguoinhan =(TextView)myview_dia.findViewById(R.id.tv_ten_nguoi_nhan);
                     TextView ghichu =(TextView)myview_dia.findViewById(R.id.editTextTextGhiChu);
                     TextView thoigian =(TextView)myview_dia.findViewById(R.id.editTextTextPhut);
-                    //TextView idshop =(TextView)myview_dia.findViewById(R.id.editTextIdShop);
                     TextView phigiao =(TextView)myview_dia.findViewById(R.id.editTextTextTienPhi);
                     TextView phiung=(TextView)myview_dia.findViewById(R.id.editTextTextTienUng);
                     TextView sokm =(TextView)myview_dia.findViewById(R.id.editTextTextKm);
 
                     tng.setText(ten_nguoi_gui);
-                    sdtnguoigui.setText(sdt_nguoi_gui);
+                 //   sdtnguoigui.setText(sdt_nguoi_gui);
                     noinhan.setText(noi_nhan);
                     noigiao.setText(noi_giao);
                     sdtnguoinhan.setText(sdt_nguoi_nhan);
@@ -156,16 +155,10 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                     tennguoinhan.setText(ten_nguoi_nhan);
                     ghichu.setText(ghi_chu);
                     thoigian.setText(thoi_gian);
-                   // idshop.setText(id_shop);
                     phigiao.setText(phi_giao);
                     phiung.setText(phi_ung);
                     sokm.setText(km);
                     dialogPlus.show();
-//                    PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan, ten_nguoi_nhan, ghi_chu, thoi_gian, id_shop, phi_giao, phi_ung, km, "keyvalue2");
-//                    databaseReference.child("received_order_status").child(postObject.getKeypush()).setValue(postObject);
-//                    databaseReference.child("nsf").setValue(null);
-//                    postList.remove(get_position);
-//                    notifyItemRemoved(get_position);
 
                 }
             });

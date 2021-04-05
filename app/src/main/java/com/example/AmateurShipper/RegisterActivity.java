@@ -47,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         changeStatusBarColor();
 
+        mAuth = FirebaseAuth.getInstance();
         name = findViewById(R.id.editTextName);
         email = findViewById(R.id.editTextEmail);
         repassword = findViewById(R.id.editTextRepassword);
@@ -65,20 +66,38 @@ public class RegisterActivity extends AppCompatActivity {
                 if (!validateName() | !validateEmail() | !validatePassword() | !validateRePassword()) {
                     return;
                 }
+                signUpByEmail();
                     FirebaseApp.initializeApp(getApplicationContext());
                     rootNode = FirebaseDatabase.getInstance();
                     databaseReference = rootNode.getReference("users");
                     user_register ur = new user_register(name.getText().toString(), email.getText().toString(), password.getText().toString(), repassword.getText().toString());
                     databaseReference.child(save_phonenumber).setValue(ur);
-                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
-                    mAuth = FirebaseAuth.getInstance();
+                    //startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    //overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
+                    //mAuth = FirebaseAuth.getInstance();
                 }
             });
         }
 
+    public void signUpByEmail(){
+        mAuth.createUserWithEmailAndPassword(save_phonenumber+"@gmail.com",password.getText().toString())
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(RegisterActivity.this, "Dang ky thanh cong!!", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
+                        } else {
+                            // Toast.makeText(Verify.this, "Loi!!!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
     public void loadData() {
         save_phonenumber = sharedPreferences.getString(GetOTP.PHONENUMBER_GETOTP, "");
+        Toast.makeText(getApplicationContext(), save_phonenumber, Toast.LENGTH_SHORT).show();
     }
 
     private boolean validateName() {
@@ -136,9 +155,6 @@ public class RegisterActivity extends AppCompatActivity {
         iPassword = password.getText().toString();
         if (iName.isEmpty()) {
             password.setError("Field cannot be empty");
-            return false;
-        } else if (!iPassword.matches(passwordVal)) {
-            password.setError("Password is too weak");
             return false;
         } else {
             password.setError(null);

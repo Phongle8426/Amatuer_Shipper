@@ -55,6 +55,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
         postList.addAll(newList);
         diffResult.dispatchUpdatesTo(PostAdapter.this);
     }
+
+    public void addItem(int position,PostObject addList ) {
+        postList.add(position, addList);
+        notifyItemInserted(position);
+    }
     @NonNull
     @Override
     public ViewAdapterClass onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

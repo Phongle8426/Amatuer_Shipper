@@ -1,7 +1,11 @@
 package com.example.AmateurShipper;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -10,11 +14,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -29,9 +35,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -40,6 +48,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
 
 
 /**
@@ -47,7 +56,7 @@ import static android.app.Activity.RESULT_OK;
  * Use the {@link tab_profile#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class tab_profile extends Fragment {
+public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,15 +66,17 @@ public class tab_profile extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    public Uri imageUri;
+    public Uri imageUri,idImageUri;
     private StorageReference mStorage;
     private FirebaseFirestore mFireStore;
+    private FirebaseAuth mAuth;
     de.hdodenhof.circleimageview.CircleImageView avata;
     EditText name, email, phone, address;
     TextView cmnd;
     ImageButton img_cmnd;
     Button update;
     RatingBar star;
+    SharedPreferences sharedpreferences;
     public String getname, getphone, getemail, getaddress, getUriAvatar, getUriCMND,uid;
 
 
@@ -116,6 +127,8 @@ public class tab_profile extends Fragment {
         avata = view.findViewById(R.id.img_poster);
         mStorage = FirebaseStorage.getInstance().getReference();
         mFireStore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        sharedpreferences = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         getIdShipper();
         readProfile();
         avata.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +143,13 @@ public class tab_profile extends Fragment {
             public void onClick(View view) {
                 updateProfile();
 
+            }
+        });
+
+        img_cmnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseIDCardPicture();
             }
         });
 
@@ -152,83 +172,82 @@ public class tab_profile extends Fragment {
         getemail = email.getText().toString();
         getaddress = address.getText().toString();
         getphone = phone.getText().toString();
-        getUriCMND = "123";
-        if (imageUri!=null){
-        final ProgressDialog pd = new ProgressDialog(getContext());
-        pd.setTitle("Uploading Avatar.....");
-        pd.show();
-        final String ramdomKey = UUID.randomUUID().toString();
-        final StorageReference riversRef = mStorage.child("images/" + ramdomKey);
+        getUriCMND = cmnd.getText().toString();
+        if (!checkError()) { // kiem tra thong tin nhap
+            if (imageUri != null) {
+                final ProgressDialog pd = new ProgressDialog(getContext());
+                pd.setTitle("Uploading Avatar.....");
+                pd.show();
+                final String ramdomKey = UUID.randomUUID().toString();
+                final StorageReference riversRef = mStorage.child("images/" + ramdomKey);
+                // up image avatar to Storage
+                riversRef.putFile(imageUri)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // Get a URL to the uploaded content
+                                //  Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                pd.dismiss();
+                                Toast.makeText(getContext(), "Avatar Uploaded", Toast.LENGTH_SHORT).show();
+                                riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        getUriAvatar = uri.toString();
 
-        // up image avatar to Storage
+                                        // Update the profile
+                                        ProfileObject profileObject = new ProfileObject(getname, getphone, getaddress, getemail, getUriAvatar, getUriCMND);
+                                        mFireStore.collection("ProfileShipper").document(uid)
+                                                .set(profileObject)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(getContext(), "Update Profile Successful", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getContext(), "Update Profile Failed", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
 
-            riversRef.putFile(imageUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // Get a URL to the uploaded content
-                            //  Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            pd.dismiss();
-                            Toast.makeText(getContext(), "Avatar Uploaded", Toast.LENGTH_SHORT).show();
-                            riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    getUriAvatar = uri.toString();
+                                    }
+                                });
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                // ...
+                                pd.dismiss();
+                                Toast.makeText(getContext(), "Failed to Upload", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                                double progress = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                                pd.setMessage("Percentage: " + (int) progress + "%");
+                            }
 
-                                    // Update the profile
-                                    ProfileObject profileObject = new ProfileObject(getname, getphone, getaddress, getemail, getUriAvatar, getUriCMND);
-                                    mFireStore.collection("ProfileShipper").document(uid)
-                                            .set(profileObject)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Toast.makeText(getContext(), "Update Profile Successful", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getContext(), "Update Profile Failed", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
-                                }
-                            });
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle unsuccessful uploads
-                            // ...
-                            pd.dismiss();
-                            Toast.makeText(getContext(), "Failed to Upload", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                            double progress = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
-                            pd.setMessage("Percentage: " + (int) progress + "%");
-                        }
-
-                    });
-        }else{
-            ProfileObject profileObject1 = new ProfileObject(getname, getphone, getaddress, getemail, getUriAvatar, getUriCMND);
-            mFireStore.collection("ProfileShipper").document(uid)
-                    .set(profileObject1)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(getContext(), "Update Profile Successful", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), "Update Profile Failed", Toast.LENGTH_SHORT).show();
-                }
-            });
+                        });
+            } else {
+                ProfileObject profileObject1 = new ProfileObject(getname, getphone, getaddress, getemail, getUriAvatar, getUriCMND);
+                mFireStore.collection("ProfileShipper").document(uid)
+                        .set(profileObject1)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(getContext(), "Update Profile Successful", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Update Profile Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
-
     }
 
     // go to choose the image in device
@@ -239,12 +258,37 @@ public class tab_profile extends Fragment {
         startActivityForResult(intent, 1);
     }
 
+    public void chooseIDCardPicture(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, 2);
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
             avata.setImageURI(imageUri);
+        }else if (requestCode == 2 && resultCode == RESULT_OK && data != null && data.getData() != null){
+            idImageUri = data.getData();
+            final String ramdomKey = UUID.randomUUID().toString();
+            final StorageReference riversRefIdCard = mStorage.child("imagesIDCard/" + ramdomKey);
+            riversRefIdCard.putFile(idImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    riversRefIdCard.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            getUriCMND  = uri.toString();
+                            cmnd.setText(getUriCMND);
+                        }
+                    });
+
+                }
+            });
         }
     }
 
@@ -252,11 +296,12 @@ public class tab_profile extends Fragment {
 
     // read the profie
     public void readProfile() {
+
         DocumentReference docRef = mFireStore.collection("ProfileShipper").document(uid);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
+                if (task.getResult().exists()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         document.getData();
@@ -281,5 +326,69 @@ public class tab_profile extends Fragment {
                 }
             }
         });
+    }
+
+    public void sigOut(){
+            mAuth.signOut();
+            clearData();
+            Intent intent_toLogin = new Intent(getActivity(),LoginActivity.class);
+            intent_toLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent_toLogin);
+    }
+    private void clearData() {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.clear();
+        editor.commit();
+    }
+    public void dialogLogOut(){
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        dialog.setTitle("Log Out!");
+        dialog.setMessage("Do you want to exit?");
+        dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                sigOut();
+            }
+        });
+        dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog al = dialog.create();
+        al.show();
+    }
+    public void openSetting(View v){
+        PopupMenu popupMenu = new PopupMenu(getContext(), v);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.setting_menu);
+        popupMenu.show();
+    }
+    // Hàm thực hiện các chức năng có trong setting
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.item1:
+                dialogLogOut();
+                return true;
+            default: return false;
+        }
+    }
+    public boolean checkError(){
+        final String emailPattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        String Email = email.getText().toString();
+        String Name = name.getText().toString();
+        String Phone = phone.getText().toString();
+        String Address = address.getText().toString();
+        String Cmnd = cmnd.getText().toString();
+
+        if (Email.isEmpty() || Phone.isEmpty() || Name.isEmpty() || Address.isEmpty()|| Cmnd.isEmpty())
+            return true;
+        if (Phone.length() != 10)
+            return true;
+        if (!Email.matches(emailPattern))
+            return true;
+        return false;
     }
 }

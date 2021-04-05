@@ -53,37 +53,36 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputLayoutName"
                         style="@style/parent"
-                        app:hintTextColor="@color/white_pressed"
-                        android:textColorHint="@color/white_pressed"
+                        android:hint="Name"
+                        app:hintTextColor="@color/colorText"
                         android:layout_marginTop="@dimen/loginViewsMargin">
+
                         <EditText
                             android:id="@+id/editTextName"
                             style="@style/modifiedEditText1"
-                            android:hint="Name"
-                            android:textColorHint="@color/white_pressed"
-                            android:textColor="@color/white_pressed"
                             android:inputType="text"
-                            android:maxLines="1" />
+                            android:maxLines="1"
+                            android:textColor="@color/colorText"
+                            android:autofillHints="Name"
+                            android:textColorHint="@color/half_black" />
                     </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputEmail"
                         style="@style/parent"
-                        app:hintTextColor="@color/white_pressed"
-                        android:textColorHint="@color/white_pressed"
+                        app:hintTextColor="@color/colorText"
+                        android:textColorHint="@color/half_black"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
                             android:id="@+id/editTextEmail"
                             style="@style/modifiedEditText1"
                             android:hint="@string/login_email_hint"
-                            android:textColorHint="@color/white_pressed"
-                            android:textColor="@color/white_pressed"
                             android:inputType="textEmailAddress"
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputLayoutPassword"
                         style="@style/parent"
-                        app:hintTextColor="@color/white_pressed"
+                        app:hintTextColor="@color/colorText"
                         android:textColorHint="@color/white_pressed"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
@@ -91,22 +90,22 @@
                             style="@style/modifiedEditText1"
                             android:hint="Password"
                             android:textColorHint="@color/white_pressed"
-                            android:textColor="@color/white_pressed"
+                            android:textColor="@color/colorText"
                             android:inputType="textPassword"
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputLayoutRepassword"
                         style="@style/parent"
-                        app:hintTextColor="@color/white_pressed"
+                        app:hintTextColor="@color/colorText"
                         android:textColorHint="@color/white_pressed"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
                             android:id="@+id/editTextRepassword"
                             style="@style/modifiedEditText1"
                             android:hint="Repassword"
-                            android:textColorHint="@color/white_pressed"
-                            android:textColor="@color/white_pressed"
+                            android:textColorHint="@color/colorText"
+                            android:textColor="@color/colorText"
                             android:inputType="textPassword"
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
