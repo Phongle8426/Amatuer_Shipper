@@ -88,8 +88,7 @@
                 android:layout_marginRight="15dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerInside"
-                android:src="@drawable/ic_setting"
-                android:onClick="openSetting"/>
+                android:src="@drawable/ic_setting"/>
 
         </RelativeLayout>
 

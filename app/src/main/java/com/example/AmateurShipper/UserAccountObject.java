@@ -1,16 +1,16 @@
 package com.example.AmateurShipper;
 
-public class user_register
+public class UserAccountObject
 {
-    String name, email, password, repassword;
+    String name, email, password, phone;
 
-    public user_register() {
+    public UserAccountObject() {
     }
-    public user_register(String name, String email, String password, String repassword) {
+    public UserAccountObject(String name, String email, String password, String phone) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.repassword = repassword;
+        this.phone = phone;
     }
 
     public String getName() {
@@ -37,11 +37,11 @@ public class user_register
         this.password = password;
     }
 
-    public String getRepassword() {
-        return repassword;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setRepassword(String repassword) {
-        this.repassword = repassword;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

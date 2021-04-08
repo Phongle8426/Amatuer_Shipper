@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -48,7 +49,10 @@ import com.google.firebase.storage.UploadTask;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.AmateurShipper.LoginActivity.IDUSER;
 import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
+import static com.example.AmateurShipper.LoginActivity.MyPREFERENCESIDUSER;
+import static com.example.AmateurShipper.LoginActivity.USERNAME;
 
 
 /**
@@ -74,10 +78,11 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
     EditText name, email, phone, address;
     TextView cmnd;
     ImageButton img_cmnd;
+    ImageView setting;
     Button update;
     RatingBar star;
-    SharedPreferences sharedpreferences;
-    public String getname, getphone, getemail, getaddress, getUriAvatar, getUriCMND,uid;
+    SharedPreferences sharedpreferences,sharedpreferencesIdUser;
+    public String getname, getphone, getemail, getaddress, getUriAvatar, getUriCMND,iDUser;
 
 
     public tab_profile() {
@@ -125,11 +130,13 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
         update = view.findViewById(R.id.btn_update);
         star = view.findViewById(R.id.star_rate);
         avata = view.findViewById(R.id.img_poster);
+        setting = view.findViewById(R.id.btn_setting);
         mStorage = FirebaseStorage.getInstance().getReference();
         mFireStore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         sharedpreferences = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        getIdShipper();
+        sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCESIDUSER, Context.MODE_PRIVATE);
+        loadData();
         readProfile();
         avata.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,21 +160,22 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
             }
         });
 
+
+        setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openSetting(v);
+            }
+        });
         return view;
     }
     // lấy ID của shipper hiện tại
-    public void getIdShipper(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user!=null) {
-            uid = user.getUid();
-        }else{
-            Toast.makeText(getContext(), "Get UID Failed", Toast.LENGTH_SHORT).show();
-        }
+    private void loadData() {
+        iDUser = sharedpreferencesIdUser.getString(IDUSER, "");
     }
 
     // Update the profile
     public void updateProfile() {
-
         getname = name.getText().toString();
         getemail = email.getText().toString();
         getaddress = address.getText().toString();
@@ -196,7 +204,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
 
                                         // Update the profile
                                         ProfileObject profileObject = new ProfileObject(getname, getphone, getaddress, getemail, getUriAvatar, getUriCMND);
-                                        mFireStore.collection("ProfileShipper").document(uid)
+                                        mFireStore.collection("ProfileShipper").document(iDUser)
                                                 .set(profileObject)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
@@ -233,7 +241,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
                         });
             } else {
                 ProfileObject profileObject1 = new ProfileObject(getname, getphone, getaddress, getemail, getUriAvatar, getUriCMND);
-                mFireStore.collection("ProfileShipper").document(uid)
+                mFireStore.collection("ProfileShipper").document(iDUser)
                         .set(profileObject1)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -247,7 +255,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
                     }
                 });
             }
-        }
+        }else Toast.makeText(getContext(), "Thong tin chua du", Toast.LENGTH_SHORT).show();
     }
 
     // go to choose the image in device
@@ -296,8 +304,8 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
 
     // read the profie
     public void readProfile() {
-
-        DocumentReference docRef = mFireStore.collection("ProfileShipper").document(uid);
+        Toast.makeText(getContext(), iDUser, Toast.LENGTH_SHORT).show();
+        DocumentReference docRef = mFireStore.collection("ProfileShipper").document(iDUser);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -342,15 +350,15 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
     }
     public void dialogLogOut(){
         final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-        dialog.setTitle("Log Out!");
-        dialog.setMessage("Do you want to exit?");
-        dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        dialog.setTitle("Đăng Xuất!");
+        dialog.setMessage("Bạn thực sự muốn đăng xuất?");
+        dialog.setPositiveButton("Có", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 sigOut();
             }
         });
-        dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton("Không", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();

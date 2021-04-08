@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,19 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskExecutors;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
-import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.nio.charset.IllegalCharsetNameException;
-import java.util.concurrent.TimeUnit;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 public class RegisterActivity extends AppCompatActivity {
@@ -63,18 +54,19 @@ public class RegisterActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validateName() | !validateEmail() | !validatePassword() | !validateRePassword()) {
+                if (!validateName() || !validateEmail()|| !validatePassword() || !validateRePassword()) {
                     return;
                 }
-                signUpByEmail();
+               // signUpByEmail();
                     FirebaseApp.initializeApp(getApplicationContext());
                     rootNode = FirebaseDatabase.getInstance();
                     databaseReference = rootNode.getReference("users");
-                    user_register ur = new user_register(name.getText().toString(), email.getText().toString(), password.getText().toString(), repassword.getText().toString());
+                    UserAccountObject ur = new UserAccountObject(name.getText().toString(), email.getText().toString(),
+                                                            password.getText().toString(), save_phonenumber);
                     databaseReference.child(save_phonenumber).setValue(ur);
-                    //startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                    //overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
-                    //mAuth = FirebaseAuth.getInstance();
+                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
+                    mAuth = FirebaseAuth.getInstance();
                 }
             });
         }
@@ -156,7 +148,10 @@ public class RegisterActivity extends AppCompatActivity {
         if (iName.isEmpty()) {
             password.setError("Field cannot be empty");
             return false;
-        } else {
+        } else if (!iPassword.matches(passwordVal)) {
+            password.setError("Password is too weak");
+            return false;
+        }else {
             password.setError(null);
             return true;
         }
@@ -179,7 +174,10 @@ public class RegisterActivity extends AppCompatActivity {
         } else if (!iRePassword.matches(passwordVal)) {
             repassword.setError("Password is too weak");
             return false;
-        } else {
+        } else if (!iRePassword.matches(iPassword)) {
+            repassword.setError("Re-password not matches");
+            return false;
+        }else {
             repassword.setError(null);
             return true;
         }
