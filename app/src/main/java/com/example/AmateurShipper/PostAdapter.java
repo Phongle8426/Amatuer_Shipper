@@ -1,6 +1,7 @@
 package com.example.AmateurShipper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.ContentValues.TAG;
+import static com.example.AmateurShipper.LoginActivity.IDUSER;
+import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterClass> {
 
@@ -31,8 +34,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
     List<PostObject> postList;
     Context mContext;
     int get_position;
+    String IdUser;
     public MainActivity mainActivity;
     private OnPostListener mOnPostListener;
+    SharedPreferences sharedpreferencesIdUser;
     FirebaseDatabase rootDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = rootDatabase.getReference();
     public PostAdapter(List<PostObject> postList, Context context, OnPostListener onPostListener) {
@@ -102,6 +107,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
 
         public ViewAdapterClass(@NonNull final View itemView, OnPostListener onPostListener) {
             super(itemView);
+            sharedpreferencesIdUser = itemView.getContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
             mainActivity = (MainActivity) itemView.getContext();
             name_poster = itemView.findViewById(R.id.name_poster);
             time = itemView.findViewById(R.id.time_post);
@@ -115,6 +121,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
             image_poster = itemView.findViewById(R.id.img_poster);
             get_order = itemView.findViewById(R.id.img_getOrder);
             // attach_image = itemView.findViewById(R.id.img_attachment_image);
+            loadData();
             this.onPostListener = onPostListener;
             itemView.setOnClickListener(this);
             get_order.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +146,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                     postList.remove(getAdapterPosition());
                     notifyItemRemoved(getAdapterPosition());
                     mainActivity.setCountOrder(mainActivity.getmCountOrder()+1);
+
+                    databaseReference.child("Transaction").child(postObject.getId_post()).child("id_shipper").setValue(IdUser);
+                    databaseReference.child("OrderStatus").child(postObject.getId_shop()).child(postObject.getId_post()).child("status").setValue("1");
+
                 }
             });
         }
@@ -152,4 +163,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
     public interface OnPostListener {
         void onPostClick(int position);
     }
+
+    //Load ID User
+    private void loadData() {
+        IdUser = sharedpreferencesIdUser.getString(IDUSER, "");
+    }
+
 }

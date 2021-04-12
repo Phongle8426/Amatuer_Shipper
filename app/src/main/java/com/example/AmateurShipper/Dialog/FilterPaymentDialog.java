@@ -62,10 +62,6 @@ public class FilterPaymentDialog extends DialogFragment {
         return builder.create();
     }
 
-    public void huhuBuonNguQua(){
-
-    }
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

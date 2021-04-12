@@ -2,14 +2,13 @@ package com.example.AmateurShipper;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +25,7 @@ import com.orhanobut.dialogplus.ViewHolder;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdapter.ViewAdapterClass> {
 
@@ -129,6 +129,8 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                     String phi_ung = postList.get(getAdapterPosition()).phi_ung;
                     String km = postList.get(getAdapterPosition()).km;
 
+
+
                     final DialogPlus dialogPlus=DialogPlus.newDialog(itemView.getContext())
                             .setContentHolder(new ViewHolder(R.layout.dialogcontent))
                             .setGravity(Gravity.CENTER)
@@ -173,4 +175,5 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
     public interface OnReceivedOderListener {
         void onReceivedItem(int position);
     }
+
 }

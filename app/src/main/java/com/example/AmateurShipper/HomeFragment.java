@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -58,6 +60,8 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostListener
     private String mParam1;
     private String mParam2;
     String iDUser;
+    int index = -1;
+    LinearLayoutManager mLayoutManager;
     RecyclerView NewsRecyclerview;
     PostAdapter postAdapter;
     SharedPreferences sharedpreferencesIdUser;
@@ -66,6 +70,7 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostListener
    final String[] location = {"Hai Chau","Thanh Khe","Cam Le","Hoa Khanh"};
    boolean selected[] = new boolean[]{false, false, false, false};
     com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment;
+    ImageView btn_notify_new_order;
     private DatabaseReference mDatabase;
     public int filter_payment = 0;
     List<PostObject> insertList1 = new ArrayList<>();
@@ -115,11 +120,12 @@ public static HomeFragment newInstance(){
         View view = inflater.inflate(R.layout.fragment_home,container,false);
         btn_filter_location = view.findViewById(R.id.btn_filter_location);
         btn_filter_payment = view.findViewById(R.id.btn_filter_payment);
+        btn_notify_new_order = view.findViewById(R.id.btn_notify_new_order);
         NewsRecyclerview = view.findViewById(R.id.rcv_post);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         loadData();
-        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        mLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         mLayoutManager.setReverseLayout(true);
         NewsRecyclerview.setHasFixedSize(true);
         mLayoutManager.setStackFromEnd(true);
@@ -128,6 +134,7 @@ public static HomeFragment newInstance(){
         postAdapter = new PostAdapter(mData, getContext(), this);
         NewsRecyclerview.setAdapter(postAdapter);
 
+        checkScroll();
         btn_filter_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,6 +148,14 @@ public static HomeFragment newInstance(){
                 FilterPaymentDialog filterPaymentDialog = new FilterPaymentDialog();
                 filterPaymentDialog.setTargetFragment(HomeFragment.this,1);
                 filterPaymentDialog.show(getFragmentManager(),"filter by payment");
+            }
+        });
+
+        btn_notify_new_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewsRecyclerview.scrollToPosition(NewsRecyclerview.getAdapter().getItemCount()-1);
+                btn_notify_new_order.setVisibility(View.INVISIBLE);
             }
         });
         return view;
@@ -183,6 +198,13 @@ public static HomeFragment newInstance(){
                             }
                         } else insertList1.add(data);
                         postAdapter.addItem(postAdapter.getItemCount(),data);
+                        if (index == -1){
+                            NewsRecyclerview.scrollToPosition(NewsRecyclerview.getAdapter().getItemCount()-1);
+                            btn_notify_new_order.setVisibility(View.INVISIBLE);
+                        }else if (index < NewsRecyclerview.getAdapter().getItemCount()-2){
+                            btn_notify_new_order.setVisibility(View.VISIBLE);
+                            Log.i(TAG, "position: "+ index + "\n"+NewsRecyclerview.getAdapter().getItemCount());
+                        }else NewsRecyclerview.scrollToPosition(NewsRecyclerview.getAdapter().getItemCount()-1);
                     }
                 }
             }
@@ -205,6 +227,17 @@ public static HomeFragment newInstance(){
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    public void checkScroll(){
+        NewsRecyclerview.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Log.i(TAG, "onScrolled: "+mLayoutManager.findLastVisibleItemPosition());
+                index = mLayoutManager.findLastVisibleItemPosition();
             }
         });
     }
