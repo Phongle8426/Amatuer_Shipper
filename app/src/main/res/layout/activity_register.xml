@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:cardBackgroundColor="@color/colorText"
+                app:cardBackgroundColor="@color/cWhite"
                 app:cardCornerRadius="10dp">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -54,10 +54,12 @@
                         android:id="@+id/textInputLayoutName"
                         style="@style/parent"
                         android:hint="Name"
+                        app:startIconDrawable="@drawable/ic_baseline_person_24"
                         app:hintTextColor="@color/colorText"
                         android:layout_marginTop="@dimen/loginViewsMargin">
 
                         <EditText
+                            android:backgroundTint="@color/white"
                             android:id="@+id/editTextName"
                             style="@style/modifiedEditText1"
                             android:inputType="text"
@@ -69,10 +71,12 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputEmail"
                         style="@style/parent"
+                        app:startIconDrawable="@drawable/ic_baseline_email_24"
                         app:hintTextColor="@color/colorText"
                         android:textColorHint="@color/half_black"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
+                            android:backgroundTint="@color/white"
                             android:id="@+id/editTextEmail"
                             style="@style/modifiedEditText1"
                             android:hint="@string/login_email_hint"
@@ -83,24 +87,27 @@
                         android:id="@+id/textInputLayoutPassword"
                         style="@style/parent"
                         app:hintTextColor="@color/colorText"
-                        android:textColorHint="@color/white_pressed"
+                        app:startIconDrawable="@drawable/ic_baseline_lock_24"
                         android:layout_marginTop="@dimen/loginViewsMargin">
+
                         <EditText
+                            android:backgroundTint="@color/white"
                             android:id="@+id/editTextPassword"
                             style="@style/modifiedEditText1"
                             android:hint="Password"
-                            android:textColorHint="@color/white_pressed"
-                            android:textColor="@color/colorText"
                             android:inputType="textPassword"
-                            android:maxLines="1" />
+                            android:maxLines="1"
+                            android:textColor="@color/colorText"
+                            android:textColorHint="@color/white_pressed" />
                     </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputLayoutRepassword"
                         style="@style/parent"
+                        app:startIconDrawable="@drawable/ic_baseline_lock_24"
                         app:hintTextColor="@color/colorText"
-                        android:textColorHint="@color/white_pressed"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
+                            android:backgroundTint="@color/white"
                             android:id="@+id/editTextRepassword"
                             style="@style/modifiedEditText1"
                             android:hint="Repassword"
@@ -114,6 +121,7 @@
                         style="@style/loginButton1"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/loginViewsMargin"
+                        android:layout_width="match_parent"
                         android:text="Register"
                         app:initialCornerAngle="27dp"
                         app:spinning_bar_color="#FFF"

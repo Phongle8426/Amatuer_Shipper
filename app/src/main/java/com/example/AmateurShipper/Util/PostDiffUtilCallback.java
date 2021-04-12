@@ -30,7 +30,6 @@ public class PostDiffUtilCallback extends DiffUtil.Callback {
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
         return oldItemPosition == newItemPosition;
     }
-
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         return oldList.get(oldItemPosition) == newList.get(newItemPosition);

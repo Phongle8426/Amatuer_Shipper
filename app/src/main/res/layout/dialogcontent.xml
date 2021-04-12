@@ -3,12 +3,14 @@
 xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
-android:layout_margin="5dp"
-    android:orientation="vertical"
-android:padding="5dp">
+android:layout_margin="5dp" android:orientation="vertical"
+android:padding="5dp"
+    android:id="@+id/container_chat"
+   >
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/dialog_received_order"
     android:orientation="vertical">
 
     <LinearLayout
@@ -58,6 +60,17 @@ android:padding="5dp">
                 android:layout_marginTop="5dp"
                 android:layout_gravity="center_horizontal"
                 android:text="5km"
+                android:fontFamily="@font/archivo_narrow"
+                android:textColor="@color/colorText"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/editTextSoDTNguoiGui"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal"
+                android:text="363159700"
                 android:fontFamily="@font/archivo_narrow"
                 android:textColor="@color/colorText"
                 android:textSize="15sp"
@@ -226,7 +239,7 @@ android:padding="5dp">
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="036xxxx770"
+                    android:text="827342755"
                     android:textColorLink="@color/colorBottomNavigationPrimaryDark"
                     android:textColor="#000000"/>
             </LinearLayout>
@@ -239,6 +252,7 @@ android:padding="5dp">
         android:gravity="center_horizontal">
 
         <Button
+            android:id="@+id/btn_massage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -247,6 +261,7 @@ android:padding="5dp">
             android:text="Nhắn tin"
             android:textAllCaps="false"/>
         <Button
+            android:id="@+id/btn_shop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -256,6 +271,7 @@ android:padding="5dp">
             android:text="Gọi Shop"
             android:textAllCaps="false"/>
         <Button
+            android:id="@+id/btn_customer_phone_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -265,7 +281,10 @@ android:padding="5dp">
             android:text="Gọi Người Nhận"
             android:textAllCaps="false"/>
     </LinearLayout>
-
-
 </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/frag_container_1">
+    </FrameLayout>
 </LinearLayout>

@@ -2,6 +2,8 @@ package com.example.AmateurShipper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,6 +49,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
         this.postList = postList;
         mContext = context;
         this.mOnPostListener = onPostListener;
+
     }
 
     public void insertData(List<PostObject> insertList) {

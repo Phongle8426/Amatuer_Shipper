@@ -1,13 +1,20 @@
 package com.example.AmateurShipper;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.ShowableListMenu;
+import androidx.appcompat.widget.TintTypedArray;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -20,12 +27,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
+import io.grpc.Context;
+
 public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener{
 
     private AHBottomNavigation bottomNavigationView;
     private Fragment fragment = null;
     public static int gallarey_count_number = 0;
     private int mCountOrder;
+    HomeFragment homeFragment = new HomeFragment();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +47,14 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         loadFragment(new HomeFragment());
 
 
+
         //BadgeDrawable badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.cart);
         //badgeDrawable.setNumber(3333);
         // Create items
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Bai dang", R.drawable.ic_home, R.color.themeColor);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem("Trang thai", R.drawable.ic_status, R.color.themeColor);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Tuyen duong", R.drawable.ic_map, R.color.themeColor);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem("Ca nhan", R.drawable.ic_profile, R.color.themeColor);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Bai dang", R.drawable.ic_home, R.color.whiteTextColor);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem("Trang thai", R.drawable.ic_status, R.color.whiteTextColor);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Tuyen duong", R.drawable.ic_map, R.color.whiteTextColor);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem("Ca nhan", R.drawable.ic_profile, R.color.whiteTextColor);
 
         bottomNavigationView.addItem(item1);
         bottomNavigationView.addItem(item2);
@@ -50,8 +62,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         bottomNavigationView.addItem(item4);
         bottomNavigationView.setCurrentItem(0);
         bottomNavigationView.setOnTabSelectedListener(this);
-
-       // setCountOrder(3333);
     }
     private boolean loadFragment(Fragment fragment) {
         //switching fragment
@@ -76,9 +86,14 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                 .setText(String.valueOf(mCountOrder))
                 .build();
         bottomNavigationView.setNotification(notification, 1);
-
     }
 
+    public void disableNotification(){
+        AHNotification notification = new AHNotification.Builder()
+                .setText(null)
+                .build();
+        bottomNavigationView.setNotification(notification, 1);
+    }
     @Override
     public boolean onTabSelected(int position, boolean wasSelected) {
         if (position == 0) {
