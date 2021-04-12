@@ -23,6 +23,7 @@
     <string name="password">Password</string>
     <string name="repassword">Repassword</string>
     <string name="map_key">AIzaSyC05W7QJSFuCLGwsQVYp6O0-vBfgH3fDTE</string>
+    <string name="already_registered_sign_in">Already registered? Sign in.</string>
 
 
 </resources>

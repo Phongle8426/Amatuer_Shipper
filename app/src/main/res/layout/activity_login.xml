@@ -52,15 +52,16 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputEmail"
                 style="@style/parent"
+                app:startIconDrawable="@drawable/ic_baseline_phone_24"
                 android:layout_marginTop="@dimen/loginViewsMargin"
                 >
                 <EditText
                     android:id="@+id/editTextPhoneNumber"
                     style="@style/modifiedEditText"
-                    android:hint="@string/login_email_hint"
+                    android:hint="Phone number"
                     android:clickable="true"
                     android:focusableInTouchMode="true"
-                    android:inputType="textEmailAddress"
+                    android:inputType="phone"
                     android:maxLines="1"
                     android:backgroundTint="@color/white"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -68,7 +69,7 @@
                 android:id="@+id/textInputPassword"
                 style="@style/parent"
                 android:layout_marginTop="@dimen/loginViewsMargin"
-
+                app:startIconDrawable="@drawable/ic_baseline_lock_24"
                 android:clickable="true">
                 <EditText
                     android:focusable="true"
@@ -106,6 +107,7 @@
             <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
                 android:id="@+id/cirLoginButton"
                 style="@style/loginButton"
+                android:layout_width="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/loginViewsMargin"
                 android:text="Login"

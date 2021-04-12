@@ -1,9 +1,13 @@
 package com.example.AmateurShipper;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,7 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
 import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +45,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -48,7 +55,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     private DatabaseReference mDatabase;
     List<PostObject> mData = new ArrayList<>();
     ReceivedOrderAdapter receivedOrderAdapter;
-
+    ChatFragment chatFragment;
     public tab_nhan() {
         // Required empty public constructor
     }
@@ -80,20 +87,29 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_nhan,container,false);
         NewsRecyclerview = view.findViewById(R.id.rcv_tab_nhan);
+        mainActivity = (MainActivity) getActivity();
+        mainActivity.setCountOrder(0);
+        mainActivity.disableNotification();
+
+        FragmentManager fm = getActivity().getSupportFragmentManager();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setReverseLayout(true);
         NewsRecyclerview.setHasFixedSize(true);
         mLayoutManager.setStackFromEnd(true);
         NewsRecyclerview.setLayoutManager(mLayoutManager);
+        if(mData!=null){
+            mData.clear();
+        }
         getListStatusReceived();
-        receivedOrderAdapter = new ReceivedOrderAdapter(mData, getContext(),this);
-        mainActivity = (MainActivity) getActivity();
+        receivedOrderAdapter = new ReceivedOrderAdapter(mData, tab_nhan.this,this, fm);
+
         NewsRecyclerview.setAdapter(receivedOrderAdapter);
         NewsRecyclerview.smoothScrollToPosition(0);
 
@@ -117,14 +133,12 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                     mData = new ArrayList<>();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         PostObject data = dataSnapshot.getValue(PostObject.class);
-                        //String get = dataSnapshot.child("ten_nguoi_gui").getValue(String.class);
-                       // Toast.makeText(getContext(), "ten nguoi gui" + get, Toast.LENGTH_SHORT).show();
                         mData.add(data);
                     }
                     receivedOrderAdapter.insertData(mData);
-                  //  mainActivity.setCountOrder(mainActivity.getmCountOrder()+1);
+
                 }else{
-                    Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
+                   // Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
                 }
             }
             @Override

@@ -1,11 +1,13 @@
 package com.example.AmateurShipper;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +28,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +44,10 @@ public class GetOTP extends AppCompatActivity {
     EditText inputMobile;
     Button buttonGetOTP;
     ProgressBar progressBar;
+    FirebaseDatabase rootNode;
+    DatabaseReference databaseReference;
     SharedPreferences sharedPreferences;
+    String get_phone_number;
     public static final String MyPREFERENCES_GETOTP = "MYPREF";
     public static final String PHONENUMBER_GETOTP = "phone number";
     @Override
@@ -47,22 +58,58 @@ public class GetOTP extends AppCompatActivity {
         buttonGetOTP = findViewById(R.id.buttonGetOTP);
         progressBar = findViewById(R.id.progressBar);
         mAuth = FirebaseAuth.getInstance();
+        rootNode = FirebaseDatabase.getInstance();
+        databaseReference = rootNode.getReference().child("users");
+
         buttonGetOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (inputMobile.getText().toString().trim().isEmpty()) {
                     Toast.makeText(GetOTP.this, "Enter mobile", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                progressBar.setVisibility(View.VISIBLE);
-                buttonGetOTP.setVisibility(View.INVISIBLE);
+                }else{
+                                progressBar.setVisibility(View.VISIBLE);
 
-                sharedPreferences = getSharedPreferences(MyPREFERENCES_GETOTP, Context.MODE_PRIVATE);
-                saveData(inputMobile.getText().toString());
-                sendVerificationCode(inputMobile.getText().toString());
+                                buttonGetOTP.setVisibility(View.INVISIBLE);
+                                sharedPreferences = getSharedPreferences(MyPREFERENCES_GETOTP, Context.MODE_PRIVATE);
+                                saveData(inputMobile.getText().toString());
+                                sendVerificationCode(inputMobile.getText().toString());
+//                    databaseReference.orderByKey().equalTo(inputMobile.getText().toString()).addChildEventListener(new ChildEventListener() {
+//                        @Override
+//                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//                            if (snapshot.exists()) {
+//                                inputMobile.setError("This number is already exists");
+//                            } else {
+//                                progressBar.setVisibility(View.VISIBLE);
+//                                buttonGetOTP.setVisibility(View.INVISIBLE);
+//                                sharedPreferences = getSharedPreferences(MyPREFERENCES_GETOTP, Context.MODE_PRIVATE);
+//                                saveData(inputMobile.getText().toString());
+//                                sendVerificationCode(inputMobile.getText().toString());
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError error) {
+//
+//                        }
+//                        });
+                    }
 
-            }
-        });
     }
     public void saveData(String phone) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -82,7 +129,6 @@ public class GetOTP extends AppCompatActivity {
             return;
         }
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-
                 "+84" + phone,
                 60L,
                 TimeUnit.SECONDS,
@@ -114,13 +160,20 @@ public class GetOTP extends AppCompatActivity {
                         startActivity(intent);
                         overridePendingTransition(R.anim.slide_in_right,R.anim.slide_mid_left);
                     }
-                }
-        );
-
+                });
     }
-
+    private boolean validatePhone(){
+        if(inputMobile.getText().toString().isEmpty()){
+            inputMobile.setError("Field cannot be empty");
+            return false;
+        }
+        else{
+            inputMobile.setError(null);
+            return true;
+        }
+    }
     public void onLoginClick(View View) {
-        startActivity(new Intent(this, LoginActivity.class));
+        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
         overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
     }
-}
+});}}

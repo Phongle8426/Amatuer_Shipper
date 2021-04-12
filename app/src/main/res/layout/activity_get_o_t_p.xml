@@ -82,11 +82,13 @@
                 android:layout_height="40dp"
                 android:background="@null"
                 android:hint="123456789"
+                android:maxLength="9"
                 android:id="@+id/inputMobile"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:imeOptions="actionDone"
                 android:importantForAutofill="no"
+                android:inputType="phone"
                 android:textColor="@color/cTextPrimary"></EditText>
 
 
@@ -117,12 +119,12 @@
             <ProgressBar
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:indeterminateTint="@color/amber"
                 android:id="@+id/progressBar"
+                android:indeterminate="true"
                 android:layout_gravity="center"
                 android:visibility="gone"></ProgressBar>
         </FrameLayout>
-
-
 
     </LinearLayout>
 </ScrollView>
