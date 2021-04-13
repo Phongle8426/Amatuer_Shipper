@@ -34,7 +34,6 @@ import static com.example.AmateurShipper.LoginActivity.IDUSER;
 import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterClass> {
-
     //private RecyclerViewClickInterface recyclerViewClickInterface;
     List<PostObject> postList;
     Context mContext;

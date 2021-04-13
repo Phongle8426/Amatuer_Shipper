@@ -19,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +58,11 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
     DatabaseReference databaseReference = rootDatabase.getReference();
     public static final String MyPREFERENCES_IDPOST = "myf";
     public static final String IDPOST = "ID post";
-    SharedPreferences sharedpreferences;
+    public static final String MyPREFERENCES_ten_nguoi_gui = "myfr";
+    public static final String getMyPREFERENCES_ten_nguoi_gui = "ten nguoi gui";
+    public static final String MyPREFERENCESID_shop = "MyPrefs";
+    public static final String IDSHOP = "iduser";
+    SharedPreferences sharedpreferences, sharedPreferences_tennguoigui, sharedPreferences_IDSHOP;
 
     public ReceivedOrderAdapter(List<PostObject> postList, Fragment re, OnReceivedOderListener onReceivedOderListener, FragmentManager fm) {
         this.postList = postList;
@@ -159,13 +164,14 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
     String sdt_nguoi_nhan_hang;
     String sdt_shop;
     public class ViewAdapterClass extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView name_poster_tab_nhan, time, txt_start_place_tab_nhan, txt_end_place_tab_nhan, distance, fee, payment, note;
+        TextView name_poster_tab_nhan, time, txt_start_place_tab_nhan, txt_end_place_tab_nhan, tv_shopname, distance, fee, payment, note;
         CircleImageView image_poster;
         private static final int REQUEST_CALL = 1;
         private TextView tv_sdt_nguoi_nhan;
         private Button btn_sdt_nguoi_nhan, btn_shop, btn_messages;
-        LinearLayout linearLayout;
+        LinearLayout linearLayout, containerChat;
         //PostAdapter.OnPostListener onPostListener;
+        ImageButton close_btn;
         ReceivedOrderAdapter.OnReceivedOderListener onReceivedOderListener;
 
         public ViewAdapterClass(@NonNull final View itemView, ReceivedOrderAdapter.OnReceivedOderListener onReceivedOderListener) {
@@ -203,17 +209,19 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                     String km = postList.get(getAdapterPosition()).km;
                     String id_post = postList.get(getAdapterPosition()).id_post;
 
-
+                    sharedPreferences_IDSHOP = mContext.getActivity().getSharedPreferences(MyPREFERENCESID_shop, Context.MODE_PRIVATE);
                     sharedpreferences = mContext.getActivity().getSharedPreferences(MyPREFERENCES_IDPOST, Context.MODE_PRIVATE);
+                    sharedPreferences_tennguoigui = mContext.getActivity().getSharedPreferences(MyPREFERENCES_ten_nguoi_gui, Context.MODE_PRIVATE);
                     saveIdPost(id_post);
+                    Toast.makeText(mContext.getActivity(), "ten nguoi gui"+ten_nguoi_gui, Toast.LENGTH_SHORT).show();
+                    saveTenNguoiGui(ten_nguoi_gui);
+                    saveIdSHOP(id_shop);
 //                    Bundle b = new Bundle();
 //                    b.putString("id_post", id_post);
 //                    ChatFragment chatFragment = new ChatFragment();
 //                    ChatFragment.createInstance("id_post", id_post);
                     //chatFragment.setArguments(b);
                     //Toast.makeText(mContext.getActivity(), "id post" + id_post, Toast.LENGTH_SHORT).show();
-
-
 
                     final DialogPlus dialogPlus = DialogPlus.newDialog(itemView.getContext())
                             .setContentHolder(new ViewHolder(R.layout.dialogcontent))
@@ -232,7 +240,9 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                     TextView phigiao = (TextView) myview_dia.findViewById(R.id.editTextTextTienPhi);
                     TextView phiung = (TextView) myview_dia.findViewById(R.id.editTextTextTienUng);
                     TextView sokm = (TextView) myview_dia.findViewById(R.id.editTextTextKm);
-
+                    containerChat = (LinearLayout) myview_dia.findViewById(R.id.container_chat) ;
+                    tv_shopname = myview_dia.findViewById(R.id.username);
+                    close_btn = myview_dia.findViewById(R.id.close_chat);
                     tng.setText(ten_nguoi_gui);
                     sdtnguoigui.setText(sdt_nguoi_gui);
                     noinhan.setText(noi_nhan);
@@ -244,16 +254,12 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                     phigiao.setText(phi_giao);
                     phiung.setText(phi_ung);
                     sokm.setText(km);
+                    tv_shopname.setText(ten_nguoi_gui);
                     dialogPlus.show();
                     sdt_nguoi_nhan_hang = sdtnguoinhan.getText().toString();
                     sdt_shop = sdtnguoigui.getText().toString();
                     btn_sdt_nguoi_nhan = (Button) myview_dia.findViewById(R.id.btn_customer_phone_number);
                     //tv_sdt_nguoi_nhan = (TextView)myview_dia.findViewById(R.id.tv_sdt_nguoi_nhan);
-
-
-
-
-
                     btn_shop = (Button) myview_dia.findViewById(R.id.btn_shop);
                     btn_messages = (Button) myview_dia.findViewById(R.id.btn_massage);
                     final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frag_container_1);
@@ -272,10 +278,18 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                     btn_messages.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            linearLayout.setVisibility(View.GONE);
+                           linearLayout.setVisibility(View.GONE);
+
+                           // dialogPlus.dismiss();
                             ChatFragment chatFragment = new ChatFragment();
                             fragmentManager = mContext.getActivity().getSupportFragmentManager();
                             mContext.getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frag_container_1, chatFragment).commit();
+                        }
+                    });
+                    close_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialogPlus.dismiss();
                         }
                     });
                 }
@@ -287,9 +301,19 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
 
         }
     }
+    public void saveTenNguoiGui(String tennguoigui){
+        SharedPreferences.Editor editor = sharedPreferences_tennguoigui.edit();
+        editor.putString(ReceivedOrderAdapter.getMyPREFERENCES_ten_nguoi_gui, tennguoigui);
+        editor.apply();
+    }
     public void saveIdPost(String idPost){
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(ReceivedOrderAdapter.IDPOST, idPost);
+        editor.apply();
+    }
+    public void saveIdSHOP(String idSHOP){
+        SharedPreferences.Editor editor = sharedPreferences_IDSHOP.edit();
+        editor.putString(ReceivedOrderAdapter.IDSHOP, idSHOP);
         editor.apply();
     }
     public interface OnReceivedOderListener {

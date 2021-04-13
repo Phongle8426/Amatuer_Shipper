@@ -13,11 +13,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ApplicationIntroduce"></activity>
         <activity android:name=".PostOrder">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".InputNewPassword" />
         <activity android:name=".ForgotPasswordVerifyOTP" />
@@ -26,7 +22,11 @@
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".RegisterActivity"

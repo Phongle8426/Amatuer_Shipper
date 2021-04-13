@@ -7,6 +7,42 @@ android:layout_margin="5dp" android:orientation="vertical"
 android:padding="5dp"
     android:id="@+id/container_chat"
    >
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
+                android:text="username"
+                android:gravity="center"
+                android:textStyle="bold"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="right"
+                >
+                <ImageButton
+                    android:layout_marginEnd="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/close_chat"
+                    android:background="@drawable/ic_baseline_close_24"></ImageButton>
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -96,12 +132,10 @@ android:padding="5dp"
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
-
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/ic_baseline_archive_24"/>
-
                         <TextView
                             android:id="@+id/editTextTextDiemdi"
                             android:layout_width="wrap_content"
