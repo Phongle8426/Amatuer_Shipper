@@ -1,5 +1,6 @@
 package com.example.AmateurShipper;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -11,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.SyncStateContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import Helper.MyButtonClickListner;
+import Helper.MySwipeHelper;
 
 import static android.content.ContentValues.TAG;
 
@@ -99,11 +104,28 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         mainActivity.disableNotification();
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setReverseLayout(true);
         NewsRecyclerview.setHasFixedSize(true);
         mLayoutManager.setStackFromEnd(true);
         NewsRecyclerview.setLayoutManager(mLayoutManager);
+        MySwipeHelper mySwipeHelper = new MySwipeHelper(getActivity(), NewsRecyclerview , 200) {
+            @Override
+            public void instaniatMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buff) {
+                buff.add(new MyButton("Delete", R.drawable.ic_baseline_call_24, 30, Color.parseColor("#FF3C30"), new MyButtonClickListner(){
+                    @Override
+                    public void onClick(int pos) {
+                        Toast.makeText(getContext(), "Delete click", Toast.LENGTH_SHORT).show();
+                    }
+                }, getContext()));
+                buff.add(new MyButton("Move", R.drawable.ic_baseline_arrow_right_alt_24, 30, Color.parseColor("#FFFFFF"), new MyButtonClickListner(){
+                    @Override
+                    public void onClick(int pos) {
+                        Toast.makeText(getContext(), "Move click", Toast.LENGTH_SHORT).show();
+                    }
+                }, getContext()));
+            }
+        };
         if(mData!=null){
             mData.clear();
         }

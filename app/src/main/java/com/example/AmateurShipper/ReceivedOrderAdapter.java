@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.example.AmateurShipper.Util.PostDiffUtilCallback;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -103,6 +104,7 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
         Animation animation = AnimationUtils.loadAnimation(mContext.getActivity(), R.anim.slide_in_right);
         holder.itemView.startAnimation(animation);
 
+
         //Toast.makeText(mContext, "ten guoi guirw" + viewAdapterClass.name_poster_tab_nhan.getText().toString(), Toast.LENGTH_SHORT).show();
 
     }
@@ -160,6 +162,7 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
         private TextView tv_sdt_nguoi_nhan;
         private Button btn_sdt_nguoi_nhan, btn_shop, btn_messages;
         LinearLayout linearLayout, containerChat;
+
         //PostAdapter.OnPostListener onPostListener;
         ImageButton close_btn;
         ReceivedOrderAdapter.OnReceivedOderListener onReceivedOderListener;
@@ -215,7 +218,7 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                             .create();
                     final View myview_dia = dialogPlus.getHolderView();
                     linearLayout = (LinearLayout) myview_dia.findViewById(R.id.dialog_received_order);
-                    TextView tng = (TextView) myview_dia.findViewById(R.id.editTextTenNguoiGui);
+                    //TextView tng = (TextView) myview_dia.findViewById(R.id.editTextTenNguoiGui);
                     TextView sdtnguoigui = (TextView) myview_dia.findViewById(R.id.editTextSoDTNguoiGui);
                     TextView noinhan = (TextView) myview_dia.findViewById(R.id.editTextTextDiemdi);
                     TextView noigiao = (TextView) myview_dia.findViewById(R.id.editTextTextDiemden);
@@ -229,7 +232,7 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                     containerChat = (LinearLayout) myview_dia.findViewById(R.id.container_chat) ;
                     tv_shopname = myview_dia.findViewById(R.id.username);
                     close_btn = myview_dia.findViewById(R.id.close_chat);
-                    tng.setText(ten_nguoi_gui);
+                   // tng.setText(ten_nguoi_gui);
                     sdtnguoigui.setText(sdt_nguoi_gui);
                     noinhan.setText(noi_nhan);
                     noigiao.setText(noi_giao);
