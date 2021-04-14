@@ -1,52 +1,38 @@
 package com.example.AmateurShipper;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Message;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
-import com.google.firebase.database.ValueEventListener;
 
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import io.grpc.Server;
 
 import static android.content.ContentValues.TAG;
-import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
+import static com.example.AmateurShipper.LoginActivity.IDUSER;
+import static com.example.AmateurShipper.LoginActivity.MyPREFERENCESIDUSER;
+import static com.example.AmateurShipper.ReceivedOrderAdapter.MyPREFERENCES_IDPOST;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,8 +46,9 @@ public class ChatFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     RecyclerView recyclerView_chat;
+    EditText edtMessage;
     // TODO: Rename and change types of parameters
-    public String id_post, id_user, id_chat_room, id_shop;
+     String id_post, id_shipper, id_chat_room, id_shop,content_message;
     FirebaseDatabase rootNode;
     DatabaseReference databaseReference;
     ChatAdapter chatAdapter;
@@ -69,9 +56,7 @@ public class ChatFragment extends Fragment {
 
     //ImageButton close_chat;
     ImageButton btn_send_message;
-
-
-    SharedPreferences sharedpreferences, sharedPreferences_shipper_id, sharedPreferences_id_shop;
+    SharedPreferences sharedpreferences, sharedpreferencesIdUser;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -107,83 +92,85 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
+
+        btn_send_message = (ImageButton) view.findViewById(R.id.btnSendMess);
+        edtMessage = view.findViewById(R.id.edtMessage);
+        sharedpreferences = getActivity().getSharedPreferences(MyPREFERENCES_IDPOST, Context.MODE_PRIVATE);
+        sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCESIDUSER, Context.MODE_PRIVATE);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        loadDataIdPost();
+        loadData();
+        readMessage();
         recyclerView_chat = view.findViewById(R.id.recycleview_mess);
         recyclerView_chat.setHasFixedSize(true);
-
-        databaseReference = FirebaseDatabase.getInstance().getReference();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setStackFromEnd(true);
         recyclerView_chat.setLayoutManager(linearLayoutManager);
-        sharedpreferences = getActivity().getSharedPreferences(ReceivedOrderAdapter.MyPREFERENCES_IDPOST, Context.MODE_PRIVATE);
-        sharedPreferences_shipper_id = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        sharedPreferences_id_shop = this.getActivity().getSharedPreferences(ReceivedOrderAdapter.IDSHOP, Context.MODE_PRIVATE);
-        chatAdapter = new ChatAdapter(getContext(), messageObjects_chat);
-        recyclerView_chat.setAdapter(chatAdapter);
-        loadDataIdPost();
-        loadIDSHOP();
-        loadIdUser();
 
-        btn_send_message = (ImageButton) view.findViewById(R.id.btnSendMess);
 
-       databaseReference.child("Transaction").child(id_post).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    id_chat_room = snapshot.child("id_roomchat").getValue(String.class);
-                    Toast.makeText(getActivity(), "id rooom" + id_chat_room, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Data snap is not exists", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        readMessage("9ebbP1pQi1JCcF1vkGfN");
         btn_send_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MessageObject messageObject = new MessageObject("hello world", id_user);
-              databaseReference.child("Chatroom").child(id_chat_room).
-                      push().setValue(messageObject).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                    }
-                });
+                sendMessage();
             }
         });
+
         return view;
     }
 
+    public void sendMessage(){
+        content_message = edtMessage.getText().toString();
+        MessageObject messageObject = new MessageObject(content_message,"shipper");
+        databaseReference.child("Chatroom").child(id_chat_room).
+                push().setValue(messageObject).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                edtMessage.setText(null);
+            }
+        });
+
+       // Log.i(TAG, "sendMessage: "+id_chat_room);
+    }
+
     public void loadDataIdPost() {
-        id_post = sharedpreferences.getString(ReceivedOrderAdapter.IDPOST, "");
+        id_chat_room = sharedpreferences.getString(ReceivedOrderAdapter.IDPOST, "");
         Toast.makeText(getActivity(), "id post + " + id_post, Toast.LENGTH_SHORT).show();
     }
 
-    public void loadIdUser() {
-        id_user = sharedPreferences_shipper_id.getString(LoginActivity.IDUSER, "");
+    private void loadData() {
+        id_shipper = sharedpreferencesIdUser.getString(IDUSER, "");
+        Toast.makeText(getContext(), id_shipper, Toast.LENGTH_SHORT).show();
     }
 
-    public void loadIDSHOP() {
-        id_shop = sharedPreferences_id_shop.getString(ReceivedOrderAdapter.IDSHOP, "");
-        Log.i(TAG, "loadIDSHOP: " + id_shop);
-    }
 
-    public void readMessage(String idroom) {
+    public void readMessage() {
         messageObjects_chat = new ArrayList<>();
-        databaseReference.child("Chatroom").child(idroom)
-        .addValueEventListener(new ValueEventListener() {
+
+        databaseReference.child("Chatroom").child(id_chat_room).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                messageObjects_chat.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    MessageObject messageObject = dataSnapshot.getValue(MessageObject.class);
-                    messageObjects_chat.add(messageObject);
-                }
-                chatAdapter = new ChatAdapter(getActivity(), messageObjects_chat);
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                //messageObjects_chat.clear();
+                MessageObject messageObject = snapshot.getValue(MessageObject.class);
+                messageObjects_chat.add(messageObject);
+                Log.i(TAG, "onChildAdded: "+ 1);
+                //chatAdapter.addItem(chatAdapter.getItemCount()-1,messageObject);
+                chatAdapter = new ChatAdapter(getContext(), messageObjects_chat);
                 recyclerView_chat.setAdapter(chatAdapter);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
             }
 
             @Override

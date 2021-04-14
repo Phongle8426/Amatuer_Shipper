@@ -1,15 +1,11 @@
 package com.example.AmateurShipper;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -26,21 +21,20 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.AmateurShipper.Util.PostDiffUtilCallback;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
-import com.example.AmateurShipper.ChatFragment;
 
 import java.util.List;
 
@@ -58,11 +52,7 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
     DatabaseReference databaseReference = rootDatabase.getReference();
     public static final String MyPREFERENCES_IDPOST = "myf";
     public static final String IDPOST = "ID post";
-    public static final String MyPREFERENCES_ten_nguoi_gui = "myfr";
-    public static final String getMyPREFERENCES_ten_nguoi_gui = "ten nguoi gui";
-    public static final String MyPREFERENCESID_shop = "MyPrefs";
-    public static final String IDSHOP = "iduser";
-    SharedPreferences sharedpreferences, sharedPreferences_tennguoigui, sharedPreferences_IDSHOP;
+    SharedPreferences sharedpreferences;
 
     public ReceivedOrderAdapter(List<PostObject> postList, Fragment re, OnReceivedOderListener onReceivedOderListener, FragmentManager fm) {
         this.postList = postList;
@@ -209,13 +199,9 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                     String km = postList.get(getAdapterPosition()).km;
                     String id_post = postList.get(getAdapterPosition()).id_post;
 
-                    sharedPreferences_IDSHOP = mContext.getActivity().getSharedPreferences(MyPREFERENCESID_shop, Context.MODE_PRIVATE);
                     sharedpreferences = mContext.getActivity().getSharedPreferences(MyPREFERENCES_IDPOST, Context.MODE_PRIVATE);
-                    sharedPreferences_tennguoigui = mContext.getActivity().getSharedPreferences(MyPREFERENCES_ten_nguoi_gui, Context.MODE_PRIVATE);
-                    saveIdPost(id_post);
+                    saveIdChatRoom(id_post);
                     Toast.makeText(mContext.getActivity(), "ten nguoi gui"+ten_nguoi_gui, Toast.LENGTH_SHORT).show();
-                    saveTenNguoiGui(ten_nguoi_gui);
-                    saveIdSHOP(id_shop);
 //                    Bundle b = new Bundle();
 //                    b.putString("id_post", id_post);
 //                    ChatFragment chatFragment = new ChatFragment();
@@ -279,7 +265,6 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                         @Override
                         public void onClick(View v) {
                            linearLayout.setVisibility(View.GONE);
-
                            // dialogPlus.dismiss();
                             ChatFragment chatFragment = new ChatFragment();
                             fragmentManager = mContext.getActivity().getSupportFragmentManager();
@@ -301,20 +286,26 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
 
         }
     }
-    public void saveTenNguoiGui(String tennguoigui){
-        SharedPreferences.Editor editor = sharedPreferences_tennguoigui.edit();
-        editor.putString(ReceivedOrderAdapter.getMyPREFERENCES_ten_nguoi_gui, tennguoigui);
-        editor.apply();
-    }
-    public void saveIdPost(String idPost){
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putString(ReceivedOrderAdapter.IDPOST, idPost);
-        editor.apply();
-    }
-    public void saveIdSHOP(String idSHOP){
-        SharedPreferences.Editor editor = sharedPreferences_IDSHOP.edit();
-        editor.putString(ReceivedOrderAdapter.IDSHOP, idSHOP);
-        editor.apply();
+
+    public void saveIdChatRoom(String idPost){
+        final String[] id_chat_room = new String[1];
+            databaseReference.child("Transaction").child(idPost).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                       id_chat_room[0] = snapshot.child("id_roomchat").getValue(String.class);
+                       // databaseReference.child("Transaction").child(idPost).removeEventListener(this);
+                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                        editor.putString(ReceivedOrderAdapter.IDPOST, id_chat_room[0]);
+                        editor.apply();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
     }
     public interface OnReceivedOderListener {
         void onReceivedItem(int position);

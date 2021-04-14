@@ -5,28 +5,27 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
-
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewAdapterClass>{
     public static final int MSG_TYPE_LEFT = 0;
     public static final int MSG_TYPE_RIGHT = 1;
     private Context mContext;
-    SharedPreferences sharedPreferences;
-    String id_user;
     private List<MessageObject> mChat;
     public ChatAdapter(Context mcontext, List<MessageObject> mchat) {
         this.mContext = mcontext;
         this.mChat = mchat;
     }
+
+    public void addItem(int position,MessageObject addList ) {
+        mChat.add(position, addList);
+        notifyItemInserted(position);
+    }
+
 
     @NonNull
     @Override
@@ -45,7 +44,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewAdapterCla
     }
     @Override
     public void onBindViewHolder(@NonNull ChatAdapter.ViewAdapterClass holder, int position) {
-        loadUserId();
         MessageObject messageObject = mChat.get(position);
         holder.showMessage.setText(messageObject.getMessage());
     }
@@ -59,21 +57,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewAdapterCla
 
         public ViewAdapterClass(@NonNull final View itemView) {
             super(itemView);
-            sharedPreferences = mContext.getSharedPreferences(LoginActivity.MyPREFERENCESIDUSER, Context.MODE_PRIVATE );
             showMessage = itemView.findViewById(R.id.show_message);
-                }
+
+        }
         }
 
     @Override
     public int getItemViewType(int position) {
-        if(mChat.get(position).getId().equals(id_user)){
+        if(mChat.get(position).getId().equals("shipper")){
             return MSG_TYPE_RIGHT;
         }
         else
             return MSG_TYPE_LEFT;
-    }
-    public void loadUserId(){
-        id_user = sharedPreferences.getString(LoginActivity.IDUSER,"");
     }
 }
 
