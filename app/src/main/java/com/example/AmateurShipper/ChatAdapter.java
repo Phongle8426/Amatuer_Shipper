@@ -5,7 +5,11 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,7 +49,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewAdapterCla
     @Override
     public void onBindViewHolder(@NonNull ChatAdapter.ViewAdapterClass holder, int position) {
         MessageObject messageObject = mChat.get(position);
-        holder.showMessage.setText(messageObject.getMessage());
+        if (!messageObject.getMessage().equals("")) {
+            holder.showMessage.setVisibility(View.VISIBLE);
+            holder.showImageMessage.setVisibility(View.GONE);
+            holder.showMessage.setText(messageObject.getMessage());
+        } else {
+            holder.showImageMessage.setVisibility(View.VISIBLE);
+            holder.showMessage.setVisibility(View.GONE);
+            Picasso.get().load(messageObject.getImgmessage()).fit().into(holder.showImageMessage);
+        }
     }
 
     @Override
@@ -54,13 +66,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewAdapterCla
     }
     public class ViewAdapterClass extends RecyclerView.ViewHolder {
         public TextView showMessage;
+        public ImageView showImageMessage;
 
         public ViewAdapterClass(@NonNull final View itemView) {
             super(itemView);
             showMessage = itemView.findViewById(R.id.show_message);
-
+            showImageMessage = itemView.findViewById(R.id.show_image);
         }
-        }
+    }
 
     @Override
     public int getItemViewType(int position) {

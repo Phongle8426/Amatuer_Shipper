@@ -16,8 +16,12 @@
             android:background="@drawable/border_item_right_chat"
             android:layout_alignParentEnd="true"
             android:textSize="23sp"
-            android:textStyle="normal"
-            android:text="Hello world"></TextView>
+            android:textStyle="normal"></TextView>
+
+        <ImageView
+            android:id="@+id/show_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"/>
     </RelativeLayout>
 
 </RelativeLayout>

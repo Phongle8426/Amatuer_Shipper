@@ -1,7 +1,9 @@
 package com.example.AmateurShipper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,16 +21,22 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 import static com.example.AmateurShipper.LoginActivity.IDUSER;
 import static com.example.AmateurShipper.LoginActivity.MyPREFERENCESIDUSER;
@@ -48,14 +56,15 @@ public class ChatFragment extends Fragment {
     RecyclerView recyclerView_chat;
     EditText edtMessage;
     // TODO: Rename and change types of parameters
-     String id_post, id_shipper, id_chat_room, id_shop,content_message;
+     String id_post, id_shipper, id_chat_room, id_shop,content_message,getUriChatMess;
     FirebaseDatabase rootNode;
     DatabaseReference databaseReference;
+    private StorageReference mStorage;
     ChatAdapter chatAdapter;
     List<MessageObject> messageObjects_chat;
-
+    Uri imageUri;
     //ImageButton close_chat;
-    ImageButton btn_send_message;
+    ImageButton btn_send_message,btn_send_image;
     SharedPreferences sharedpreferences, sharedpreferencesIdUser;
 
     public ChatFragment() {
@@ -94,10 +103,12 @@ public class ChatFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         btn_send_message = (ImageButton) view.findViewById(R.id.btnSendMess);
+        btn_send_image = view.findViewById(R.id.btn_mess_picture);
         edtMessage = view.findViewById(R.id.edtMessage);
         sharedpreferences = getActivity().getSharedPreferences(MyPREFERENCES_IDPOST, Context.MODE_PRIVATE);
         sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCESIDUSER, Context.MODE_PRIVATE);
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        mStorage = FirebaseStorage.getInstance().getReference();
         loadDataIdPost();
         loadData();
         readMessage();
@@ -107,20 +118,62 @@ public class ChatFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView_chat.setLayoutManager(linearLayoutManager);
 
-
+        btn_send_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                choosePicture();
+            }
+        });
         btn_send_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendMessage();
+                content_message = edtMessage.getText().toString();
+                sendMessage(content_message,"");
             }
         });
 
         return view;
     }
 
-    public void sendMessage(){
-        content_message = edtMessage.getText().toString();
-        MessageObject messageObject = new MessageObject(content_message,"shipper");
+    public void choosePicture() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+           // avata.setImageURI(imageUri);
+            sendImageMessage();
+        }
+    }
+
+    public void sendImageMessage(){
+        if(imageUri != null){
+            final String ramdomKey = UUID.randomUUID().toString();
+            final StorageReference riversRef = mStorage.child("imagesChat/" + ramdomKey);
+            riversRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            getUriChatMess = uri.toString();
+                            sendMessage("",getUriChatMess);
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    public void sendMessage(String content_message,String content_image){
+        if (content_message != null){
+        MessageObject messageObject = new MessageObject(content_message,"shipper",content_image);
         databaseReference.child("Chatroom").child(id_chat_room).
                 push().setValue(messageObject).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -128,6 +181,7 @@ public class ChatFragment extends Fragment {
                 edtMessage.setText(null);
             }
         });
+        }
 
        // Log.i(TAG, "sendMessage: "+id_chat_room);
     }
