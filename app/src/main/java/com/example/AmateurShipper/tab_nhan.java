@@ -1,10 +1,15 @@
 package com.example.AmateurShipper;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -22,6 +27,7 @@ import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
 import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
 import com.google.android.material.badge.BadgeDrawable;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +42,8 @@ import Helper.MyButtonClickListner;
 import Helper.MySwipeHelper;
 
 import static android.content.ContentValues.TAG;
+import static com.example.AmateurShipper.LoginActivity.IDUSER;
+import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
 
 
 /**
@@ -54,6 +62,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    SharedPreferences sharedpreferencesIdUser;
     RecyclerView NewsRecyclerview;
     MainActivity mainActivity;
     FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
@@ -61,6 +70,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     List<PostObject> mData = new ArrayList<>();
     ReceivedOrderAdapter receivedOrderAdapter;
     ChatFragment chatFragment;
+    String iDUser;
     public tab_nhan() {
         // Required empty public constructor
     }
@@ -97,8 +107,11 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         View view = inflater.inflate(R.layout.fragment_tab_nhan,container,false);
         NewsRecyclerview = view.findViewById(R.id.rcv_tab_nhan);
+        mDatabase = rootNode.getReference();
+        loadData();
         mainActivity = (MainActivity) getActivity();
         mainActivity.setCountOrder(0);
         mainActivity.disableNotification();
@@ -111,17 +124,39 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         NewsRecyclerview.setLayoutManager(mLayoutManager);
         MySwipeHelper mySwipeHelper = new MySwipeHelper(getActivity(), NewsRecyclerview , 200) {
             @Override
-            public void instaniatMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buff) {
-                buff.add(new MyButton("Delete", R.drawable.ic_baseline_call_24, 30, Color.parseColor("#FF3C30"), new MyButtonClickListner(){
+            public void instaniatMyButton(final RecyclerView.ViewHolder viewHolder, List<MyButton> buff) {
+                buff.add(new MyButton("Huy Don", 30, Color.parseColor("#DC143C"), new MyButtonClickListner(){
                     @Override
-                    public void onClick(int pos) {
-                        Toast.makeText(getContext(), "Delete click", Toast.LENGTH_SHORT).show();
+                    public void onClick(final int pos) {
+                        // String deleteItem = null;
+                        final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+                        dialog.setTitle("Xoa don!");
+                        dialog.setMessage("Bạn thực sự muốn xoa don?");
+                        dialog.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                deleteItem(pos, viewHolder);
+                            }
+                        }).setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+                        AlertDialog al = dialog.create();
+                        al.show();
                     }
                 }, getContext()));
-                buff.add(new MyButton("Move", R.drawable.ic_baseline_arrow_right_alt_24, 30, Color.parseColor("#FFFFFF"), new MyButtonClickListner(){
+                buff.add(new MyButton("Nhan Hang",30, Color.parseColor("#FF4BB54F"), new MyButtonClickListner(){
                     @Override
                     public void onClick(int pos) {
-                        Toast.makeText(getContext(), "Move click", Toast.LENGTH_SHORT).show();
+                        pos = viewHolder.getAdapterPosition();
+                        String idshop = mData.get(pos).id_shop;
+                        String idpost = mData.get(pos).id_post;
+                        //  deleteItem = String.valueOf(mData.get(pos));
+                        mData.remove(pos);
+                        receivedOrderAdapter.notifyItemChanged(pos);
+                        mDatabase.child("received_order_status").child(iDUser).child(idpost).child("status").setValue("1");
                     }
                 }, getContext()));
             }
@@ -134,21 +169,23 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
 
         NewsRecyclerview.setAdapter(receivedOrderAdapter);
         NewsRecyclerview.smoothScrollToPosition(0);
-
-        //mData = new ArrayList<>();
-//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-//        mData.add(new PostObject("Van Phong","10 phut","285/33 Tran Cao Van - Dan Nang","36/8 Pham Van Nghi Da Nang","3KM","Dua tay day naf, mai ben nhau ban nho",R.drawable.anhhhhh,R.drawable.anhhhhh,10,15000,15000));
-
         return view;
+    }
+    public void deleteItem(int pos, RecyclerView.ViewHolder viewHolder){
+        String idshop = null;
+        String idpost = null;
+        pos = viewHolder.getAdapterPosition();
+        idshop = mData.get(pos).id_shop;
+        idpost = mData.get(pos).id_post;
+        //  deleteItem = String.valueOf(mData.get(pos));
+        mData.remove(pos);
+        receivedOrderAdapter.notifyItemChanged(pos);
+        mDatabase.child("OrderStatus").child(idshop).child(idpost).child("status").setValue("3");
     }
 
     public void getListStatusReceived(){
         mDatabase = rootNode.getReference();
-        mDatabase.child("received_order_status").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("0").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -158,7 +195,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                         mData.add(data);
                     }
                     receivedOrderAdapter.insertData(mData);
-
+                    mDatabase.child("received_order_status").removeEventListener(this);
                 }else{
                    // Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
                 }
@@ -169,11 +206,13 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
             }
         });
     }
+    //Load ID User
+    private void loadData() {
+        iDUser = sharedpreferencesIdUser.getString(IDUSER, "");
+    }
 
     @Override
     public void onItemClick(int position) {
-
-        Toast.makeText(getContext(), "Tina muon an shit", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -181,10 +220,8 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
 
     }
 
-
-
     @Override
     public void onReceivedItem(int position){
-        Toast.makeText(getContext(), "hello con cac", Toast.LENGTH_SHORT).show();
+
     }
 }

@@ -148,9 +148,8 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback{
         private Context context;
         private Resources resource;
 
-        public  MyButton(String text, int imageResId, int textSize, int color, MyButtonClickListner listner, Context context) {
+        public  MyButton(String text, int textSize, int color, MyButtonClickListner listner, Context context) {
             this.text = text;
-            this.imageResId = imageResId;
             this.textSize = textSize;
             this.color = color;
             this.listner = listner;

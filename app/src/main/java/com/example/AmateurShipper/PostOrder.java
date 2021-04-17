@@ -52,7 +52,7 @@ public class PostOrder extends AppCompatActivity {
                 sdtnguoigui = sdtnguoiguii.getText().toString();
                 idpost = idposti.getText().toString();
                 // tao doi tuong
-                PostObject postOrder = new PostObject(tennguoigui,sdtnguoinhan, diemdi, diemden, sdtnguoinhan, tennguoinhan, ghichu, phut,  idshop, tienphi, tienung, km, idpost );
+                PostObject postOrder = new PostObject(tennguoigui,sdtnguoinhan, diemdi, diemden, sdtnguoinhan, tennguoinhan, ghichu, phut,  idshop, tienphi, tienung, km, idpost,"");
                 //PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan, ten_nguoi_nhan, ghi_chu, thoi_gian, id_shop, phi_giao, phi_ung, km, id_post);
                 //up data to firebase
                 rootNode = FirebaseDatabase.getInstance();

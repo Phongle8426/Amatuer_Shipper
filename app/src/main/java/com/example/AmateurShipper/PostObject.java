@@ -2,7 +2,8 @@ package com.example.AmateurShipper;
 
 
 public class PostObject {
-    String ten_nguoi_gui,sdt_nguoi_gui,noi_nhan,noi_giao,sdt_nguoi_nhan,ten_nguoi_nhan,ghi_chu,thoi_gian,id_shop,phi_giao,phi_ung,km, id_post;
+    String ten_nguoi_gui,sdt_nguoi_gui,noi_nhan,noi_giao,sdt_nguoi_nhan,ten_nguoi_nhan,
+            ghi_chu,thoi_gian,id_shop,phi_giao,phi_ung,km, id_post,status;
 
     public PostObject() {
     }
@@ -17,7 +18,7 @@ public class PostObject {
 
     public PostObject(String ten_nguoi_gui, String sdt_nguoi_gui, String noi_nhan, String noi_giao,
                       String sdt_nguoi_nhan, String ten_nguoi_nhan, String ghi_chu, String thoi_gian,
-                      String id_shop, String phi_giao, String phi_ung, String km, String id_post) {
+                      String id_shop, String phi_giao, String phi_ung, String km, String id_post,String status) {
         this.ten_nguoi_gui = ten_nguoi_gui;
         this.sdt_nguoi_gui = sdt_nguoi_gui;
         this.noi_nhan = noi_nhan;
@@ -31,6 +32,7 @@ public class PostObject {
         this.phi_ung = phi_ung;
         this.km = km;
         this.id_post = id_post;
+        this.status = status;
     }
 
     public String getTen_nguoi_gui() {
@@ -127,5 +129,13 @@ public class PostObject {
 
     public void setKm(String km) {
         this.km = km;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

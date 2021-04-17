@@ -10,23 +10,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.example.AmateurShipper.Util.PostDiffUtilCallback;
 import com.google.firebase.database.DataSnapshot;
@@ -39,166 +28,114 @@ import com.orhanobut.dialogplus.ViewHolder;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
+import static com.example.AmateurShipper.ReceivedOrderAdapter.MyPREFERENCES_IDPOST;
 
-public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdapter.ViewAdapterClass> implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdapter.ViewAdapterClass>{
 
-    List<PostObject> postList;
-    Fragment mContext;
     int get_position;
-    FragmentManager fragmentManager;
-    private OnReceivedOderListener mOnReceivedOderListener;
+    SharedPreferences sharedpreferences;
     FirebaseDatabase rootDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = rootDatabase.getReference();
-    public static final String MyPREFERENCES_IDPOST = "myf";
-    public static final String IDPOST = "ID post";
-    SharedPreferences sharedpreferences;
+    List<PostObject> shippingList;
+    Fragment mContext;
+    FragmentManager fragmentManager;
+    String sdt_nguoi_nhan_hang,sdt_shop;
 
-    public ReceivedOrderAdapter(List<PostObject> postList, Fragment re, OnReceivedOderListener onReceivedOderListener, FragmentManager fm) {
-        this.postList = postList;
-        mContext = re;
-        this.mOnReceivedOderListener = onReceivedOderListener;
-        fragmentManager = fm;
+    public ShippingOrderAdapter(List<PostObject> shippingList,Fragment re,FragmentManager fm){
+       this.shippingList = shippingList;
+       this.mContext = re;
+       this.fragmentManager = fm;
     }
 
     public void insertData(List<PostObject> insertList) {
-        PostDiffUtilCallback postDiffUtilCallback = new PostDiffUtilCallback(postList, insertList);
+        PostDiffUtilCallback postDiffUtilCallback = new PostDiffUtilCallback(shippingList, insertList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(postDiffUtilCallback);
-        postList.clear();
-        postList.addAll(insertList);
-        diffResult.dispatchUpdatesTo(ReceivedOrderAdapter.this);
+        shippingList.clear();
+        shippingList.addAll(insertList);
+        diffResult.dispatchUpdatesTo(ShippingOrderAdapter.this);
     }
 
-    public void updateData(List<PostObject> newList) {
-        PostDiffUtilCallback postDiffUtilCallback = new PostDiffUtilCallback(postList, newList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(postDiffUtilCallback);
-        postList.clear();
-        postList.addAll(newList);
-        diffResult.dispatchUpdatesTo(ReceivedOrderAdapter.this);
-    }
     public void addItem(int position,PostObject addList ) {
-        postList.add(position, addList);
-        notifyItemInserted(position);
+//        if (shippingList.size()>0){
+//            if(!addList.id_post.equals(shippingList.get(0).id_post)){
+//                shippingList.add(position, addList);
+//                notifyItemInserted(position);
+//            }
+//        }else{
+            shippingList.add(position, addList);
+            notifyItemInserted(position);
+       // }
     }
+
+
 
     @NonNull
     @Override
-    public ReceivedOrderAdapter.ViewAdapterClass onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewAdapterClass onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tab_nhan, parent, false);
-        ReceivedOrderAdapter.ViewAdapterClass viewAdapterClass = new ReceivedOrderAdapter.ViewAdapterClass(view, mOnReceivedOderListener);
+        ShippingOrderAdapter.ViewAdapterClass viewAdapterClass = new ShippingOrderAdapter.ViewAdapterClass(view);
         return viewAdapterClass;
     }
 
 
+
     @Override
     public void onBindViewHolder(@NonNull ViewAdapterClass holder, int position) {
-        ViewAdapterClass viewAdapterClass = (ViewAdapterClass) holder;
-        PostObject postObject = postList.get(position);
-        get_position = position;
+    ViewAdapterClass viewAdapterClass = (ViewAdapterClass) holder;
+        PostObject postObject = shippingList.get(position);
         viewAdapterClass.name_poster_tab_nhan.setText(postObject.getTen_nguoi_gui());
-        //  viewAdapterClass.time.setText(postObject.getThoi_gian());
         viewAdapterClass.txt_start_place_tab_nhan.setText(postObject.getNoi_nhan());
         viewAdapterClass.txt_end_place_tab_nhan.setText(postObject.getNoi_giao());
-        //   viewAdapterClass.distance.setText(String.valueOf(postObject.getKm()));
-        //  viewAdapterClass.fee.setText(String.valueOf(postObject.getPhi_giao()));
-        //   viewAdapterClass.payment.setText(String.valueOf(postObject.getPhi_ung()));
-        //  viewAdapterClass.note.setText(postObject.getGhi_chu());
-        // viewAdapterClass.image_poster.setImageResource(postObject.imgage_poster);
-        Animation animation = AnimationUtils.loadAnimation(mContext.getActivity(), R.anim.slide_in_right);
-        holder.itemView.startAnimation(animation);
-
-
-        //Toast.makeText(mContext, "ten guoi guirw" + viewAdapterClass.name_poster_tab_nhan.getText().toString(), Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
     public int getItemCount() {
-        return postList.size();
+        return shippingList.size();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == ViewAdapterClass.REQUEST_CALL) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                call_customer();
-                call_shop();
-            } else {
-                Toast.makeText(mContext.getActivity(), "permission DENIED", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
-    private void call_shop() {
-        String number_shop = "0" + sdt_shop;
-        if (number_shop.trim().length() > 0) {
-            if (ContextCompat.checkSelfPermission(mContext.getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
-                ActivityCompat.requestPermissions(mContext.getActivity(), new String[]{Manifest.permission.CALL_PHONE}, ViewAdapterClass.REQUEST_CALL);
-            else {
-                String dial = "tel: " + number_shop;
-                mContext.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
-            }
-        }
-    }
 
-    public void message_click() {
-
-    }
-
-    private void call_customer() {
-        String number_customer = "0" + sdt_nguoi_nhan_hang;
-        if (number_customer.trim().length() > 0) {
-            if (ContextCompat.checkSelfPermission(mContext.getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
-                ActivityCompat.requestPermissions(mContext.getActivity(), new String[]{Manifest.permission.CALL_PHONE}, ViewAdapterClass.REQUEST_CALL);
-            else {
-                String dial = "tel: " + number_customer;
-                mContext.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
-            }
-        }
-    }
-    String sdt_nguoi_nhan_hang;
-    String sdt_shop;
-    public class ViewAdapterClass extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView name_poster_tab_nhan, time, txt_start_place_tab_nhan, txt_end_place_tab_nhan, tv_shopname, distance, fee, payment, note;
-        CircleImageView image_poster;
+    public class ViewAdapterClass extends RecyclerView.ViewHolder {
+        TextView name_poster_tab_nhan, txt_start_place_tab_nhan, txt_end_place_tab_nhan,tv_shopname;
         private static final int REQUEST_CALL = 1;
         private TextView tv_sdt_nguoi_nhan;
         private Button btn_sdt_nguoi_nhan, btn_shop, btn_messages;
         LinearLayout linearLayout, containerChat;
-
-        //PostAdapter.OnPostListener onPostListener;
         ImageButton close_btn;
-        ReceivedOrderAdapter.OnReceivedOderListener onReceivedOderListener;
-
-        public ViewAdapterClass(@NonNull final View itemView, ReceivedOrderAdapter.OnReceivedOderListener onReceivedOderListener) {
+        public ViewAdapterClass(@NonNull final View itemView) {
             super(itemView);
-
             name_poster_tab_nhan = itemView.findViewById(R.id.name_poster_tab_nhan);
             txt_start_place_tab_nhan = itemView.findViewById(R.id.txt_start_place_tab_nhan);
             txt_end_place_tab_nhan = itemView.findViewById(R.id.txt_end_place_tab_nhan);
-            this.onReceivedOderListener = onReceivedOderListener;
-            itemView.setOnClickListener(this);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    String ten_nguoi_gui = postList.get(getAdapterPosition()).ten_nguoi_gui;
-                    String sdt_nguoi_gui = postList.get(getAdapterPosition()).sdt_nguoi_gui;
-                    String noi_nhan = postList.get(getAdapterPosition()).noi_nhan;
-                    String noi_giao = postList.get(getAdapterPosition()).noi_giao;
-                    String sdt_nguoi_nhan = postList.get(getAdapterPosition()).sdt_nguoi_nhan;
-                    String ten_nguoi_nhan = postList.get(getAdapterPosition()).ten_nguoi_nhan;
-                    String ghi_chu = postList.get(getAdapterPosition()).ghi_chu;
-                    String thoi_gian = postList.get(getAdapterPosition()).thoi_gian;
-                    String id_shop = postList.get(getAdapterPosition()).id_shop;
-                    String phi_giao = postList.get(getAdapterPosition()).phi_giao;
-                    String phi_ung = postList.get(getAdapterPosition()).phi_ung;
-                    String km = postList.get(getAdapterPosition()).km;
-                    String id_post = postList.get(getAdapterPosition()).id_post;
+                    String ten_nguoi_gui = shippingList.get(getAdapterPosition()).ten_nguoi_gui;
+                    String sdt_nguoi_gui = shippingList.get(getAdapterPosition()).sdt_nguoi_gui;
+                    String noi_nhan = shippingList.get(getAdapterPosition()).noi_nhan;
+                    String noi_giao = shippingList.get(getAdapterPosition()).noi_giao;
+                    String sdt_nguoi_nhan = shippingList.get(getAdapterPosition()).sdt_nguoi_nhan;
+                    String ten_nguoi_nhan = shippingList.get(getAdapterPosition()).ten_nguoi_nhan;
+                    String ghi_chu = shippingList.get(getAdapterPosition()).ghi_chu;
+                    String thoi_gian = shippingList.get(getAdapterPosition()).thoi_gian;
+                    String id_shop = shippingList.get(getAdapterPosition()).id_shop;
+                    String phi_giao = shippingList.get(getAdapterPosition()).phi_giao;
+                    String phi_ung = shippingList.get(getAdapterPosition()).phi_ung;
+                    String km = shippingList.get(getAdapterPosition()).km;
+                    String id_post = shippingList.get(getAdapterPosition()).id_post;
 
                     sharedpreferences = mContext.getActivity().getSharedPreferences(MyPREFERENCES_IDPOST, Context.MODE_PRIVATE);
                     saveIdChatRoom(id_post);
-                    Toast.makeText(mContext.getActivity(), "ten nguoi gui"+ten_nguoi_gui, Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(mContext.getActivity(), "ten nguoi gui"+ten_nguoi_gui, Toast.LENGTH_SHORT).show();
                     final DialogPlus dialogPlus = DialogPlus.newDialog(itemView.getContext())
                             .setContentHolder(new ViewHolder(R.layout.dialogcontent))
                             .setGravity(Gravity.CENTER)
@@ -246,20 +183,20 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                     btn_sdt_nguoi_nhan.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            call_customer();
+                          //  call_customer();
                         }
                     });
                     btn_shop.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            call_shop();
+                           // call_shop();
                         }
                     });
                     btn_messages.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                           linearLayout.setVisibility(View.GONE);
-                           // dialogPlus.dismiss();
+                            linearLayout.setVisibility(View.GONE);
+                            // dialogPlus.dismiss();
                             ChatFragment chatFragment = new ChatFragment();
                             fragmentManager = mContext.getActivity().getSupportFragmentManager();
                             mContext.getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frag_container_1, chatFragment).commit();
@@ -274,13 +211,8 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                 }
             });
         }
-
-        @Override
-        public void onClick(View v) {
-
-        }
     }
-
+    
     public void saveIdChatRoom(String idPost){
         final String[] id_chat_room = new String[1];
         databaseReference.child("Transaction").child(idPost).addValueEventListener(new ValueEventListener() {
@@ -300,8 +232,5 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
 
             }
         });
-    }
-    public interface OnReceivedOderListener {
-        void onReceivedItem(int position);
     }
 }
