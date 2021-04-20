@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,9 +38,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.content.ContentValues.TAG;
 
 
 public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdapter.ViewAdapterClass> implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -78,8 +82,9 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
         diffResult.dispatchUpdatesTo(ReceivedOrderAdapter.this);
     }
     public void addItem(int position,PostObject addList ) {
-        postList.add(position, addList);
-        notifyItemInserted(position);
+            postList.add(position, addList);
+            notifyItemInserted(position);
+           // id_postList.add(addList.id_post);
     }
 
     @NonNull
@@ -173,7 +178,6 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
 
         public ViewAdapterClass(@NonNull final View itemView, ReceivedOrderAdapter.OnReceivedOderListener onReceivedOderListener) {
             super(itemView);
-
             name_poster_tab_nhan = itemView.findViewById(R.id.name_poster_tab_nhan);
             txt_start_place_tab_nhan = itemView.findViewById(R.id.txt_start_place_tab_nhan);
             txt_end_place_tab_nhan = itemView.findViewById(R.id.txt_end_place_tab_nhan);

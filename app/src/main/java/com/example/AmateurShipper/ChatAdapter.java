@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import java.util.List;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewAdapterClass>{
     public static final int MSG_TYPE_LEFT = 0;
     public static final int MSG_TYPE_RIGHT = 1;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private Context mContext;
     private List<MessageObject> mChat;
     public ChatAdapter(Context mcontext, List<MessageObject> mchat) {
@@ -77,7 +80,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewAdapterCla
 
     @Override
     public int getItemViewType(int position) {
-        if(mChat.get(position).getId().equals("shipper")){
+        if(mChat.get(position).getId().equals(user.getUid())){
             return MSG_TYPE_RIGHT;
         }
         else

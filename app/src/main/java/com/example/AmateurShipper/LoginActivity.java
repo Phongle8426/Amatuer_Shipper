@@ -61,9 +61,9 @@ public class LoginActivity extends AppCompatActivity {
     public static final String USERNAME = "userNameKey"; // biến lưu username
     public static final String PASS = "passKey";        // biến lưu password
     public static final String REMEMBER = "remember";  // biến lưu lựa chọn remember me
-    public static final String MyPREFERENCESIDUSER = "MyPrefs";
-    public static final String IDUSER = "iduser";     // biến lưu id của user
-    SharedPreferences sharedpreferences, sharedpreferencesIdUser; // khai báo sharedpreference để lưu cặp user/passs
+   // public static final String MyPREFERENCESIDUSER = "MyPrefs";
+    //public static final String IDUSER = "iduser";     // biến lưu id của user
+    SharedPreferences sharedpreferences; // khai báo sharedpreference để lưu cặp user/passs
     // private FirebaseAuth mFirebaseAuth;
     //private CallbackManager mCallbackManager;
     @Override
@@ -86,8 +86,10 @@ public class LoginActivity extends AppCompatActivity {
         forgotPassword = findViewById(R.id.tv_forgotpassword);
         saveAcount = findViewById(R.id.cbSaveAcount);
         mAuth = FirebaseAuth.getInstance();
+        databaseReference = rootNode.getInstance().getReference();
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        sharedpreferencesIdUser = getSharedPreferences(MyPREFERENCESIDUSER,Context.MODE_PRIVATE);
+       // sharedpreferencesIdUser = getSharedPreferences(MyPREFERENCESIDUSER,Context.MODE_PRIVATE);
+
         loadData();
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,8 +118,13 @@ public class LoginActivity extends AppCompatActivity {
                 if(!validatePassword() | !validatePhone()){
                     return;
                 }
-                loginWithPhoneNumber(editTextPhonenumber.getText().toString());
-            //    loginByPhone(editTextPhonenumber.getText().toString(),editTextPassword.getText().toString());
+                if(editTextPhonenumber.getText().toString() != "Email"){
+                    loginByPhone();
+                }else{
+                    login(editTextPhonenumber.getText().toString(),editTextPassword.getText().toString());
+                }
+                //loginWithPhoneNumber(editTextPhonenumber.getText().toString());
+                //loginByPhone(editTextPhonenumber.getText().toString(),editTextPassword.getText().toString());
             }
         });
     }
@@ -133,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                     phonenumber = snapshot.child("phone").getValue(String.class);
                     password = snapshot.child("password").getValue(String.class);
                     if(password.equals(editTextPassword.getText().toString())){
-                        saveIdUser(phonenumber);
+                        //saveIdUser(phonenumber);
                         if (saveAcount.isChecked())
                             saveData(phonenumber,password);
                         else
@@ -152,6 +159,62 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    public void loginByPhone(){
+        final String Phone = editTextPhonenumber.getText().toString(); // lấy mail
+        final String Password = editTextPassword.getText().toString(); // lấy pass// báo lỗi
+        databaseReference.child("Account_Shipper").child(Phone).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String email1 = snapshot.getValue(String.class);
+                login(email1,Password);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+//            mAuth.signInWithEmailAndPassword(Email, Password)
+//                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<AuthResult> task) {
+//                            if (task.isSuccessful()) {
+//                                if (saveAcount.isChecked())
+//                                    saveData(Email,Password);
+//                                else
+//                                    clearData();
+//                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                                startActivity(intent);
+//                                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_mid_left);
+//                            }else {
+//                                Toast.makeText(LoginActivity.this, "Datasnapshot is not exist!!!!", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+    }
+
+
+    public void login(final String Email, final String Password){
+        mAuth.signInWithEmailAndPassword(Email, Password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            if (saveAcount.isChecked())
+                                saveData(Email,Password);
+                            else
+                                clearData();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_mid_left);
+                        }else {
+                            Toast.makeText(LoginActivity.this, "Datasnapshot is not exist!!!!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private boolean validatePhone(){
@@ -180,11 +243,11 @@ public class LoginActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_right,R.anim.slide_mid_left);
     }
 
-    public void saveIdUser(String iduser){
-        SharedPreferences.Editor editor = sharedpreferencesIdUser.edit();
-        editor.putString(IDUSER, iduser);
-        editor.commit();
-    }
+//    public void saveIdUser(String iduser){
+//        SharedPreferences.Editor editor = sharedpreferencesIdUser.edit();
+//        editor.putString(IDUSER, iduser);
+//        editor.commit();
+//    }
 
     public void saveData(String username, String Pass){
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -206,8 +269,9 @@ public class LoginActivity extends AppCompatActivity {
             editTextPhonenumber.setText(user_name);
             editTextPassword.setText(passw);
             saveAcount.setChecked(true);
-            loginWithPhoneNumber(user_name);
+            //loginWithPhoneNumber(user_name);
           //  loginByPhone(user_name,passw);
+            login(user_name,passw);
         }
         else
             saveAcount.setChecked(false);

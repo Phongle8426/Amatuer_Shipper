@@ -27,6 +27,8 @@ import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
 import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
 import com.google.android.material.badge.BadgeDrawable;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,9 +43,6 @@ import java.util.List;
 import Helper.MyButtonClickListner;
 import Helper.MySwipeHelper;
 
-import static android.content.ContentValues.TAG;
-import static com.example.AmateurShipper.LoginActivity.IDUSER;
-import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
 
 
 /**
@@ -62,10 +61,8 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    SharedPreferences sharedpreferencesIdUser;
     RecyclerView NewsRecyclerview;
     MainActivity mainActivity;
-    FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
     private DatabaseReference mDatabase;
     List<PostObject> mData = new ArrayList<>();
     ReceivedOrderAdapter receivedOrderAdapter;
@@ -107,15 +104,15 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         View view = inflater.inflate(R.layout.fragment_tab_nhan,container,false);
         NewsRecyclerview = view.findViewById(R.id.rcv_tab_nhan);
-        mDatabase = rootNode.getReference();
-        loadData();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        getUid();
         mainActivity = (MainActivity) getActivity();
         mainActivity.setCountOrder(0);
         mainActivity.disableNotification();
-
+        getListStatusReceived();
         FragmentManager fm = getActivity().getSupportFragmentManager();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setReverseLayout(true);
@@ -153,10 +150,12 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                         pos = viewHolder.getAdapterPosition();
                         String idshop = mData.get(pos).id_shop;
                         String idpost = mData.get(pos).id_post;
+                        PostObject post = mData.get(pos);
                         //  deleteItem = String.valueOf(mData.get(pos));
                         mData.remove(pos);
                         receivedOrderAdapter.notifyItemChanged(pos);
                         mDatabase.child("received_order_status").child(iDUser).child(idpost).child("status").setValue("1");
+                        //mDatabase.child("received_order_status").child(iDUser).child(idpost).setValue(null);
                     }
                 }, getContext()));
             }
@@ -164,13 +163,15 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         if(mData!=null){
             mData.clear();
         }
-        getListStatusReceived();
+
         receivedOrderAdapter = new ReceivedOrderAdapter(mData, tab_nhan.this,this, fm);
 
         NewsRecyclerview.setAdapter(receivedOrderAdapter);
         NewsRecyclerview.smoothScrollToPosition(0);
         return view;
     }
+
+
     public void deleteItem(int pos, RecyclerView.ViewHolder viewHolder){
         String idshop = null;
         String idpost = null;
@@ -184,7 +185,6 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     }
 
     public void getListStatusReceived(){
-        mDatabase = rootNode.getReference();
         mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("0").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -195,9 +195,8 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                         mData.add(data);
                     }
                     receivedOrderAdapter.insertData(mData);
-                    mDatabase.child("received_order_status").removeEventListener(this);
                 }else{
-                   // Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
                 }
             }
             @Override
@@ -206,11 +205,12 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
             }
         });
     }
-    //Load ID User
-    private void loadData() {
-        iDUser = sharedpreferencesIdUser.getString(IDUSER, "");
-    }
 
+    //Load ID User
+    public void getUid(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        iDUser = user.getUid();
+    }
     @Override
     public void onItemClick(int position) {
     }

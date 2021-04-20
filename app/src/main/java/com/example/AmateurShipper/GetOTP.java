@@ -59,7 +59,7 @@ public class GetOTP extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         mAuth = FirebaseAuth.getInstance();
         rootNode = FirebaseDatabase.getInstance();
-        databaseReference = rootNode.getReference().child("users");
+        databaseReference = rootNode.getReference();
 
         buttonGetOTP.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,12 +68,32 @@ public class GetOTP extends AppCompatActivity {
                     Toast.makeText(GetOTP.this, "Enter mobile", Toast.LENGTH_SHORT).show();
                     return;
                 }else{
+                    databaseReference.child("Account_Shipper").orderByKey().equalTo(inputMobile.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                inputMobile.setError("This number is already exists");
+                            } else {
                                 progressBar.setVisibility(View.VISIBLE);
-
                                 buttonGetOTP.setVisibility(View.INVISIBLE);
                                 sharedPreferences = getSharedPreferences(MyPREFERENCES_GETOTP, Context.MODE_PRIVATE);
                                 saveData(inputMobile.getText().toString());
                                 sendVerificationCode(inputMobile.getText().toString());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+//                                progressBar.setVisibility(View.VISIBLE);
+//
+//                                buttonGetOTP.setVisibility(View.INVISIBLE);
+//                                sharedPreferences = getSharedPreferences(MyPREFERENCES_GETOTP, Context.MODE_PRIVATE);
+//                                saveData(inputMobile.getText().toString());
+//                                sendVerificationCode(inputMobile.getText().toString());
+
 //                    databaseReference.orderByKey().equalTo(inputMobile.getText().toString()).addChildEventListener(new ChildEventListener() {
 //                        @Override
 //                        public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {

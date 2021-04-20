@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
-import static com.example.AmateurShipper.LoginActivity.IDUSER;
-import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
+//import static com.example.AmateurShipper.LoginActivity.IDUSER;
+//import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
 
 
 /**
@@ -47,10 +49,10 @@ public class tab_dang_giao extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    SharedPreferences sharedpreferencesIdUser;
     RecyclerView TabDGiaoRecyclerview;
     ShippingOrderAdapter shippingOrderAdapter;
     DatabaseReference mDatabase;
+    FragmentManager fm;
     List<PostObject> mListData = new ArrayList<>() ;
     String iDUser;
     public tab_dang_giao() {
@@ -88,17 +90,18 @@ public class tab_dang_giao extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        //sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         View view = inflater.inflate(R.layout.fragment_tab_dang_giao,container,false);
         TabDGiaoRecyclerview = view.findViewById(R.id.rcv_tab_dang_giao);
         mDatabase = FirebaseDatabase.getInstance().getReference();
        // mainActivity = (MainActivity) getActivity();
        // mainActivity.setCountOrder(0);
         //mainActivity.disableNotification();
+        getUid();
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        fm = getActivity().getSupportFragmentManager();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        loadData();
+
         mLayoutManager.setReverseLayout(true);
         mLayoutManager.setStackFromEnd(true);
         TabDGiaoRecyclerview.setHasFixedSize(true);
@@ -107,69 +110,38 @@ public class tab_dang_giao extends Fragment {
             mListData.clear();
         }
         getListOrder();
-        shippingOrderAdapter = new ShippingOrderAdapter(mListData, tab_dang_giao.this,fm);
-        TabDGiaoRecyclerview.setAdapter(shippingOrderAdapter);
-        TabDGiaoRecyclerview.smoothScrollToPosition(0);
         return view;
     }
 
-    //Load ID User
-    private void loadData() {
-        iDUser = sharedpreferencesIdUser.getString(IDUSER, "");
+    //  Load ID User
+    public void getUid(){
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    iDUser = user.getUid();
     }
 
     public void getListOrder(){
-        mListData.clear();
-        mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("1").addChildEventListener(new ChildEventListener() {
+        mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("1").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                        PostObject data = snapshot.getValue(PostObject.class);
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        PostObject data = dataSnapshot.getValue(PostObject.class);
                         mListData.add(data);
-                    shippingOrderAdapter.addItem(0,data);
-                    Log.i(TAG, "onChildAdded:"+shippingOrderAdapter.getItemCount());
+                    }
+                    shippingOrderAdapter = new ShippingOrderAdapter(mListData, tab_dang_giao.this,fm);
+                    TabDGiaoRecyclerview.setAdapter(shippingOrderAdapter);
+                    shippingOrderAdapter.notifyDataSetChanged();
+
+                }else{
+                    Toast.makeText(getContext(), "Khong the tai", Toast.LENGTH_SHORT).show();
                 }
+
+                mDatabase.child("received_order_status").child(iDUser).removeEventListener(this);
             }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-//        mDatabase.child("received_order_status").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if (snapshot.exists()) {
-//                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                        PostObject data = dataSnapshot.getValue(PostObject.class);
-//                        mListData.add(data);
-//                    }
-//                    shippingOrderAdapter.insertData(mListData);
-//                    Log.i(TAG, "onChildAdded:"+shippingOrderAdapter.getItemCount());
-//                    mDatabase.child("received_order_status").removeEventListener(this);
-//                }else{
-//                    // Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
     }
 }

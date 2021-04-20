@@ -49,9 +49,9 @@ import com.google.firebase.storage.UploadTask;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.AmateurShipper.LoginActivity.IDUSER;
+//import static com.example.AmateurShipper.LoginActivity.IDUSER;
 import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
-import static com.example.AmateurShipper.LoginActivity.MyPREFERENCESIDUSER;
+//import static com.example.AmateurShipper.LoginActivity.MyPREFERENCESIDUSER;
 import static com.example.AmateurShipper.LoginActivity.USERNAME;
 
 
@@ -135,8 +135,8 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
         mFireStore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         sharedpreferences = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCESIDUSER, Context.MODE_PRIVATE);
-        loadData();
+      //  sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCESIDUSER, Context.MODE_PRIVATE);
+        getUid();
         readProfile();
         avata.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,9 +170,15 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
         return view;
     }
     // lấy ID của shipper hiện tại
-    private void loadData() {
-        iDUser = sharedpreferencesIdUser.getString(IDUSER, "");
+//    private void loadData() {
+//        iDUser = sharedpreferencesIdUser.getString(IDUSER, "");
+//    }
+    //lấy UID
+    public void getUid(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        iDUser = user.getUid();
     }
+
 
     // Update the profile
     public void updateProfile() {

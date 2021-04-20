@@ -44,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         repassword = findViewById(R.id.editTextRepassword);
         password = findViewById(R.id.editTextPassword);
         loginButton = findViewById(R.id.cirRegisterButton);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         iEmail = email.getText().toString();
 //        iPhonen = phonenumber.getText().toString();
@@ -57,13 +58,15 @@ public class RegisterActivity extends AppCompatActivity {
                 if (!validateName() || !validateEmail()|| !validatePassword() || !validateRePassword()) {
                     return;
                 }
-               // signUpByEmail();
-                    FirebaseApp.initializeApp(getApplicationContext());
-                    rootNode = FirebaseDatabase.getInstance();
-                    databaseReference = rootNode.getReference("users");
-                    UserAccountObject ur = new UserAccountObject(name.getText().toString(), email.getText().toString(),
-                                                            password.getText().toString(), save_phonenumber);
-                    databaseReference.child(save_phonenumber).setValue(ur);
+                signUpByEmail();
+
+                   // FirebaseApp.initializeApp(getApplicationContext());
+                  //  rootNode = FirebaseDatabase.getInstance();
+                   // databaseReference = rootNode.getReference("users");
+                databaseReference.child("Account_Shipper").child(save_phonenumber).setValue(email.getText().toString());
+//                    UserAccountObject ur = new UserAccountObject(name.getText().toString(), email.getText().toString(),
+//                                                            password.getText().toString(), save_phonenumber);
+//                    databaseReference.child(save_phonenumber).setValue(ur);
                     startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
                     mAuth = FirebaseAuth.getInstance();
@@ -72,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
     public void signUpByEmail(){
-        mAuth.createUserWithEmailAndPassword(save_phonenumber+"@gmail.com",password.getText().toString())
+        mAuth.createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -81,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity {
                             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
                         } else {
-                            // Toast.makeText(Verify.this, "Loi!!!", Toast.LENGTH_SHORT).show();
+                             Toast.makeText(RegisterActivity.this, "Loi!!!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

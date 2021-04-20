@@ -1,5 +1,6 @@
 package com.example.AmateurShipper;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,7 +11,10 @@ import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
@@ -33,6 +37,7 @@ public class CartFragment extends Fragment {
     private ViewPager viewPager;
     private TabItem tab_nhan,tab_chua_nhan,tab_lichsu;
     public PageAdapter pagerAdapter;
+   // Button daNhan,dangGiao,lichSu;
 
     public CartFragment() {
         // Required empty public constructor
@@ -75,9 +80,19 @@ public class CartFragment extends Fragment {
         tab_lichsu = view.findViewById(R.id.tab_lich_su);
         viewPager = view.findViewById(R.id.viewpage);
 
+//        //loadFragment(new tab_nhan());
+//        getActivity().getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.content_cart, new tab_nhan())
+//                .commit();
+//        onTabSelected();
+
+//        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Đã Nhận", R.color.whiteTextColor);
+//        AHBottomNavigationItem item2 = new AHBottomNavigationItem("Đang Giao", R.color.whiteTextColor);
+//        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Lịch Sử", R.color.whiteTextColor);
+       // topNavigationView.setCurrentItem(0);
         pagerAdapter = new PageAdapter(getChildFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
-
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -106,4 +121,57 @@ public class CartFragment extends Fragment {
         // Inflate the layout for this fragment
         return view;
     }
+//    private void loadFragment(Fragment fragment) {
+//        //switching fragment
+//        if (fragment != null) {
+//            getActivity().getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .replace(R.id.content_cart, fragment)
+//                    .commit();
+//            //return true;
+//        }
+//       // return false;
+//    }
+//
+//    public void onTabSelected(){
+//        daNhan.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tab_nhan tab_nhan1 = new tab_nhan();
+//                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_cart, tab_nhan1).commit();
+//               // getActivity().getSupportFragmentManager().beginTransaction().add(R.id.content_cart, tab_nhan1).commit();
+//            }
+//        });
+//        dangGiao.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tab_dang_giao tab_dang_giao1 = new tab_dang_giao();
+//                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_cart, tab_dang_giao1).commit();
+//            }
+//        });
+//        lichSu.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                tab_lich_su tab_lich_su1 = new tab_lich_su();
+//                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_cart, tab_lich_su1).commit();
+//            }
+//        });
+//    }
+//    @Override
+//    public boolean onTabSelected(int position, boolean wasSelected) {
+//        if (position == 0) {
+//            tab_nhan tab_nhan1 = new tab_nhan();
+//            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_cart, tab_nhan1).commit();
+//            return true;
+//        } else if (position == 1) {
+//            tab_dang_giao tab_dang_giao1 = new tab_dang_giao();
+//            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_cart, tab_dang_giao1).commit();
+//            return true;
+//        } else if (position == 2) {
+//            tab_lich_su tab_lich_su1 = new tab_lich_su();
+//            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_cart, tab_lich_su1).commit();
+//            return true;
+//        }
+//        return false;
+//    }
 }

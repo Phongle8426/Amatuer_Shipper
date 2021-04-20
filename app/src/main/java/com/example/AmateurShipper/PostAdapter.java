@@ -2,9 +2,6 @@ package com.example.AmateurShipper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,26 +9,23 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.AmateurShipper.Util.PostDiffUtilCallback;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static android.content.ContentValues.TAG;
-import static com.example.AmateurShipper.LoginActivity.IDUSER;
-import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
+//import static com.example.AmateurShipper.LoginActivity.IDUSER;
+
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterClass> {
     //private RecyclerViewClickInterface recyclerViewClickInterface;
@@ -112,7 +106,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
 
         public ViewAdapterClass(@NonNull final View itemView, OnPostListener onPostListener) {
             super(itemView);
-            sharedpreferencesIdUser = itemView.getContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+           // sharedpreferencesIdUser = itemView.getContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
             mainActivity = (MainActivity) itemView.getContext();
             name_poster = itemView.findViewById(R.id.name_poster);
             time = itemView.findViewById(R.id.time_post);
@@ -126,7 +120,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
             image_poster = itemView.findViewById(R.id.img_poster);
             get_order = itemView.findViewById(R.id.img_getOrder);
             // attach_image = itemView.findViewById(R.id.img_attachment_image);
-            loadData();
+            getUid();
             this.onPostListener = onPostListener;
             itemView.setOnClickListener(this);
             get_order.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +139,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                     String phi_ung = postList.get(getAdapterPosition()).phi_ung;
                     String km = postList.get(getAdapterPosition()).km;
                     String id_post = postList.get(getAdapterPosition()).id_post;
-                    PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan, ten_nguoi_nhan, ghi_chu, thoi_gian, id_shop, phi_giao, phi_ung, km, id_post,"0");
+                    PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan,
+                            ten_nguoi_nhan, ghi_chu, thoi_gian, id_shop, phi_giao, phi_ung, km, id_post,"0");
                     databaseReference.child("received_order_status").child(IdUser).child(postObject.getId_post()).setValue(postObject);
                     databaseReference.child("newsfeed").child(postObject.getId_post()).setValue(null);
                     postList.remove(getAdapterPosition());
@@ -170,8 +165,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
     }
 
     //Load ID User
-    private void loadData() {
-        IdUser = sharedpreferencesIdUser.getString(IDUSER, "");
+//    private void loadData() {
+//        IdUser = sharedpreferencesIdUser.getString(IDUSER, "");
+//    }
+    public void getUid(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        IdUser = user.getUid();
     }
 
 }

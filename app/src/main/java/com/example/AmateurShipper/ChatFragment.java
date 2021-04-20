@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,8 +40,8 @@ import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
-import static com.example.AmateurShipper.LoginActivity.IDUSER;
-import static com.example.AmateurShipper.LoginActivity.MyPREFERENCESIDUSER;
+//import static com.example.AmateurShipper.LoginActivity.IDUSER;
+//import static com.example.AmateurShipper.LoginActivity.MyPREFERENCESIDUSER;
 import static com.example.AmateurShipper.ReceivedOrderAdapter.MyPREFERENCES_IDPOST;
 
 /**
@@ -66,7 +68,7 @@ public class ChatFragment extends Fragment {
     //ImageButton close_chat;
     ImageButton btn_send_message,btn_send_image;
     SharedPreferences sharedpreferences, sharedpreferencesIdUser;
-
+    boolean seenMessage = false;
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -106,11 +108,11 @@ public class ChatFragment extends Fragment {
         btn_send_image = view.findViewById(R.id.btn_mess_picture);
         edtMessage = view.findViewById(R.id.edtMessage);
         sharedpreferences = getActivity().getSharedPreferences(MyPREFERENCES_IDPOST, Context.MODE_PRIVATE);
-        sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCESIDUSER, Context.MODE_PRIVATE);
+       // sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCESIDUSER, Context.MODE_PRIVATE);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         mStorage = FirebaseStorage.getInstance().getReference();
         loadDataIdPost();
-        loadData();
+        getUid();
         readMessage();
         recyclerView_chat = view.findViewById(R.id.recycleview_mess);
         recyclerView_chat.setHasFixedSize(true);
@@ -173,7 +175,7 @@ public class ChatFragment extends Fragment {
 
     public void sendMessage(String content_message,String content_image){
         if (content_message != null){
-        MessageObject messageObject = new MessageObject(content_message,"shipper",content_image);
+        MessageObject messageObject = new MessageObject(content_message,id_shipper,content_image);
         databaseReference.child("Chatroom").child(id_chat_room).
                 push().setValue(messageObject).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -191,15 +193,18 @@ public class ChatFragment extends Fragment {
         Toast.makeText(getActivity(), "id post + " + id_post, Toast.LENGTH_SHORT).show();
     }
 
-    private void loadData() {
-        id_shipper = sharedpreferencesIdUser.getString(IDUSER, "");
-        Toast.makeText(getContext(), id_shipper, Toast.LENGTH_SHORT).show();
+//    private void loadData() {
+//        id_shipper = sharedpreferencesIdUser.getString(IDUSER, "");
+//        Toast.makeText(getContext(), id_shipper, Toast.LENGTH_SHORT).show();
+//    }
+    public void getUid(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        id_shipper = user.getUid();
     }
 
 
     public void readMessage() {
         messageObjects_chat = new ArrayList<>();
-
         databaseReference.child("Chatroom").child(id_chat_room).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {

@@ -29,6 +29,8 @@ import com.example.AmateurShipper.Dialog.FilterPaymentDialog;
 import com.example.AmateurShipper.Util.PostDiffUtilCallback;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
-import static com.example.AmateurShipper.LoginActivity.IDUSER;
+//import static com.example.AmateurShipper.LoginActivity.IDUSER;
 import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
 import static com.example.AmateurShipper.LoginActivity.USERNAME;
 
@@ -123,8 +125,8 @@ public static HomeFragment newInstance(){
         btn_notify_new_order = view.findViewById(R.id.btn_notify_new_order);
         NewsRecyclerview = view.findViewById(R.id.rcv_post);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        loadData();
+       // sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        getUid();
         mLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         mLayoutManager.setReverseLayout(true);
         NewsRecyclerview.setHasFixedSize(true);
@@ -162,10 +164,13 @@ public static HomeFragment newInstance(){
     }
 
     //Load ID User
-    private void loadData() {
-       iDUser = sharedpreferencesIdUser.getString(IDUSER, "");
+//    private void loadData() {
+//       iDUser = sharedpreferencesIdUser.getString(IDUSER, "");
+//    }
+    public void getUid(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        iDUser = user.getUid();
     }
-
 
     public void getChildList(){
         mDatabase.child("newsfeed").addChildEventListener(new ChildEventListener() {

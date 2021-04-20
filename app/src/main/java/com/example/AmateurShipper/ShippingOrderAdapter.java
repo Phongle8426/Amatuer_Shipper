@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -36,14 +39,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static android.content.ContentValues.TAG;
 import static com.example.AmateurShipper.ReceivedOrderAdapter.MyPREFERENCES_IDPOST;
 
-public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdapter.ViewAdapterClass>{
+public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdapter.ViewAdapterClass> implements ActivityCompat.OnRequestPermissionsResultCallback{
 
     int get_position;
     SharedPreferences sharedpreferences;
-    FirebaseDatabase rootDatabase = FirebaseDatabase.getInstance();
-    DatabaseReference databaseReference = rootDatabase.getReference();
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
     List<PostObject> shippingList;
     Fragment mContext;
     FragmentManager fragmentManager;
@@ -55,32 +58,11 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
        this.fragmentManager = fm;
     }
 
-    public void insertData(List<PostObject> insertList) {
-        PostDiffUtilCallback postDiffUtilCallback = new PostDiffUtilCallback(shippingList, insertList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(postDiffUtilCallback);
-        shippingList.clear();
-        shippingList.addAll(insertList);
-        diffResult.dispatchUpdatesTo(ShippingOrderAdapter.this);
-    }
-
-    public void addItem(int position,PostObject addList ) {
-//        if (shippingList.size()>0){
-//            if(!addList.id_post.equals(shippingList.get(0).id_post)){
-//                shippingList.add(position, addList);
-//                notifyItemInserted(position);
-//            }
-//        }else{
-            shippingList.add(position, addList);
-            notifyItemInserted(position);
-       // }
-    }
-
-
 
     @NonNull
     @Override
     public ViewAdapterClass onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tab_nhan, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tab_dang_giao, parent, false);
         ShippingOrderAdapter.ViewAdapterClass viewAdapterClass = new ShippingOrderAdapter.ViewAdapterClass(view);
         return viewAdapterClass;
     }
@@ -101,7 +83,39 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
         return shippingList.size();
     }
 
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == ShippingOrderAdapter.ViewAdapterClass.REQUEST_CALL) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                call_customer();
+                call_shop();
+            } else {
+                Toast.makeText(mContext.getActivity(), "permission DENIED", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private void call_shop() {
+        String number_shop = "0" + sdt_shop;
+        if (number_shop.trim().length() > 0) {
+            if (ContextCompat.checkSelfPermission(mContext.getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
+                ActivityCompat.requestPermissions(mContext.getActivity(), new String[]{Manifest.permission.CALL_PHONE}, ShippingOrderAdapter.ViewAdapterClass.REQUEST_CALL);
+            else {
+                String dial = "tel: " + number_shop;
+                mContext.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
+            }
+        }
+    }
+    private void call_customer() {
+        String number_customer = "0" + sdt_nguoi_nhan_hang;
+        if (number_customer.trim().length() > 0) {
+            if (ContextCompat.checkSelfPermission(mContext.getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
+                ActivityCompat.requestPermissions(mContext.getActivity(), new String[]{Manifest.permission.CALL_PHONE}, ShippingOrderAdapter.ViewAdapterClass.REQUEST_CALL);
+            else {
+                String dial = "tel: " + number_customer;
+                mContext.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
+            }
+        }
+    }
 
     public class ViewAdapterClass extends RecyclerView.ViewHolder {
         TextView name_poster_tab_nhan, txt_start_place_tab_nhan, txt_end_place_tab_nhan,tv_shopname;
@@ -183,13 +197,13 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
                     btn_sdt_nguoi_nhan.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                          //  call_customer();
+                            call_customer();
                         }
                     });
                     btn_shop.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                           // call_shop();
+                            call_shop();
                         }
                     });
                     btn_messages.setOnClickListener(new View.OnClickListener() {
@@ -220,7 +234,6 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     id_chat_room[0] = snapshot.child("id_roomchat").getValue(String.class);
-                    // databaseReference.child("Transaction").child(idPost).removeEventListener(this);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString(ReceivedOrderAdapter.IDPOST, id_chat_room[0]);
                     editor.apply();
