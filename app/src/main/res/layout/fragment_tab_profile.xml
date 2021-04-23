@@ -47,7 +47,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15sp"
                 android:fontFamily="sans-serif-light"
-                android:text="Aron Shini"
+                android:hint="Tên"
                 android:textColor="@color/colorText"
                 android:background="@null"
                 android:textSize="32sp" />
@@ -129,7 +129,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:fontFamily="sans-serif-light"
-                        android:text="aronshininho@gmail.com"
+                        android:hint="aronshininho@gmail.com"
                         android:textColor="@color/colorText"
                         android:textSize="18sp" />
 
@@ -160,7 +160,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:fontFamily="sans-serif-light"
-                        android:text="+84-363-15-9770"
+                        android:hint="0363159770"
                         android:textColor="@color/colorText"
                         android:textSize="18sp" />
 
@@ -191,7 +191,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:fontFamily="sans-serif-light"
-                        android:text="285 Tran Cao van , Da Nang"
+                        android:hint="285 Tran Cao van , Da Nang"
                         android:textColor="@color/colorText"
                         android:textSize="18sp" />
 
@@ -224,7 +224,6 @@
                             android:id="@+id/edt_cmnd"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="CMMD"
                             android:textColor="@color/colorText"
                             android:fontFamily="sans-serif-light"
                             android:textSize="18sp"/>

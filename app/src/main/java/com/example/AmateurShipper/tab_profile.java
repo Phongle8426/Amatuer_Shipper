@@ -169,10 +169,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
         });
         return view;
     }
-    // lấy ID của shipper hiện tại
-//    private void loadData() {
-//        iDUser = sharedpreferencesIdUser.getString(IDUSER, "");
-//    }
+
     //lấy UID
     public void getUid(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -324,7 +321,9 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
                         email.setText(document.get("email").toString());
                         phone.setText(document.get("phone").toString());
                         cmnd.setText(document.get("cmnd").toString());
-                        Glide.with(getContext()).load(document.get("avatar").toString()).into((de.hdodenhof.circleimageview.CircleImageView )avata);
+                        if(!document.get("avatar").toString().equals(null)){
+                            Glide.with(getContext()).load(document.get("avatar").toString()).into((de.hdodenhof.circleimageview.CircleImageView )avata);
+                        }
 
                         getname=document.get("name").toString();
                         getaddress=document.get("address").toString();
@@ -397,7 +396,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
         String Address = address.getText().toString();
         String Cmnd = cmnd.getText().toString();
 
-        if (Email.isEmpty() || Phone.isEmpty() || Name.isEmpty() || Address.isEmpty()|| Cmnd.isEmpty())
+        if (Email.isEmpty() || Phone.isEmpty() || Name.isEmpty() || Address.isEmpty())
             return true;
         if (Phone.length() != 10)
             return true;

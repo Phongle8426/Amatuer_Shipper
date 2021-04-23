@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
 import com.example.AmateurShipper.Util.PostDiffUtilCallback;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -58,12 +59,15 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
     public static final String MyPREFERENCES_IDPOST = "myf";
     public static final String IDPOST = "ID post";
     SharedPreferences sharedpreferences;
+    private statusInterfaceRecyclerView clickInterface;
 
-    public ReceivedOrderAdapter(List<PostObject> postList, Fragment re, OnReceivedOderListener onReceivedOderListener, FragmentManager fm) {
+    public ReceivedOrderAdapter(List<PostObject> postList, Fragment re,
+                                OnReceivedOderListener onReceivedOderListener, FragmentManager fm,statusInterfaceRecyclerView clickInterface) {
         this.postList = postList;
         mContext = re;
         this.mOnReceivedOderListener = onReceivedOderListener;
         fragmentManager = fm;
+        this.clickInterface = clickInterface;
     }
 
     public void insertData(List<PostObject> insertList) {
@@ -147,10 +151,6 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
         }
     }
 
-    public void message_click() {
-
-    }
-
     private void call_customer() {
         String number_customer = "0" + sdt_nguoi_nhan_hang;
         if (number_customer.trim().length() > 0) {
@@ -181,102 +181,110 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
             name_poster_tab_nhan = itemView.findViewById(R.id.name_poster_tab_nhan);
             txt_start_place_tab_nhan = itemView.findViewById(R.id.txt_start_place_tab_nhan);
             txt_end_place_tab_nhan = itemView.findViewById(R.id.txt_end_place_tab_nhan);
-            this.onReceivedOderListener = onReceivedOderListener;
-            itemView.setOnClickListener(this);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(final View view) {
-                    String ten_nguoi_gui = postList.get(getAdapterPosition()).ten_nguoi_gui;
-                    String sdt_nguoi_gui = postList.get(getAdapterPosition()).sdt_nguoi_gui;
-                    String noi_nhan = postList.get(getAdapterPosition()).noi_nhan;
-                    String noi_giao = postList.get(getAdapterPosition()).noi_giao;
-                    String sdt_nguoi_nhan = postList.get(getAdapterPosition()).sdt_nguoi_nhan;
-                    String ten_nguoi_nhan = postList.get(getAdapterPosition()).ten_nguoi_nhan;
-                    String ghi_chu = postList.get(getAdapterPosition()).ghi_chu;
-                    String thoi_gian = postList.get(getAdapterPosition()).thoi_gian;
-                    String id_shop = postList.get(getAdapterPosition()).id_shop;
-                    String phi_giao = postList.get(getAdapterPosition()).phi_giao;
-                    String phi_ung = postList.get(getAdapterPosition()).phi_ung;
-                    String km = postList.get(getAdapterPosition()).km;
-                    String id_post = postList.get(getAdapterPosition()).id_post;
+                public void onClick(View v) {
+                    int position = getLayoutPosition();
+                    clickInterface.onItemClick(position);
 
-                    sharedpreferences = mContext.getActivity().getSharedPreferences(MyPREFERENCES_IDPOST, Context.MODE_PRIVATE);
-                    saveIdChatRoom(id_post);
-                    Toast.makeText(mContext.getActivity(), "ten nguoi gui"+ten_nguoi_gui, Toast.LENGTH_SHORT).show();
-                    final DialogPlus dialogPlus = DialogPlus.newDialog(itemView.getContext())
-                            .setContentHolder(new ViewHolder(R.layout.dialogcontent))
-                            .setGravity(Gravity.CENTER)
-                            .create();
-                    final View myview_dia = dialogPlus.getHolderView();
-                    //Khai báo
-                    linearLayout = (LinearLayout) myview_dia.findViewById(R.id.dialog_received_order);
-                    //TextView tng = (TextView) myview_dia.findViewById(R.id.editTextTenNguoiGui);
-                    TextView sdtnguoigui = (TextView) myview_dia.findViewById(R.id.editTextSoDTNguoiGui);
-                    TextView noinhan = (TextView) myview_dia.findViewById(R.id.editTextTextDiemdi);
-                    TextView noigiao = (TextView) myview_dia.findViewById(R.id.editTextTextDiemden);
-                    TextView sdtnguoinhan = (TextView) myview_dia.findViewById(R.id.tv_sdt_nguoi_nhan);
-                    TextView tennguoinhan = (TextView) myview_dia.findViewById(R.id.tv_ten_nguoi_nhan);
-                    TextView ghichu = (TextView) myview_dia.findViewById(R.id.editTextTextGhiChu);
-                    TextView thoigian = (TextView) myview_dia.findViewById(R.id.editTextTextPhut);
-                    TextView phigiao = (TextView) myview_dia.findViewById(R.id.editTextTextTienPhi);
-                    TextView phiung = (TextView) myview_dia.findViewById(R.id.editTextTextTienUng);
-                    TextView sokm = (TextView) myview_dia.findViewById(R.id.editTextTextKm);
-                    containerChat = (LinearLayout) myview_dia.findViewById(R.id.container_chat) ;
-                    tv_shopname = myview_dia.findViewById(R.id.username);
-                    close_btn = myview_dia.findViewById(R.id.close_chat);
-
-                    //Set data vao view
-                    sdtnguoigui.setText(sdt_nguoi_gui);
-                    noinhan.setText(noi_nhan);
-                    noigiao.setText(noi_giao);
-                    sdtnguoinhan.setText(sdt_nguoi_nhan);
-                    tennguoinhan.setText(ten_nguoi_nhan);
-                    ghichu.setText(ghi_chu);
-                    thoigian.setText(thoi_gian);
-                    phigiao.setText(phi_giao);
-                    phiung.setText(phi_ung);
-                    sokm.setText(km);
-                    tv_shopname.setText(ten_nguoi_gui);
-                    dialogPlus.show();
-
-                    //lay sdt shop va khach hang
-                    sdt_nguoi_nhan_hang = sdtnguoinhan.getText().toString();
-                    sdt_shop = sdtnguoigui.getText().toString();
-                    btn_sdt_nguoi_nhan = (Button) myview_dia.findViewById(R.id.btn_customer_phone_number);
-                    //tv_sdt_nguoi_nhan = (TextView)myview_dia.findViewById(R.id.tv_sdt_nguoi_nhan);
-                    btn_shop = (Button) myview_dia.findViewById(R.id.btn_shop);
-                    btn_messages = (Button) myview_dia.findViewById(R.id.btn_massage);
-                    final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frag_container_1);
-                    btn_sdt_nguoi_nhan.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            call_customer();
-                        }
-                    });
-                    btn_shop.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            call_shop();
-                        }
-                    });
-                    btn_messages.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                           linearLayout.setVisibility(View.GONE);
-                           // dialogPlus.dismiss();
-                            ChatFragment chatFragment = new ChatFragment();
-                            fragmentManager = mContext.getActivity().getSupportFragmentManager();
-                            mContext.getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frag_container_1, chatFragment).commit();
-                        }
-                    });
-                    close_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialogPlus.dismiss();
-                        }
-                    });
                 }
             });
+//            this.onReceivedOderListener = onReceivedOderListener;
+//            itemView.setOnClickListener(this);
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(final View view) {
+//                    String ten_nguoi_gui = postList.get(getAdapterPosition()).ten_nguoi_gui;
+//                    String sdt_nguoi_gui = postList.get(getAdapterPosition()).sdt_nguoi_gui;
+//                    String noi_nhan = postList.get(getAdapterPosition()).noi_nhan;
+//                    String noi_giao = postList.get(getAdapterPosition()).noi_giao;
+//                    String sdt_nguoi_nhan = postList.get(getAdapterPosition()).sdt_nguoi_nhan;
+//                    String ten_nguoi_nhan = postList.get(getAdapterPosition()).ten_nguoi_nhan;
+//                    String ghi_chu = postList.get(getAdapterPosition()).ghi_chu;
+//                    String thoi_gian = postList.get(getAdapterPosition()).thoi_gian;
+//                    String id_shop = postList.get(getAdapterPosition()).id_shop;
+//                    String phi_giao = postList.get(getAdapterPosition()).phi_giao;
+//                    String phi_ung = postList.get(getAdapterPosition()).phi_ung;
+//                    String km = postList.get(getAdapterPosition()).km;
+//                    String id_post = postList.get(getAdapterPosition()).id_post;
+//
+//                    sharedpreferences = mContext.getActivity().getSharedPreferences(MyPREFERENCES_IDPOST, Context.MODE_PRIVATE);
+//                    saveIdChatRoom(id_post);
+//                    Toast.makeText(mContext.getActivity(), "ten nguoi gui"+ten_nguoi_gui, Toast.LENGTH_SHORT).show();
+//                    final DialogPlus dialogPlus = DialogPlus.newDialog(itemView.getContext())
+//                            .setContentHolder(new ViewHolder(R.layout.dialogcontent))
+//                            .setGravity(Gravity.CENTER)
+//                            .create();
+//                    final View myview_dia = dialogPlus.getHolderView();
+//                    //Khai báo
+//                    linearLayout = (LinearLayout) myview_dia.findViewById(R.id.dialog_received_order);
+//                    //TextView tng = (TextView) myview_dia.findViewById(R.id.editTextTenNguoiGui);
+//                    TextView sdtnguoigui = (TextView) myview_dia.findViewById(R.id.editTextSoDTNguoiGui);
+//                    TextView noinhan = (TextView) myview_dia.findViewById(R.id.editTextTextDiemdi);
+//                    TextView noigiao = (TextView) myview_dia.findViewById(R.id.editTextTextDiemden);
+//                    TextView sdtnguoinhan = (TextView) myview_dia.findViewById(R.id.tv_sdt_nguoi_nhan);
+//                    TextView tennguoinhan = (TextView) myview_dia.findViewById(R.id.tv_ten_nguoi_nhan);
+//                    TextView ghichu = (TextView) myview_dia.findViewById(R.id.editTextTextGhiChu);
+//                    TextView thoigian = (TextView) myview_dia.findViewById(R.id.editTextTextPhut);
+//                    TextView phigiao = (TextView) myview_dia.findViewById(R.id.editTextTextTienPhi);
+//                    TextView phiung = (TextView) myview_dia.findViewById(R.id.editTextTextTienUng);
+//                    TextView sokm = (TextView) myview_dia.findViewById(R.id.editTextTextKm);
+//                    containerChat = (LinearLayout) myview_dia.findViewById(R.id.container_chat) ;
+//                    tv_shopname = myview_dia.findViewById(R.id.username);
+//                    close_btn = myview_dia.findViewById(R.id.close_chat);
+//
+//                    //Set data vao view
+//                    sdtnguoigui.setText(sdt_nguoi_gui);
+//                    noinhan.setText(noi_nhan);
+//                    noigiao.setText(noi_giao);
+//                    sdtnguoinhan.setText(sdt_nguoi_nhan);
+//                    tennguoinhan.setText(ten_nguoi_nhan);
+//                    ghichu.setText(ghi_chu);
+//                    thoigian.setText(thoi_gian);
+//                    phigiao.setText(phi_giao);
+//                    phiung.setText(phi_ung);
+//                    sokm.setText(km);
+//                    tv_shopname.setText(ten_nguoi_gui);
+//                    dialogPlus.show();
+//
+//                    //lay sdt shop va khach hang
+//                    sdt_nguoi_nhan_hang = sdtnguoinhan.getText().toString();
+//                    sdt_shop = sdtnguoigui.getText().toString();
+//                    btn_sdt_nguoi_nhan = (Button) myview_dia.findViewById(R.id.btn_customer_phone_number);
+//                    //tv_sdt_nguoi_nhan = (TextView)myview_dia.findViewById(R.id.tv_sdt_nguoi_nhan);
+//                    btn_shop = (Button) myview_dia.findViewById(R.id.btn_shop);
+//                    btn_messages = (Button) myview_dia.findViewById(R.id.btn_massage);
+//                    final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frag_container_1);
+//                    btn_sdt_nguoi_nhan.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            call_customer();
+//                        }
+//                    });
+//                    btn_shop.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            call_shop();
+//                        }
+//                    });
+//                    btn_messages.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                           linearLayout.setVisibility(View.GONE);
+//                           // dialogPlus.dismiss();
+//                            ChatFragment chatFragment = new ChatFragment();
+//                            fragmentManager = mContext.getActivity().getSupportFragmentManager();
+//                            mContext.getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frag_container_1, chatFragment).commit();
+//                        }
+//                    });
+//                    close_btn.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            dialogPlus.dismiss();
+//                        }
+//                    });
+//                }
+//            });
         }
 
         @Override

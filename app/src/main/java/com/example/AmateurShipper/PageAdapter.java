@@ -1,5 +1,7 @@
 package com.example.AmateurShipper;
 
+import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -35,4 +37,5 @@ public class PageAdapter extends FragmentPagerAdapter {
     public int getItemPosition(@NonNull Object object) {
         return POSITION_NONE;
     }
+
 }

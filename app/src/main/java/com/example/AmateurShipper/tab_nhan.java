@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,9 +23,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
+import com.example.AmateurShipper.Dialog.FilterPaymentDialog;
 import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +46,7 @@ import java.util.List;
 import Helper.MyButtonClickListner;
 import Helper.MySwipeHelper;
 
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -56,18 +60,21 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    public static final String idpostvalue = "123";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     RecyclerView NewsRecyclerview;
+    FrameLayout framChat;
     MainActivity mainActivity;
     private DatabaseReference mDatabase;
     List<PostObject> mData = new ArrayList<>();
     ReceivedOrderAdapter receivedOrderAdapter;
     ChatFragment chatFragment;
     String iDUser;
+    FragmentManager fragmentManager;
+
     public tab_nhan() {
         // Required empty public constructor
     }
@@ -106,6 +113,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_nhan,container,false);
         NewsRecyclerview = view.findViewById(R.id.rcv_tab_nhan);
+        framChat =view.findViewById(R.id.frag_container_detail);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         getUid();
@@ -164,8 +172,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
             mData.clear();
         }
 
-        receivedOrderAdapter = new ReceivedOrderAdapter(mData, tab_nhan.this,this, fm);
-
+        receivedOrderAdapter = new ReceivedOrderAdapter(mData, tab_nhan.this,this, fm,this);
         NewsRecyclerview.setAdapter(receivedOrderAdapter);
         NewsRecyclerview.smoothScrollToPosition(0);
         return view;
@@ -213,6 +220,19 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     }
     @Override
     public void onItemClick(int position) {
+        String idPost = mData.get(position).getId_post();
+        Log.i(TAG, "onItemClick: "+idPost);
+       // NewsRecyclerview.setVisibility(View.INVISIBLE);
+        framChat.setVisibility(View.VISIBLE);
+        DetailOrderFragment detailFragment = new DetailOrderFragment();
+        Bundle bundle = new Bundle();
+
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        bundle.putString(idpostvalue,idPost); // use as per your need
+        detailFragment.setArguments(bundle);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.frag_container_detail,detailFragment);
+        fragmentTransaction.commit();
     }
 
     @Override
@@ -224,4 +244,5 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     public void onReceivedItem(int position){
 
     }
+
 }

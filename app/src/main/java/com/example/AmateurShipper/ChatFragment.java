@@ -30,11 +30,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +48,9 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 //import static com.example.AmateurShipper.LoginActivity.IDUSER;
 //import static com.example.AmateurShipper.LoginActivity.MyPREFERENCESIDUSER;
+import static com.example.AmateurShipper.DetailOrderFragment.id_room;
 import static com.example.AmateurShipper.ReceivedOrderAdapter.MyPREFERENCES_IDPOST;
+import static com.example.AmateurShipper.tab_nhan.idpostvalue;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,8 +75,8 @@ public class ChatFragment extends Fragment {
     Uri imageUri;
     //ImageButton close_chat;
     ImageButton btn_send_message,btn_send_image;
-    SharedPreferences sharedpreferences, sharedpreferencesIdUser;
-    boolean seenMessage = false;
+    SharedPreferences sharedpreferences;
+    ValueEventListener seenMessage;
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -103,7 +111,10 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
-
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            id_chat_room = bundle.getString(id_room, "1");
+        }
         btn_send_message = (ImageButton) view.findViewById(R.id.btnSendMess);
         btn_send_image = view.findViewById(R.id.btn_mess_picture);
         edtMessage = view.findViewById(R.id.edtMessage);
@@ -111,7 +122,7 @@ public class ChatFragment extends Fragment {
        // sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCESIDUSER, Context.MODE_PRIVATE);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         mStorage = FirebaseStorage.getInstance().getReference();
-        loadDataIdPost();
+       // loadDataIdPost();
         getUid();
         readMessage();
         recyclerView_chat = view.findViewById(R.id.recycleview_mess);
@@ -133,8 +144,14 @@ public class ChatFragment extends Fragment {
                 sendMessage(content_message,"");
             }
         });
-
+        seenMessage();
         return view;
+    }
+
+    public String getTimeMessage(){
+        DateFormat df = new SimpleDateFormat("HH':'mm");
+        String date = df.format(Calendar.getInstance().getTime());
+        return date;
     }
 
     public void choosePicture() {
@@ -154,6 +171,28 @@ public class ChatFragment extends Fragment {
         }
     }
 
+    public void seenMessage(){
+        seenMessage = databaseReference.child("Chatroom").child(id_chat_room).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        MessageObject mess = dataSnapshot.getValue(MessageObject.class);
+                        if (!mess.getId().equals(id_shipper)){
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("isseen","1");
+                            snapshot.getRef().child(dataSnapshot.getKey()).updateChildren(hashMap);
+                        }
+                    }
+                }
+        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     public void sendImageMessage(){
         if(imageUri != null){
             final String ramdomKey = UUID.randomUUID().toString();
@@ -175,7 +214,7 @@ public class ChatFragment extends Fragment {
 
     public void sendMessage(String content_message,String content_image){
         if (content_message != null){
-        MessageObject messageObject = new MessageObject(content_message,id_shipper,content_image);
+        MessageObject messageObject = new MessageObject(content_message,id_shipper,content_image,"0",getTimeMessage(),"Aron WanbiSaka");
         databaseReference.child("Chatroom").child(id_chat_room).
                 push().setValue(messageObject).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -193,10 +232,6 @@ public class ChatFragment extends Fragment {
         Toast.makeText(getActivity(), "id post + " + id_post, Toast.LENGTH_SHORT).show();
     }
 
-//    private void loadData() {
-//        id_shipper = sharedpreferencesIdUser.getString(IDUSER, "");
-//        Toast.makeText(getContext(), id_shipper, Toast.LENGTH_SHORT).show();
-//    }
     public void getUid(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         id_shipper = user.getUid();
@@ -205,31 +240,19 @@ public class ChatFragment extends Fragment {
 
     public void readMessage() {
         messageObjects_chat = new ArrayList<>();
-        databaseReference.child("Chatroom").child(id_chat_room).addChildEventListener(new ChildEventListener() {
+        databaseReference.child("Chatroom").child(id_chat_room).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                //messageObjects_chat.clear();
-                MessageObject messageObject = snapshot.getValue(MessageObject.class);
-                messageObjects_chat.add(messageObject);
-                Log.i(TAG, "onChildAdded: "+ 1);
-                //chatAdapter.addItem(chatAdapter.getItemCount()-1,messageObject);
-                chatAdapter = new ChatAdapter(getContext(), messageObjects_chat);
-                recyclerView_chat.setAdapter(chatAdapter);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                messageObjects_chat.clear();
+                if (snapshot.exists()){
+                    for (DataSnapshot data : snapshot.getChildren()){
+                        MessageObject messageObject = data.getValue(MessageObject.class);
+                        messageObjects_chat.add(messageObject);
+                        //chatAdapter.addItem(chatAdapter.getItemCount()-1,messageObject);
+                        chatAdapter = new ChatAdapter(getContext(), messageObjects_chat);
+                        recyclerView_chat.setAdapter(chatAdapter);
+                    }
+                }
             }
 
             @Override
@@ -237,5 +260,11 @@ public class ChatFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        databaseReference.removeEventListener(seenMessage);
     }
 }

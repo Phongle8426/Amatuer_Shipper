@@ -35,11 +35,15 @@
             android:layout_height="wrap_content"
             android:text="lịch sử" />
     </com.google.android.material.tabs.TabLayout>
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewpage"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </androidx.viewpager.widget.ViewPager>
+    </RelativeLayout>
 
-    </androidx.viewpager.widget.ViewPager>
 
 </LinearLayout>

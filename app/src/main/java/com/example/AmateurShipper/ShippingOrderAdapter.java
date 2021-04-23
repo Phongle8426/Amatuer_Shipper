@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -121,7 +122,7 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
         TextView name_poster_tab_nhan, txt_start_place_tab_nhan, txt_end_place_tab_nhan,tv_shopname;
         private static final int REQUEST_CALL = 1;
         private TextView tv_sdt_nguoi_nhan;
-        private Button btn_sdt_nguoi_nhan, btn_shop, btn_messages;
+        private ImageView btn_sdt_nguoi_nhan, btn_shop, btn_messages;
         LinearLayout linearLayout, containerChat;
         ImageButton close_btn;
         public ViewAdapterClass(@NonNull final View itemView) {
@@ -169,8 +170,8 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
                     TextView phiung = (TextView) myview_dia.findViewById(R.id.editTextTextTienUng);
                     TextView sokm = (TextView) myview_dia.findViewById(R.id.editTextTextKm);
                     containerChat = (LinearLayout) myview_dia.findViewById(R.id.container_chat) ;
-                    tv_shopname = myview_dia.findViewById(R.id.username);
-                    close_btn = myview_dia.findViewById(R.id.close_chat);
+                    //tv_shopname = myview_dia.findViewById(R.id.username);
+                   // close_btn = myview_dia.findViewById(R.id.close_chat);
 
                     //Set data vao view
                     sdtnguoigui.setText(sdt_nguoi_gui);
@@ -189,10 +190,10 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
                     //lay sdt shop va khach hang
                     sdt_nguoi_nhan_hang = sdtnguoinhan.getText().toString();
                     sdt_shop = sdtnguoigui.getText().toString();
-                    btn_sdt_nguoi_nhan = (Button) myview_dia.findViewById(R.id.btn_customer_phone_number);
+                    btn_sdt_nguoi_nhan = myview_dia.findViewById(R.id.btn_customer_phone_number);
                     //tv_sdt_nguoi_nhan = (TextView)myview_dia.findViewById(R.id.tv_sdt_nguoi_nhan);
-                    btn_shop = (Button) myview_dia.findViewById(R.id.btn_shop);
-                    btn_messages = (Button) myview_dia.findViewById(R.id.btn_massage);
+                    btn_shop = myview_dia.findViewById(R.id.btn_shop);
+                    btn_messages = myview_dia.findViewById(R.id.btn_massage);
                     final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.frag_container_1);
                     btn_sdt_nguoi_nhan.setOnClickListener(new View.OnClickListener() {
                         @Override

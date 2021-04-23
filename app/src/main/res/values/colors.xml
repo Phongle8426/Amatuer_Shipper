@@ -35,4 +35,8 @@
     <color name="cTextSecondary">#757575</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="cWhite">#FFFFFF</color>
+    <color name="mess">#0084FF</color>
+    <color name="nen">#FFF4DE</color>
+    <color name="chu">#FFA800</color>
+    <color name="nen_post">#F2C94C</color>
 </resources>

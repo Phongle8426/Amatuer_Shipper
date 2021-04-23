@@ -56,10 +56,23 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewAdapterCla
             holder.showMessage.setVisibility(View.VISIBLE);
             holder.showImageMessage.setVisibility(View.GONE);
             holder.showMessage.setText(messageObject.getMessage());
+            holder.timeMessage.setText(messageObject.getTimemessage());
         } else {
             holder.showImageMessage.setVisibility(View.VISIBLE);
             holder.showMessage.setVisibility(View.GONE);
+            holder.timeMessage.setText(messageObject.getTimemessage());
             Picasso.get().load(messageObject.getImgmessage()).fit().into(holder.showImageMessage);
+        }
+
+        if (position == mChat.size()-1){
+            if (messageObject.getIsseen().equals("1")){
+                //holder.seenMessage.setText("Da xem");
+                holder.seen.setImageResource(R.drawable.background_seen_chat);
+            }else{
+                holder.seen.setImageResource(R.drawable.background_notseen_chat);
+            }
+        }else{
+            holder.seen.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -68,13 +81,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewAdapterCla
         return mChat.size();
     }
     public class ViewAdapterClass extends RecyclerView.ViewHolder {
-        public TextView showMessage;
-        public ImageView showImageMessage;
+        public TextView showMessage,seenMessage,timeMessage;
+        public ImageView showImageMessage,seen;
+
 
         public ViewAdapterClass(@NonNull final View itemView) {
             super(itemView);
             showMessage = itemView.findViewById(R.id.show_message);
             showImageMessage = itemView.findViewById(R.id.show_image);
+            //seenMessage = itemView.findViewById(R.id.tv_seen);
+            timeMessage = itemView.findViewById(R.id.time_message);
+            seen = itemView.findViewById(R.id.seen);
         }
     }
 
