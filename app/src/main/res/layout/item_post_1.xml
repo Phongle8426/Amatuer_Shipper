@@ -62,6 +62,7 @@
                 android:textStyle="bold" />
 
             <Button
+
                 android:id="@+id/img_getOrder"
                 android:layout_width="70dp"
                 android:layout_height="40dp"
@@ -69,7 +70,8 @@
                 android:layout_gravity="center_horizontal"
                 style="@style/button_receive"
                 android:text="nhan"
-                android:textSize="9sp"/>
+                android:textColor="@color/cTextPrimary"
+                />
 
         </LinearLayout>
 

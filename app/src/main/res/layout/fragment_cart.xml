@@ -13,18 +13,28 @@
         android:id="@+id/tablayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorText"
-        app:tabTextColor="@color/half_black"
-        app:tabSelectedTextColor="@color/cardview_light_background">
+        android:background="@color/background1"
+        app:tabGravity="fill"
+        app:tabInlineLabel="true"
+        app:tabIndicatorColor="#FFC400"
+        app:tabMode="fixed"
+        app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
+        app:tabIconTint="@color/background"
+        app:tabSelectedTextColor="@color/cardview_light_background"
+        app:tabTextColor="@color/half_black">
+        >
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_nhan"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:icon="@drawable/deliverybox"
             android:text="Đơn đã nhận" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_chua_nhan"
+            android:icon="@drawable/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Đơn chờ gom" />
@@ -32,8 +42,10 @@
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_lich_su"
             android:layout_width="wrap_content"
+            android:icon="@drawable/his"
             android:layout_height="wrap_content"
             android:text="lịch sử" />
+
     </com.google.android.material.tabs.TabLayout>
     <RelativeLayout
         android:layout_width="match_parent"

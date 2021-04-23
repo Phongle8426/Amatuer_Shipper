@@ -8,23 +8,29 @@
     tools:context=".CartFragment">
 
     <com.google.android.material.tabs.TabLayout
+        app:tabBackground="@color/background1"
         android:id="@+id/tablayout_profile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorText"
+        app:tabGravity="fill"
+        app:tabInlineLabel="true"
+        app:tabIndicatorColor="#FFC400"
+        app:tabMode="fixed"
+        app:tabIconTint="@color/background"
         app:tabTextColor="@color/half_black"
         app:tabSelectedTextColor="@color/cardview_light_background">
-
         <com.google.android.material.tabs.TabItem
             android:id="@+id/profile_tab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:icon="@drawable/profile"
             android:text="Cá Nhân" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/statis_tab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:icon="@drawable/stats"
             android:text="Thống Kê" />
     </com.google.android.material.tabs.TabLayout>
 

@@ -96,7 +96,7 @@ android:padding="5dp" android:id="@+id/container_chat">
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Tên khách hàng:"
-                        android:textColor="@color/colorText" />
+                        android:textColor="#3f4254" />
 
                     <TextView
                         android:id="@+id/tv_ten_nguoi_nhan"
@@ -104,7 +104,8 @@ android:padding="5dp" android:id="@+id/container_chat">
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:text="Tran trong tin"
-                        android:textColor="@color/colorText" />
+                        android:textStyle="bold"
+                        android:textColor="#3f4254" />
                 </LinearLayout>
                 <ImageView
                     android:id="@+id/btn_customer_phone_number"
@@ -123,7 +124,7 @@ android:padding="5dp" android:id="@+id/container_chat">
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Số điện thoại:"
-                    android:textColor="@color/colorText" />
+                    android:textColor="#3f4254" />
 
                 <TextView
                     android:id="@+id/tv_sdt_nguoi_nhan"
@@ -131,7 +132,8 @@ android:padding="5dp" android:id="@+id/container_chat">
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:text="0263150779"
-                    android:textColor="@color/colorText" />
+                    android:textStyle="bold"
+                    android:textColor="#3f4254" />
             </LinearLayout>
 
             <LinearLayout
@@ -143,14 +145,15 @@ android:padding="5dp" android:id="@+id/container_chat">
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Phí giao hàng:"
-                    android:textColor="@color/colorText" />
+                    android:textColor="#3f4254" />
 
                 <TextView
                     android:id="@+id/editTextTextTienPhi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:textColor="#079119"
+                    android:textColor="#188ae2"
+                    android:textStyle="bold"
                     android:text="12" />
             </LinearLayout>
 
@@ -163,14 +166,15 @@ android:padding="5dp" android:id="@+id/container_chat">
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Tạm ứng:"
-                    android:textColor="@color/colorText" />
+                    android:textColor="#3f4254" />
 
                 <TextView
                     android:id="@+id/editTextTextTienUng"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#EF0000"
+                    android:textColor="#f27173"
                     android:layout_marginLeft="5dp"
+                    android:textStyle="bold"
                     android:text="500" />
             </LinearLayout>
 
@@ -184,7 +188,9 @@ android:padding="5dp" android:id="@+id/container_chat">
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nhận hàng từ"
-                    android:textColor="@color/colorText" />
+                    android:textStyle="bold"
+
+                    android:textColor="#3f4254"/>
 
                 <TextView
                     android:id="@+id/editTextTextDiemdi"
@@ -192,7 +198,7 @@ android:padding="5dp" android:id="@+id/container_chat">
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:text="285/33 Trần cao vân, thanh khe, đa nang"
-                    android:textColor="@color/colorText" />
+                    android:textColor="#3f4254" />
             </LinearLayout>
 
             <LinearLayout
@@ -205,7 +211,7 @@ android:padding="5dp" android:id="@+id/container_chat">
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Giao hàng tới"
-                    android:textColor="@color/colorText" />
+                    android:textColor="#3f4254" />
 
                 <TextView
                     android:id="@+id/editTextTextDiemden"
@@ -213,7 +219,7 @@ android:padding="5dp" android:id="@+id/container_chat">
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:text="285/33 Trần cao vân, thanh khe, đa nang"
-                    android:textColor="@color/colorText" />
+                    android:textColor="#3f4254" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -243,7 +249,7 @@ android:padding="5dp" android:id="@+id/container_chat">
             android:id="@+id/editTextTextGhiChu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorText"
+            android:textColor="#3f4254"
             android:layout_marginLeft="5dp"
             android:text="285/33 Trần cao vân, thanh khe, đa nang"/>
     </LinearLayout>
@@ -265,7 +271,8 @@ android:padding="5dp" android:id="@+id/container_chat">
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Người gửi đơn: "
-                android:textColor="@color/colorText" />
+                android:textStyle="bold"
+                android:textColor="#3f4254" />
 
             <TextView
                 android:id="@+id/tv_ten_nguoi_gui"
@@ -273,14 +280,14 @@ android:padding="5dp" android:id="@+id/container_chat">
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="Huynh Ba Thang"
-                android:textColor="@color/colorText" />
+                android:textColor="#3f4254"/>
 
             <TextView
                 android:id="@+id/editTextSoDTNguoiGui"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:textColor="@color/colorText"
+                android:textColor="#3f4254"
                 android:text="0363159770"/>
         </LinearLayout>
         <ImageView

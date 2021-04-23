@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:text="@string/otp_verification"
-            android:textColor="@color/colorText"
+            android:textColor="@color/cTextSecondary"
             android:textSize="20sp"
             android:textStyle="bold">
 
@@ -53,7 +53,7 @@
             android:layout_marginEnd="50dp"
             android:layout_marginTop="4dp"
             android:gravity="center"
-            android:textColor="@color/cTextPrimary"
+            android:textColor="@color/colorDivider"
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_width="match_parent"
@@ -150,33 +150,7 @@
 
 
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:orientation="horizontal">
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/didn_t_receive_the_otp"
-                android:textColor="@color/cTextSecondary"
-                android:textSize="14sp"></TextView>
-
-            <TextView
-                android:id="@+id/textResendOTP"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/resend_otp"
-                android:textStyle="bold"
-                android:textColor="@color/cAccent"
-                android:textSize="15sp"></TextView>
-
-
-
-        </LinearLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

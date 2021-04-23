@@ -27,7 +27,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:text="Here’s\nyour first\nstep with \nus! "
-                    android:textColor="@color/colorText" />
+                    android:textColor="@color/cTextSecondary" />
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/animation_view"
                     android:layout_width="600px"
@@ -59,7 +59,7 @@
                         android:layout_marginTop="@dimen/loginViewsMargin">
 
                         <EditText
-                            android:backgroundTint="@color/white"
+                            android:background="@drawable/backgournd_button"
                             android:id="@+id/editTextName"
                             style="@style/modifiedEditText1"
                             android:inputType="text"
@@ -76,7 +76,7 @@
                         android:textColorHint="@color/half_black"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
-                            android:backgroundTint="@color/white"
+                            android:background="@drawable/backgournd_button"
                             android:id="@+id/editTextEmail"
                             style="@style/modifiedEditText1"
                             android:hint="@string/login_email_hint"
@@ -91,7 +91,7 @@
                         android:layout_marginTop="@dimen/loginViewsMargin">
 
                         <EditText
-                            android:backgroundTint="@color/white"
+                            android:background="@drawable/backgournd_button"
                             android:id="@+id/editTextPassword"
                             style="@style/modifiedEditText1"
                             android:hint="Password"
@@ -107,7 +107,7 @@
                         app:hintTextColor="@color/colorText"
                         android:layout_marginTop="@dimen/loginViewsMargin">
                         <EditText
-                            android:backgroundTint="@color/white"
+                            android:background="@drawable/backgournd_button"
                             android:id="@+id/editTextRepassword"
                             style="@style/modifiedEditText1"
                             android:hint="Repassword"
@@ -116,24 +116,28 @@
                             android:inputType="textPassword"
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
+
                     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
                         android:id="@+id/cirRegisterButton"
-                        style="@style/loginButton1"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/loginViewsMargin"
-                        android:layout_width="match_parent"
                         android:text="Register"
+                        android:textColor="@color/cWhite"
+                        android:background="@drawable/backgournd_button"
                         app:initialCornerAngle="27dp"
                         app:spinning_bar_color="#FFF"
                         app:spinning_bar_padding="6dp"
                         app:spinning_bar_width="4dp" />
+
                     <TextView
                         style="@style/parent"
                         android:layout_marginTop="@dimen/loginViewsMargin"
                         android:onClick="onLoginClick"
                         android:text="Already have an account?"
                         android:textAlignment="center"
-                        android:textColor="@color/whiteTextColor"
+                        android:textColor="@color/cTextSecondary"
                         android:textSize="17sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -156,7 +160,7 @@
                     android:layout_weight="6"
                     android:text="Use other Methods"
                     android:textAlignment="center"
-                    android:textColor="@color/whiteTextColor"
+                    android:textColor="@color/colorDivider"
                     android:textSize="12sp" />
                 <View
                     android:layout_width="0dp"
@@ -186,7 +190,6 @@
         android:layout_width="11dp"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
         android:layout_marginTop="20dp"
         android:background="@drawable/ic_side_bg" />
     <ImageView

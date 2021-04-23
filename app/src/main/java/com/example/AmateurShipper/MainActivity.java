@@ -62,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         bottomNavigationView.addItem(item4);
         bottomNavigationView.setCurrentItem(0);
         bottomNavigationView.setOnTabSelectedListener(this);
+
+        bottomNavigationView.setAccentColor(Color.parseColor("#FF3C4673"));
+        bottomNavigationView.setInactiveColor(Color.parseColor("#FF3C4673"));
     }
     private boolean loadFragment(Fragment fragment) {
         //switching fragment

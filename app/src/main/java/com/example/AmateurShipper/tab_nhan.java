@@ -222,7 +222,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     public void onItemClick(int position) {
         String idPost = mData.get(position).getId_post();
         Log.i(TAG, "onItemClick: "+idPost);
-       // NewsRecyclerview.setVisibility(View.INVISIBLE);
+        NewsRecyclerview.setVisibility(View.INVISIBLE);
         framChat.setVisibility(View.VISIBLE);
         DetailOrderFragment detailFragment = new DetailOrderFragment();
         Bundle bundle = new Bundle();

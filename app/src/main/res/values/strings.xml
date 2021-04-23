@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Amatuer Shipper</string>
+    <string name="mapbox_access_token">pk.eyJ1IjoidHJvbmd0aW4iLCJhIjoiY2tubGluaDk5MGk2MDJvcGJubXBmYjAybSJ9.iod8C2tfXJYSq3sA9ngCtA</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="login_email_hint">Email</string>

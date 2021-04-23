@@ -8,7 +8,12 @@
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/chipNavigation"
         android:layout_width="match_parent"
+        android:fitsSystemWindows="true"
+        app:itemIconTint="@drawable/tab_color"
+        app:itemTextColor="@drawable/tab_color"
         android:layout_height="wrap_content"
+        app:labelVisibilityMode="labeled"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
         android:layout_alignParentBottom="true" />
     <FrameLayout
         android:id="@+id/container"
