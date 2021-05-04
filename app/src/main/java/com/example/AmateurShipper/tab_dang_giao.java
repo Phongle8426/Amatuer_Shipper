@@ -1,13 +1,19 @@
 package com.example.AmateurShipper;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 
+import Helper.MyButtonClickListner;
+import Helper.MySwipeHelper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,8 +21,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.example.AmateurShipper.Dialog.SecurityCodeDialog;
+import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -30,8 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
-//import static com.example.AmateurShipper.LoginActivity.IDUSER;
-//import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
+import static com.example.AmateurShipper.tab_nhan.idpostvalue;
 
 
 /**
@@ -39,12 +47,17 @@ import static android.content.ContentValues.TAG;
  * Use the {@link tab_dang_giao#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class tab_dang_giao extends Fragment {
+public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerView,SecurityCodeDialog.OnInputSelected {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    public static final String securitycodeToSecurity = "1234";
+    public static final String idpostToSecurity = "111";
+    public static final String idshopToSecurity = "222";
+    public static final String positionToSecurity = "333";
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -53,6 +66,7 @@ public class tab_dang_giao extends Fragment {
     ShippingOrderAdapter shippingOrderAdapter;
     DatabaseReference mDatabase;
     FragmentManager fm;
+    FrameLayout framChat;
     List<PostObject> mListData = new ArrayList<>() ;
     String iDUser;
     public tab_dang_giao() {
@@ -90,15 +104,11 @@ public class tab_dang_giao extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         View view = inflater.inflate(R.layout.fragment_tab_dang_giao,container,false);
         TabDGiaoRecyclerview = view.findViewById(R.id.rcv_tab_dang_giao);
+        framChat =view.findViewById(R.id.frag_container_detail);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-       // mainActivity = (MainActivity) getActivity();
-       // mainActivity.setCountOrder(0);
-        //mainActivity.disableNotification();
         getUid();
-
         fm = getActivity().getSupportFragmentManager();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
 
@@ -106,6 +116,18 @@ public class tab_dang_giao extends Fragment {
         mLayoutManager.setStackFromEnd(true);
         TabDGiaoRecyclerview.setHasFixedSize(true);
         TabDGiaoRecyclerview.setLayoutManager(mLayoutManager);
+        MySwipeHelper mySwipeHelper = new MySwipeHelper(getActivity(), TabDGiaoRecyclerview , 200) {
+            @Override
+            public void instaniatMyButton(final RecyclerView.ViewHolder viewHolder, List<MyButton> buff) {
+                buff.add(new MyButton("Hoan Thanh", 30, Color.parseColor("#DC143C"), new MyButtonClickListner(){
+                    @Override
+                    public void onClick(final int pos) {
+                        openSecurityCode(pos);
+                    }
+                }, getContext()));
+            }
+        };
+
         if(mListData!=null){
             mListData.clear();
         }
@@ -113,12 +135,45 @@ public class tab_dang_giao extends Fragment {
         return view;
     }
 
+    public void openSecurityCode(int pos){
+        String idpost;
+        String idshop;
+        idpost = mListData.get(pos).getId_post();
+        idshop = mListData.get(pos).getId_shop();
+        Log.i(TAG, "openSecurityCode: " + idpost +"/" +idshop);
+        mDatabase.child("Transaction").child(idpost).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String securitycode = snapshot.child("ma_bi_mat").getValue(String.class);
+                mDatabase.child("Transaction").child(idpost).removeEventListener(this);
+                Bundle args = new Bundle();
+                args.putString(securitycodeToSecurity, securitycode);
+                args.putString(idpostToSecurity,idpost);
+                args.putString(idshopToSecurity,idshop);
+                args.putInt(positionToSecurity,pos);
+                SecurityCodeDialog securityCodeDialog = new SecurityCodeDialog();
+                securityCodeDialog.setTargetFragment(tab_dang_giao.this,1);
+                securityCodeDialog.setArguments(args);
+                securityCodeDialog.show(getFragmentManager(),"security code");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
     //  Load ID User
     public void getUid(){
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     iDUser = user.getUid();
     }
 
+    public void createNewAdapter(){
+        shippingOrderAdapter = new ShippingOrderAdapter(mListData, tab_dang_giao.this,fm,this);
+    }
     public void getListOrder(){
         mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("1").addValueEventListener(new ValueEventListener() {
             @Override
@@ -128,7 +183,7 @@ public class tab_dang_giao extends Fragment {
                         PostObject data = dataSnapshot.getValue(PostObject.class);
                         mListData.add(data);
                     }
-                    shippingOrderAdapter = new ShippingOrderAdapter(mListData, tab_dang_giao.this,fm);
+                    createNewAdapter();
                     TabDGiaoRecyclerview.setAdapter(shippingOrderAdapter);
                     shippingOrderAdapter.notifyDataSetChanged();
 
@@ -143,5 +198,31 @@ public class tab_dang_giao extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        String idPost = mListData.get(position).getId_post();
+        Log.i(TAG, "onItemClick: "+idPost);
+        //TabDGiaoRecyclerview.setVisibility(View.INVISIBLE);
+        framChat.setVisibility(View.VISIBLE);
+        DetailOrderFragment detailFragment = new DetailOrderFragment();
+        Bundle bundle = new Bundle();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        bundle.putString(idpostvalue,idPost); // use as per your need
+        detailFragment.setArguments(bundle);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.add(R.id.frame_cart,detailFragment);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onLongItemClick(int position) {
+
+    }
+
+    @Override
+    public void sendInput(int position) {
+        mListData.remove(position-1);
     }
 }

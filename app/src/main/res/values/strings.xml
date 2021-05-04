@@ -27,4 +27,14 @@
     <string name="map_key">AIzaSyC05W7QJSFuCLGwsQVYp6O0-vBfgH3fDTE</string>
     <string name="already_registered_sign_in">Already registered? Sign in.</string>
 
+    <string name="successful_but_no_routes">successful but no routes</string>
+    <string name="no_success">no success</string>
+    <string name="null_in_response">null in response</string>
+    <string name="only_twelve_stops_allowed">only twelve stops allowed</string>
+    <string name="location_picker_place_name_result">location picker place name réult</string>
+    <string name="new_location">new location</string>
+    <string name="user_location_permission_explanation">user location permission explanation</string>
+    <string name="user_location_permission_not_granted">user location permission not granted</string>
+
+
 </resources>

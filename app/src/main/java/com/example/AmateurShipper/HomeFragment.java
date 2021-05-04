@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,10 @@ import android.widget.Toast;
 
 import com.example.AmateurShipper.Dialog.FilterPaymentDialog;
 import com.example.AmateurShipper.Util.PostDiffUtilCallback;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +41,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,12 +68,12 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostListener
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ShimmerFrameLayout layout_shimmer;
     String iDUser;
     int index = -1;
     LinearLayoutManager mLayoutManager;
     RecyclerView NewsRecyclerview;
     PostAdapter postAdapter;
-    SharedPreferences sharedpreferencesIdUser;
    private List<PostObject> mData = new ArrayList<>();
    final ArrayList<String> mLocationItem = new ArrayList<>();
    final String[] location = {"Hai Chau","Thanh Khe","Cam Le","Hoa Khanh"};
@@ -74,7 +81,8 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostListener
     com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment;
     ImageView btn_notify_new_order;
     private DatabaseReference mDatabase;
-    public int filter_payment = 0;
+    private FirebaseFirestore mFireStore;
+    public int filter_payment = 0, rate_score;
     List<PostObject> insertList1 = new ArrayList<>();
     public HomeFragment() {
 
@@ -120,19 +128,22 @@ public static HomeFragment newInstance(){
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_home,container,false);
+        layout_shimmer = view.findViewById(R.id.shimmer_newfeed);
         btn_filter_location = view.findViewById(R.id.btn_filter_location);
         btn_filter_payment = view.findViewById(R.id.btn_filter_payment);
         btn_notify_new_order = view.findViewById(R.id.btn_notify_new_order);
         NewsRecyclerview = view.findViewById(R.id.rcv_post);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-       // sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        mFireStore = FirebaseFirestore.getInstance();
         getUid();
+        loadStar();
         mLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         mLayoutManager.setReverseLayout(true);
         NewsRecyclerview.setHasFixedSize(true);
         mLayoutManager.setStackFromEnd(true);
         NewsRecyclerview.setLayoutManager(mLayoutManager);
         getChildList();
+        loadshimer();
         postAdapter = new PostAdapter(mData, getContext(), this);
         NewsRecyclerview.setAdapter(postAdapter);
 
@@ -163,10 +174,37 @@ public static HomeFragment newInstance(){
         return view;
     }
 
+    public void loadStar(){
+        mDatabase.child("Ratting_Star").child(iDUser).addValueEventListener(new ValueEventListener() {
+            int star1=0;
+            String star;
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    for (DataSnapshot snap : snapshot.getChildren()){
+                        star1 += Integer.parseInt(snap.getValue(String.class));
+                    }
+                    if (star1 > 0 && star1 <= 50)
+                        star="2";
+                    if (star1 >= 50 && star1 < 100)
+                        star="3";
+                    if (star1 >= 100 && star1 < 150)
+                        star="4";
+                    if (star1 >= 150)
+                        star="5";
+                    Log.i(TAG, "onDataChangeSSSSS: "+ star);
+                    mFireStore.collection("ProfileShipper").document(iDUser).update("rate_star",star);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     //Load ID User
-//    private void loadData() {
-//       iDUser = sharedpreferencesIdUser.getString(IDUSER, "");
-//    }
     public void getUid(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         iDUser = user.getUid();
@@ -234,6 +272,18 @@ public static HomeFragment newInstance(){
 
             }
         });
+    }
+    public void loadshimer(){
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                layout_shimmer.stopShimmer();
+                layout_shimmer.hideShimmer();
+                layout_shimmer.setVisibility(View.GONE);
+                NewsRecyclerview.setVisibility(View.VISIBLE);
+            }
+        },1000);
     }
 
     public void checkScroll(){

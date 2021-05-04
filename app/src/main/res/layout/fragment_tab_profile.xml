@@ -65,11 +65,33 @@
                 android:textColor="@color/colorText"
                 android:textSize="14sp" />
 
+            <TextView
+                android:id="@+id/aa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_address"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="sans-serif"
+                android:text="Tu vi: Tam Trọng Thiên"
+                android:textAllCaps="false"
+                android:textColor="@color/colorText"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/bb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/aa"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="sans-serif"
+                android:text="Độ uy tín: 75"
+                android:textAllCaps="false"
+                android:textColor="@color/colorText"
+                android:textSize="14sp" />
             <RatingBar
                 android:id="@+id/star_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_address"
+                android:layout_below="@+id/bb"
                 android:layout_centerHorizontal="true"
                 android:isIndicator="true"
                 android:numStars="5"
@@ -129,6 +151,7 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:fontFamily="sans-serif-light"
+                        android:inputType="textEmailAddress"
                         android:hint="aronshininho@gmail.com"
                         android:textColor="@color/colorText"
                         android:textSize="18sp" />
@@ -153,17 +176,16 @@
                         android:textColor="@color/colorText"
                         android:textSize="13sp"
                         android:textStyle="bold"/>
-
                     <EditText
                         android:id="@+id/edt_phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@null"
+                        android:inputType="phone"
                         android:fontFamily="sans-serif-light"
                         android:hint="0363159770"
+                        android:background="@null"
                         android:textColor="@color/colorText"
                         android:textSize="18sp" />
-
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"

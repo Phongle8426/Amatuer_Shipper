@@ -39,7 +39,7 @@ public class CartFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    private com.example.AmateurShipper.CustomViewPager viewPager;
     private TabItem tab_nhan,tab_chua_nhan,tab_lichsu;
     public PageAdapter pagerAdapter;
    // Button daNhan,dangGiao,lichSu;
@@ -84,6 +84,7 @@ public class CartFragment extends Fragment {
         tab_chua_nhan = view.findViewById(R.id.tab_chua_nhan);
         tab_lichsu = view.findViewById(R.id.tab_lich_su);
         viewPager = view.findViewById(R.id.viewpage);
+        viewPager.setSwipeable(false);
 
         pagerAdapter = new PageAdapter(getChildFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);

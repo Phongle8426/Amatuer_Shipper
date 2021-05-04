@@ -13,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.InputFilter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +53,7 @@ import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 //import static com.example.AmateurShipper.LoginActivity.IDUSER;
+import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
 //import static com.example.AmateurShipper.LoginActivity.MyPREFERENCESIDUSER;
 import static com.example.AmateurShipper.LoginActivity.USERNAME;
@@ -75,14 +79,14 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
     private FirebaseFirestore mFireStore;
     private FirebaseAuth mAuth;
     de.hdodenhof.circleimageview.CircleImageView avata;
-    EditText name, email, phone, address;
+    EditText name, email, address,phone;
     TextView cmnd;
     ImageButton img_cmnd;
     ImageView setting;
     Button update;
     RatingBar star;
     SharedPreferences sharedpreferences,sharedpreferencesIdUser;
-    public String getname, getphone, getemail, getaddress, getUriAvatar, getUriCMND,iDUser;
+    public String getname, getphone, getemail, getaddress, getUriAvatar, getUriCMND,getStar,iDUser;
 
 
     public tab_profile() {
@@ -135,6 +139,8 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
         mFireStore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         sharedpreferences = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        phone.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)
+        });
       //  sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCESIDUSER, Context.MODE_PRIVATE);
         getUid();
         readProfile();
@@ -167,6 +173,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
                 openSetting(v);
             }
         });
+
         return view;
     }
 
@@ -206,7 +213,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
                                         getUriAvatar = uri.toString();
 
                                         // Update the profile
-                                        ProfileObject profileObject = new ProfileObject(getname, getphone, getaddress, getemail, getUriAvatar, getUriCMND);
+                                        ProfileObject profileObject = new ProfileObject(getname, getphone, getaddress, getemail, getUriAvatar, getUriCMND,"2");
                                         mFireStore.collection("ProfileShipper").document(iDUser)
                                                 .set(profileObject)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -243,7 +250,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
 
                         });
             } else {
-                ProfileObject profileObject1 = new ProfileObject(getname, getphone, getaddress, getemail, getUriAvatar, getUriCMND);
+                ProfileObject profileObject1 = new ProfileObject(getname, getphone, getaddress, getemail, getUriAvatar, getUriCMND,"2");
                 mFireStore.collection("ProfileShipper").document(iDUser)
                         .set(profileObject1)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -321,6 +328,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
                         email.setText(document.get("email").toString());
                         phone.setText(document.get("phone").toString());
                         cmnd.setText(document.get("cmnd").toString());
+                        //star.setNumStars(Integer.parseInt(document.get("rate_star").toString()));
                         if(!document.get("avatar").toString().equals(null)){
                             Glide.with(getContext()).load(document.get("avatar").toString()).into((de.hdodenhof.circleimageview.CircleImageView )avata);
                         }
@@ -339,6 +347,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
                 }
             }
         });
+
     }
 
     public void sigOut(){
@@ -398,7 +407,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
 
         if (Email.isEmpty() || Phone.isEmpty() || Name.isEmpty() || Address.isEmpty())
             return true;
-        if (Phone.length() != 10)
+        if (Phone.length() < 10)
             return true;
         if (!Email.matches(emailPattern))
             return true;

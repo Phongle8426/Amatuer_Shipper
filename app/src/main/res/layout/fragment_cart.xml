@@ -50,11 +50,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.viewpager.widget.ViewPager
+        <com.example.AmateurShipper.CustomViewPager
             android:id="@+id/viewpage"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </androidx.viewpager.widget.ViewPager>
+        </com.example.AmateurShipper.CustomViewPager>
     </RelativeLayout>
 
 

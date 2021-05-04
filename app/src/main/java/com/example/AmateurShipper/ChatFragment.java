@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,6 +52,7 @@ import static android.content.ContentValues.TAG;
 //import static com.example.AmateurShipper.LoginActivity.IDUSER;
 //import static com.example.AmateurShipper.LoginActivity.MyPREFERENCESIDUSER;
 import static com.example.AmateurShipper.DetailOrderFragment.id_room;
+import static com.example.AmateurShipper.DetailOrderFragment.ten_shop;
 import static com.example.AmateurShipper.ReceivedOrderAdapter.MyPREFERENCES_IDPOST;
 import static com.example.AmateurShipper.tab_nhan.idpostvalue;
 
@@ -65,8 +69,9 @@ public class ChatFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     RecyclerView recyclerView_chat;
     EditText edtMessage;
+    TextView name_shop_header;
     // TODO: Rename and change types of parameters
-     String id_post, id_shipper, id_chat_room, id_shop,content_message,getUriChatMess;
+     String id_post, id_shipper, id_chat_room, ten_nguoi_gui,content_message,getUriChatMess;
     FirebaseDatabase rootNode;
     DatabaseReference databaseReference;
     private StorageReference mStorage;
@@ -75,6 +80,7 @@ public class ChatFragment extends Fragment {
     Uri imageUri;
     //ImageButton close_chat;
     ImageButton btn_send_message,btn_send_image;
+    ImageView close_chat;
     SharedPreferences sharedpreferences;
     ValueEventListener seenMessage;
     public ChatFragment() {
@@ -114,15 +120,19 @@ public class ChatFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             id_chat_room = bundle.getString(id_room, "1");
+            ten_nguoi_gui = bundle.getString(ten_shop,"thang");
+            Log.i(TAG, "onCreateView: "+id_chat_room);
         }
         btn_send_message = (ImageButton) view.findViewById(R.id.btnSendMess);
         btn_send_image = view.findViewById(R.id.btn_mess_picture);
         edtMessage = view.findViewById(R.id.edtMessage);
+        name_shop_header = view.findViewById(R.id.tv_name_shop_header);
+        close_chat = view.findViewById(R.id.btn_close_chat);
         sharedpreferences = getActivity().getSharedPreferences(MyPREFERENCES_IDPOST, Context.MODE_PRIVATE);
        // sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCESIDUSER, Context.MODE_PRIVATE);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         mStorage = FirebaseStorage.getInstance().getReference();
-       // loadDataIdPost();
+        name_shop_header.setText(ten_nguoi_gui);
         getUid();
         readMessage();
         recyclerView_chat = view.findViewById(R.id.recycleview_mess);
@@ -142,6 +152,12 @@ public class ChatFragment extends Fragment {
             public void onClick(View v) {
                 content_message = edtMessage.getText().toString();
                 sendMessage(content_message,"");
+            }
+        });
+        close_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeChat();
             }
         });
         seenMessage();
@@ -213,7 +229,7 @@ public class ChatFragment extends Fragment {
     }
 
     public void sendMessage(String content_message,String content_image){
-        if (content_message != null){
+        if (!content_message.equals("")){
         MessageObject messageObject = new MessageObject(content_message,id_shipper,content_image,"0",getTimeMessage(),"Aron WanbiSaka");
         databaseReference.child("Chatroom").child(id_chat_room).
                 push().setValue(messageObject).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -223,13 +239,6 @@ public class ChatFragment extends Fragment {
             }
         });
         }
-
-       // Log.i(TAG, "sendMessage: "+id_chat_room);
-    }
-
-    public void loadDataIdPost() {
-        id_chat_room = sharedpreferences.getString(ReceivedOrderAdapter.IDPOST, "");
-        Toast.makeText(getActivity(), "id post + " + id_post, Toast.LENGTH_SHORT).show();
     }
 
     public void getUid(){
@@ -260,6 +269,17 @@ public class ChatFragment extends Fragment {
 
             }
         });
+    }
+
+    public void closeChat(){
+        DetailOrderFragment detailFragment = new DetailOrderFragment();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_from_top,R.anim.slide_from_top);
+        fragmentTransaction.remove(this).commit();
+       // FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        //fragmentTransaction.addToBackStack(null);
+        //fragmentTransaction.replace(R.id.frame_chat,detailFragment);
+      //  fragmentTransaction.commit();
     }
 
     @Override

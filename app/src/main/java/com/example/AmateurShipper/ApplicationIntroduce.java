@@ -21,7 +21,7 @@ public class ApplicationIntroduce extends AppCompatActivity {
     ImageView nightowl;
     TextView slogan, logo;
     final Handler handler = new Handler(Looper.getMainLooper());
-    private static int SPLASH_SCREEN = 5000;
+    private static int SPLASH_SCREEN = 3000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,9 +35,9 @@ public class ApplicationIntroduce extends AppCompatActivity {
         nightowl = findViewById(R.id.image_owl);
         slogan = findViewById(R.id.tv_slogan);
         logo = findViewById(R.id.logo);
-        nightowl.setAnimation(topAnim);
-        logo.setAnimation(bottomAnim);
-        slogan.setAnimation(bottomAnim);
+//        nightowl.setAnimation(topAnim);
+//        logo.setAnimation(bottomAnim);
+//        slogan.setAnimation(bottomAnim);
 
        handler.postDelayed(new Runnable() {
             @Override

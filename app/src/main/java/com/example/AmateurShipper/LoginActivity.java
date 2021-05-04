@@ -89,8 +89,12 @@ public class LoginActivity extends AppCompatActivity {
         databaseReference = rootNode.getInstance().getReference();
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
        // sharedpreferencesIdUser = getSharedPreferences(MyPREFERENCESIDUSER,Context.MODE_PRIVATE);
-
-        loadData();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user!=null){
+            Intent is = new Intent(this,MainActivity.class);
+            startActivity(is);
+        }else
+            //loadData();
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

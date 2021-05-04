@@ -2,14 +2,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/half_black"
+    android:background="@color/white"
+    android:id="@+id/frame_cart"
     tools:context="com.example.AmateurShipper.tab_lich_su">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="30sp"
-        android:text="Trọng ăn Cặc nè" />
-
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_tab_lich_su"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/whiteTextColor"/>
+        <FrameLayout
+            android:id="@+id/frag_container_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+        </FrameLayout>
+    </RelativeLayout>
 </FrameLayout>

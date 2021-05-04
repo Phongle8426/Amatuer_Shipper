@@ -14,9 +14,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ApplicationIntroduce"></activity>
-        <activity android:name=".PostOrder">
+        <activity android:name=".ApplicationIntroduce">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".PostOrder">
         </activity>
         <activity android:name=".InputNewPassword" />
         <activity android:name=".ForgotPasswordVerifyOTP" />
@@ -30,17 +35,12 @@
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan">
-
         </activity>
         <activity
             android:name=".GetOTP"

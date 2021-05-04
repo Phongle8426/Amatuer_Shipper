@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:id="@+id/frame_detail">
+    <RelativeLayout
+        android:id="@+id/frame_shimmer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 <LinearLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
 android:layout_margin="5dp" android:orientation="vertical"
@@ -189,7 +199,6 @@ android:padding="5dp" android:id="@+id/container_chat">
                     android:layout_height="wrap_content"
                     android:text="Nhận hàng từ"
                     android:textStyle="bold"
-
                     android:textColor="#3f4254"/>
 
                 <TextView
@@ -211,6 +220,7 @@ android:padding="5dp" android:id="@+id/container_chat">
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Giao hàng tới"
+                    android:textStyle="bold"
                     android:textColor="#3f4254" />
 
                 <TextView
@@ -306,9 +316,20 @@ android:padding="5dp" android:id="@+id/container_chat">
     </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/frag_container_1">
-    </FrameLayout>
 </LinearLayout>
+    </RelativeLayout>
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_centerVertical="true"
+        android:id="@+id/shimmer_detail_order">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/shimmer_layout_detail_order"/>
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+</FrameLayout>

@@ -188,6 +188,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         //  deleteItem = String.valueOf(mData.get(pos));
         mData.remove(pos);
         receivedOrderAdapter.notifyItemChanged(pos);
+        mDatabase.child("received_order_status").child(iDUser).child(idpost).setValue(null);
         mDatabase.child("OrderStatus").child(idshop).child(idpost).child("status").setValue("3");
     }
 
@@ -222,7 +223,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     public void onItemClick(int position) {
         String idPost = mData.get(position).getId_post();
         Log.i(TAG, "onItemClick: "+idPost);
-        NewsRecyclerview.setVisibility(View.INVISIBLE);
+        //NewsRecyclerview.setVisibility(View.INVISIBLE);
         framChat.setVisibility(View.VISIBLE);
         DetailOrderFragment detailFragment = new DetailOrderFragment();
         Bundle bundle = new Bundle();
@@ -231,7 +232,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         bundle.putString(idpostvalue,idPost); // use as per your need
         detailFragment.setArguments(bundle);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.replace(R.id.frag_container_detail,detailFragment);
+        fragmentTransaction.add(R.id.frame_cart,detailFragment);
         fragmentTransaction.commit();
     }
 

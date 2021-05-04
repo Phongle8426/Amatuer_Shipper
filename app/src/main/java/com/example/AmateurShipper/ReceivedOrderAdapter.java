@@ -31,6 +31,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
 import com.example.AmateurShipper.Util.PostDiffUtilCallback;
+import com.example.AmateurShipper.Util.formatAddress;
+import com.example.AmateurShipper.Util.formatTimeStampToDate;
+import com.google.firebase.Timestamp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,7 +42,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -105,15 +110,12 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
         ViewAdapterClass viewAdapterClass = (ViewAdapterClass) holder;
         PostObject postObject = postList.get(position);
         get_position = position;
+        formatTimeStampToDate ts = new formatTimeStampToDate();
+        formatAddress faddress = new formatAddress();
         viewAdapterClass.name_poster_tab_nhan.setText(postObject.getTen_nguoi_gui());
-        //  viewAdapterClass.time.setText(postObject.getThoi_gian());
-        viewAdapterClass.txt_start_place_tab_nhan.setText(postObject.getNoi_nhan());
-        viewAdapterClass.txt_end_place_tab_nhan.setText(postObject.getNoi_giao());
-        //   viewAdapterClass.distance.setText(String.valueOf(postObject.getKm()));
-        //  viewAdapterClass.fee.setText(String.valueOf(postObject.getPhi_giao()));
-        //   viewAdapterClass.payment.setText(String.valueOf(postObject.getPhi_ung()));
-        //  viewAdapterClass.note.setText(postObject.getGhi_chu());
-        // viewAdapterClass.image_poster.setImageResource(postObject.imgage_poster);
+        viewAdapterClass.txt_time_stamp.setText(ts.convertTimeStamp(Long.parseLong(postObject.getThoi_gian())));
+        viewAdapterClass.txt_start_place_tab_nhan.setText(faddress.formatAddress(postObject.getNoi_nhan()));
+        viewAdapterClass.txt_end_place_tab_nhan.setText(faddress.formatAddress(postObject.getNoi_giao()));
         Animation animation = AnimationUtils.loadAnimation(mContext.getActivity(), R.anim.slide_in_right);
         holder.itemView.startAnimation(animation);
 
@@ -165,22 +167,16 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
     String sdt_nguoi_nhan_hang;
     String sdt_shop;
     public class ViewAdapterClass extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView name_poster_tab_nhan, time, txt_start_place_tab_nhan, txt_end_place_tab_nhan, tv_shopname, distance, fee, payment, note;
+        TextView name_poster_tab_nhan,txt_start_place_tab_nhan, txt_end_place_tab_nhan,txt_time_stamp;
         CircleImageView image_poster;
         private static final int REQUEST_CALL = 1;
-        private TextView tv_sdt_nguoi_nhan;
-        private Button btn_sdt_nguoi_nhan, btn_shop, btn_messages;
-        LinearLayout linearLayout, containerChat;
-
-        //PostAdapter.OnPostListener onPostListener;
-        ImageButton close_btn;
-        ReceivedOrderAdapter.OnReceivedOderListener onReceivedOderListener;
 
         public ViewAdapterClass(@NonNull final View itemView, ReceivedOrderAdapter.OnReceivedOderListener onReceivedOderListener) {
             super(itemView);
             name_poster_tab_nhan = itemView.findViewById(R.id.name_poster_tab_nhan);
             txt_start_place_tab_nhan = itemView.findViewById(R.id.txt_start_place_tab_nhan);
             txt_end_place_tab_nhan = itemView.findViewById(R.id.txt_end_place_tab_nhan);
+            txt_time_stamp = itemView.findViewById(R.id.tv_time);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -316,4 +312,5 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
     public interface OnReceivedOderListener {
         void onReceivedItem(int position);
     }
+
 }

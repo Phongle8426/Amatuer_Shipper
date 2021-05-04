@@ -12,15 +12,18 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -45,10 +48,13 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
     private static final String ARG_PARAM2 = "param2";
     private static final int REQUEST_CALL = 1;
     public static final String id_room = "123";
+    public static final String ten_shop = "Huynh Ba Thang";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ShimmerFrameLayout layout_shimmer;
+    RelativeLayout frame_shimmer;
     private DatabaseReference mDatabase;
     String iDUser,sdt_nguoi_nhan_hang,sdt_shop,idRoom;
     ImageView callShop,callCustomer,message_shop,back;
@@ -97,6 +103,8 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.dialogcontent, container, false);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        layout_shimmer = view.findViewById(R.id.shimmer_detail_order);
+        frame_shimmer = view.findViewById(R.id.frame_shimmer);
         callCustomer = view.findViewById(R.id.btn_customer_phone_number);
         callShop =view.findViewById(R.id.btn_shop);
         message_shop = view.findViewById(R.id.btn_massage);
@@ -118,6 +126,7 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
 
         getUid();
         getDataDetail();
+        loadshimer();
         callShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,7 +149,7 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                closeDetail();
             }
         });
 
@@ -153,6 +162,13 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 PostObject data = snapshot.getValue(PostObject.class);
+                if (data.getStatus().equals("2")){
+                    message_shop.setVisibility(View.GONE);
+                    callCustomer.setVisibility(View.GONE);
+                    callShop.setVisibility(View.GONE);
+                    sdtnguoinhan.setVisibility(View.GONE);
+                    sdtnguoigui.setVisibility(View.GONE);
+                }
                     tng.setText(data.getTen_nguoi_gui());
                     sdtnguoigui.setText(data.getSdt_nguoi_gui());
                     noinhan.setText(data.getNoi_nhan());
@@ -168,6 +184,7 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
                     //sokm.setText(data.getKm());
                     sdt_nguoi_nhan_hang = data.getSdt_nguoi_nhan();
                     sdt_shop = data.getSdt_nguoi_gui();
+                    ten_nguoi_gui = data.getTen_nguoi_gui();
             }
 
             @Override
@@ -175,20 +192,21 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
 
             }
         });
+
     }
 
-    public void getIdRoom(){
-        mDatabase.child("Transaction").child(id_cur_post).addValueEventListener(new ValueEventListener() {
+    public void loadshimer(){
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                idRoom = snapshot.child("id_roomchat").getValue(String.class);
-            }
+            public void run() {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+                layout_shimmer.stopShimmer();
+                layout_shimmer.hideShimmer();
+                layout_shimmer.setVisibility(View.GONE);
+                frame_shimmer.setVisibility(View.VISIBLE);;
             }
-        });
+        },500);
     }
 
     @Override
@@ -204,7 +222,7 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
     }
 
     private void call_shop() {
-        String number_shop = "0" + sdt_shop;
+        String number_shop = sdt_shop;
         if (number_shop.trim().length() > 0) {
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE},REQUEST_CALL);
@@ -216,7 +234,7 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
     }
 
     private void call_customer() {
-        String number_customer = "0" + sdt_nguoi_nhan_hang;
+        String number_customer = sdt_nguoi_nhan_hang;
         if (number_customer.trim().length() > 0) {
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL);
@@ -228,16 +246,33 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
     }
 
     public void openMessageFragment(){
-        getIdRoom();
-        ChatFragment chatFragment = new ChatFragment();
-        Bundle bundle = new Bundle();
+        mDatabase.child("Transaction").child(id_cur_post).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                idRoom = snapshot.child("id_roomchat").getValue(String.class);
+                ChatFragment chatFragment = new ChatFragment();
+                Bundle bundle = new Bundle();
+                Log.i(TAG, "openMessageFragment: "+ idRoom);
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.slide_from_bottom,R.anim.slide_down_top);
+                bundle.putString(id_room,idRoom); // use as per your need
+                bundle.putString(ten_shop,ten_nguoi_gui);
+                chatFragment.setArguments(bundle);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.add(R.id.frame_cart,chatFragment);
+                fragmentTransaction.commit();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void closeDetail(){
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        bundle.putString(id_room,idRoom); // use as per your need
-        chatFragment.setArguments(bundle);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.replace(R.id.frag_container_detail,chatFragment);
-        fragmentTransaction.commit();
+        fragmentTransaction.remove(this).commit();
     }
     //Load ID User
     public void getUid(){

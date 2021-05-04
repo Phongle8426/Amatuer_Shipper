@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp" android:orientation="vertical"
+        android:padding="5dp" android:id="@+id/container_chat">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+            <View
+                android:layout_width="300dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_shimmer" />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/half_black"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/dialog_received_order"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/background_detail_post"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <View
+                                android:layout_width="150dp"
+                                android:layout_height="30dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/bg_shimmer" />
+                        </LinearLayout>
+                        <View
+                            android:id="@+id/editTextTextPhut"
+                            android:layout_width="100dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:background="@drawable/bg_shimmer" />
+
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="200dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_shimmer"/>
+
+                    <View
+                        android:layout_width="170dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_shimmer"/>
+
+                    <View
+                        android:layout_width="100dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_shimmer"/>
+                    <View
+                        android:layout_width="100dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/bg_shimmer"/>
+
+                    <View
+                        android:layout_width="270dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="40dp"
+                        android:background="@drawable/bg_shimmer" />
+
+                    <View
+                        android:layout_width="300dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/bg_shimmer" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:orientation="vertical">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#ebedf3"/>
+                <View
+                    android:layout_width="350dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_shimmer" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#ebedf3"/>
+                <RelativeLayout
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <View
+                            android:layout_width="100dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/bg_shimmer" />
+
+                        <View
+                            android:layout_width="200dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/bg_shimmer" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

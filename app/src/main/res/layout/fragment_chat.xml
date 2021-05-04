@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/frame_chat">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avt_shop"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="9dp"
+            android:src="@drawable/anhhhhh"/>
 
-
+        <TextView
+            android:id="@+id/tv_name_shop_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorText"
+            android:text="Huỳnh Bá Thắng"/>
+        <ImageView
+            android:id="@+id/btn_close_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="30dp"
+            android:src="@drawable/ic_close"/>
+    </LinearLayout>
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/layout_header"
+        android:background="@color/half_black"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleview_mess"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:layout_above="@id/relative_layout"
+        android:layout_below="@+id/view_line"
         android:paddingBottom="5dp"/>
     <RelativeLayout
         android:id="@+id/relative_layout"
@@ -62,5 +102,5 @@
             tools:ignore="OnClick" />
 
     </RelativeLayout>
-
 </RelativeLayout>
+</FrameLayout>
