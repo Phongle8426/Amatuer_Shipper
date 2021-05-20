@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -34,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import static android.content.ContentValues.TAG;
 import static com.example.AmateurShipper.tab_nhan.idpostvalue;
+import static com.example.AmateurShipper.tab_nhan.idtabvalue;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,7 +58,7 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
     ShimmerFrameLayout layout_shimmer;
     RelativeLayout frame_shimmer;
     private DatabaseReference mDatabase;
-    String iDUser,sdt_nguoi_nhan_hang,sdt_shop,idRoom;
+    String iDUser,sdt_nguoi_nhan_hang,sdt_shop,idRoom,fromTab;
     ImageView callShop,callCustomer,message_shop,back;
     TextView tng,sdtnguoigui,noinhan,noigiao,sdtnguoinhan,tennguoinhan,ghichu,thoigian,phigiao,phiung,sokm,tv_id_post,id_post2;
     String ten_nguoi_gui,sdt_nguoi_gui,noi_nhan,noi_giao,sdt_nguoi_nhan,ten_nguoi_nhan,ghi_chu,thoi_gian,
@@ -99,6 +101,7 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             id_cur_post = bundle.getString(idpostvalue, "1");
+            fromTab = bundle.getString(idtabvalue,"tab");
         }
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.dialogcontent, container, false);
@@ -252,7 +255,7 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
                 idRoom = snapshot.child("id_roomchat").getValue(String.class);
                 ChatFragment chatFragment = new ChatFragment();
                 Bundle bundle = new Bundle();
-                Log.i(TAG, "openMessageFragment: "+ idRoom);
+               // Log.i(TAG, "openMessageFragment: "+ idRoom);
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_from_bottom,R.anim.slide_down_top);
                 bundle.putString(id_room,idRoom); // use as per your need
@@ -272,7 +275,20 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
 
     public void closeDetail(){
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.remove(this).commit();
+        fragmentTransaction.addToBackStack(null);
+        if (fromTab.equals("tabnhan")){
+            tab_nhan tabNhanFragment = new tab_nhan();
+            fragmentTransaction.replace(R.id.frame_cart,tabNhanFragment);
+        }else if(fromTab.equals("tabdanggiao")){
+            tab_dang_giao tabDangGiaoFragment = new tab_dang_giao();
+            fragmentTransaction.replace(R.id.frame_cart,tabDangGiaoFragment);
+        }else if(fromTab.equals("tablichsu")){
+            tab_lich_su tabLichSuFragment = new tab_lich_su();
+            fragmentTransaction.replace(R.id.frame_cart,tabLichSuFragment);
+        }
+        fragmentTransaction.commit();
+//        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.remove(this).commitAllowingStateLoss();
     }
     //Load ID User
     public void getUid(){
@@ -280,4 +296,51 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
         iDUser = user.getUid();
     }
 
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.i(TAG, "onViewCreated: chay");
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        Log.i(TAG, "onStart: chay");
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        Log.i(TAG, "onResume: chay");
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        Log.i(TAG, "onPause: chay");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        Log.i(TAG, "onStop: chay");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.i(TAG, "onDestroyView: chay");
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i(TAG, "onDestroy: chay");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
 }

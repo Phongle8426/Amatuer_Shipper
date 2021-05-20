@@ -121,7 +121,6 @@ public class ChatFragment extends Fragment {
         if (bundle != null) {
             id_chat_room = bundle.getString(id_room, "1");
             ten_nguoi_gui = bundle.getString(ten_shop,"thang");
-            Log.i(TAG, "onCreateView: "+id_chat_room);
         }
         btn_send_message = (ImageButton) view.findViewById(R.id.btnSendMess);
         btn_send_image = view.findViewById(R.id.btn_mess_picture);
@@ -151,7 +150,8 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 content_message = edtMessage.getText().toString();
-                sendMessage(content_message,"");
+                if (!content_message.equals(""))
+                    sendMessage(content_message,"");
             }
         });
         close_chat.setOnClickListener(new View.OnClickListener() {
@@ -182,7 +182,6 @@ public class ChatFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
-           // avata.setImageURI(imageUri);
             sendImageMessage();
         }
     }
@@ -225,11 +224,12 @@ public class ChatFragment extends Fragment {
                     });
                 }
             });
+        }else{
+            Toast.makeText(getContext(), "Không thể gửi!", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void sendMessage(String content_message,String content_image){
-        if (!content_message.equals("")){
         MessageObject messageObject = new MessageObject(content_message,id_shipper,content_image,"0",getTimeMessage(),"Aron WanbiSaka");
         databaseReference.child("Chatroom").child(id_chat_room).
                 push().setValue(messageObject).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -238,7 +238,7 @@ public class ChatFragment extends Fragment {
                 edtMessage.setText(null);
             }
         });
-        }
+
     }
 
     public void getUid(){

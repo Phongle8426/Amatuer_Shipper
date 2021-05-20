@@ -60,7 +60,7 @@
 
                     android:id="@+id/editTextPhoneNumber"
                     style="@style/modifiedEditText"
-                    android:hint="Phone number"
+                    android:hint="Số điện thoại"
                     android:clickable="true"
                     android:focusableInTouchMode="true"
                     android:inputType="phone"
@@ -71,7 +71,7 @@
                 android:id="@+id/textInputPassword"
                 style="@style/parent"
                 android:layout_marginTop="@dimen/loginViewsMargin"
-
+                app:passwordToggleEnabled="true"
                 app:startIconDrawable="@drawable/ic_baseline_lock_24"
                 android:clickable="true">
                 <EditText
@@ -81,7 +81,7 @@
                     android:clickable="true"
                     android:id="@+id/editTextPassword"
                     style="@style/modifiedEditText"
-                    android:hint="@string/login_password_hint"
+                    android:hint="Mật khẩu"
                     android:backgroundTint="@color/white"
                     android:inputType="textPassword"
                     android:maxLines="1" />
@@ -104,7 +104,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Forgot Password?"
+                    android:text="Quên mật khẩu?"
                     android:textColor="@color/cTextSecondary" />
             </LinearLayout>
 
@@ -114,7 +114,7 @@
                 android:layout_width="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/loginViewsMargin"
-                android:text="Login"
+                android:text="Đăng nhập"
               android:background="@color/background1"
                 app:initialCornerAngle="27dp"
                 app:spinning_bar_color="#FFF"
@@ -124,7 +124,7 @@
                 style="@style/parent"
                 android:layout_marginTop="@dimen/loginViewsMargin"
                 android:onClick="onLoginClick"
-                android:text="New user? Register Now"
+                android:text="Thành viên mới? Đăng ký ngay"
                 android:textAlignment="center"
                 android:textColor="@color/cTextSecondary"
                 android:textSize="17sp"
@@ -145,7 +145,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="6"
-                    android:text="Use other Methods"
+                    android:text="Sử dụng phương thức khác"
                     android:textColor="@color/colorDivider"
                     android:textAlignment="center"
                     android:textSize="12sp" />

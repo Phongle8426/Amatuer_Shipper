@@ -1,6 +1,8 @@
 package com.example.AmateurShipper;
 
 import android.app.Activity;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +20,7 @@ import android.widget.FrameLayout;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
+import com.example.AmateurShipper.Util.NetworkChangeListener;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
@@ -75,6 +78,8 @@ public class CartFragment extends Fragment {
         }
     }
 
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -116,5 +121,16 @@ public class CartFragment extends Fragment {
         // Inflate the layout for this fragment
         return view;
     }
+    @Override
+    public void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        requireActivity().registerReceiver(networkChangeListener,filter);
+        super.onStart();
+    }
 
+    @Override
+    public void onStop() {
+        requireActivity().unregisterReceiver(networkChangeListener);
+        super.onStop();
+    }
 }

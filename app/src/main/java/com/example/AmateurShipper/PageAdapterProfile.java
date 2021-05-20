@@ -21,7 +21,7 @@ public class PageAdapterProfile extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return new tab_profile();
+                return new EditProfileFragment();
             case 1:
                 return new tab_statis();
             default: return null;

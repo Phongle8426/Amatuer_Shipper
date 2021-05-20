@@ -83,6 +83,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
     TextView cmnd;
     ImageButton img_cmnd;
     ImageView setting;
+    ProgressBar progressLv;
     Button update;
     RatingBar star;
     SharedPreferences sharedpreferences,sharedpreferencesIdUser;
@@ -132,15 +133,18 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
         cmnd = view.findViewById(R.id.edt_cmnd);
         img_cmnd = view.findViewById(R.id.btn_img_cmnd);
         update = view.findViewById(R.id.btn_update);
-        star = view.findViewById(R.id.star_rate);
         avata = view.findViewById(R.id.img_poster);
         setting = view.findViewById(R.id.btn_setting);
+        progressLv = view.findViewById(R.id.progressLV);
         mStorage = FirebaseStorage.getInstance().getReference();
         mFireStore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         sharedpreferences = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         phone.setFilters(new InputFilter[] {new InputFilter.LengthFilter(10)
         });
+
+        progressLv.setMax(50);
+        progressLv.setProgress(20);
       //  sharedpreferencesIdUser = this.getActivity().getSharedPreferences(MyPREFERENCESIDUSER, Context.MODE_PRIVATE);
         getUid();
         readProfile();
@@ -181,6 +185,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
     public void getUid(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         iDUser = user.getUid();
+        Log.i(TAG, "getUid: "+iDUser);
     }
 
 
@@ -323,7 +328,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         document.getData();
-                        name.setText(document.get("name").toString());
+                        name.setText(document.get("fullname").toString());
                         address.setText(document.get("address").toString());
                         email.setText(document.get("email").toString());
                         phone.setText(document.get("phone").toString());
@@ -343,7 +348,7 @@ public class tab_profile extends Fragment implements PopupMenu.OnMenuItemClickLi
                         Toast.makeText(getContext(), "Load Profile Failed", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getContext(), "Load Profile Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });

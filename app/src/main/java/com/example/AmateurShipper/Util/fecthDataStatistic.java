@@ -26,7 +26,7 @@ public class fecthDataStatistic {
     public void fecthData(final DataStatisticCallback dataStatisticCallback, String uId){
         ArrayList<DataStatisticObject> lDataStatistic = new ArrayList<>();
 
-        mDatabase.child("received_order_status").child(uId).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("received_order_status").child(uId).orderByChild("status").equalTo("2").addValueEventListener(new ValueEventListener() {
             String day,amount;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

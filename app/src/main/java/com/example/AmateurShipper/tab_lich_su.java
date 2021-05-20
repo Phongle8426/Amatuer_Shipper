@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +32,7 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 import static com.example.AmateurShipper.tab_nhan.idpostvalue;
+import static com.example.AmateurShipper.tab_nhan.idtabvalue;
 
 
 /**
@@ -48,6 +51,7 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
     private String mParam1;
     private String mParam2;
     RecyclerView TabLSuRecyclerview;
+    ShimmerFrameLayout layout_shimmer;
     DatabaseReference mDatabase;
     HistoryOrderAdapter historyOrderAdapter;
     FragmentManager fm;
@@ -93,6 +97,7 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
         View view = inflater.inflate(R.layout.fragment_tab_lich_su,container,false);
         TabLSuRecyclerview = view.findViewById(R.id.rcv_tab_lich_su);
         framChat =view.findViewById(R.id.frag_container_detail);
+        layout_shimmer = view.findViewById(R.id.shimmer_status);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         getUid();
 
@@ -107,6 +112,7 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
             mListData.clear();
         }
         getListOrderHistory();
+        loadshimer();
         return view;
     }
 
@@ -157,10 +163,24 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
 
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         bundle.putString(idpostvalue,idPost); // use as per your need
+        bundle.putString(idtabvalue,"tablichsu");
         detailFragment.setArguments(bundle);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.add(R.id.frame_cart,detailFragment);
+        fragmentTransaction.replace(R.id.frame_cart,detailFragment);
         fragmentTransaction.commit();
+    }
+
+    public void loadshimer(){
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                layout_shimmer.stopShimmer();
+                layout_shimmer.hideShimmer();
+                layout_shimmer.setVisibility(View.GONE);
+                TabLSuRecyclerview.setVisibility(View.VISIBLE);
+            }
+        },1000);
     }
 
     @Override

@@ -12,7 +12,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.AmateurShipper.Model.NotificationWebObject;
 import com.example.AmateurShipper.Util.PostDiffUtilCallback;
+import com.example.AmateurShipper.Util.formatTimeStampToDate;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,7 +42,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
     //private RecyclerViewClickInterface recyclerViewClickInterface;
     List<PostObject> postList;
     Context mContext;
-    public int get_position,rate_score,star,countPost;
+    public int get_position,rate_score;
+    double star,countPost;
     String IdUser;
     public MainActivity mainActivity;
     private OnPostListener mOnPostListener;
@@ -92,7 +95,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
         PostObject postObject = postList.get(position);
         get_position = position;
         viewAdapterClass.name_poster.setText(postObject.getTen_nguoi_gui());
-        viewAdapterClass.time.setText(postObject.getThoi_gian());
+        formatTimeStampToDate fm = new formatTimeStampToDate();
+        viewAdapterClass.time.setText(fm.convertToDay(Long.parseLong(postObject.getThoi_gian())));
         viewAdapterClass.start_post.setText(formatAddress(postObject.getNoi_nhan()));
         viewAdapterClass.end_post.setText(formatAddress(postObject.getNoi_giao()));
         viewAdapterClass.distance.setText(String.valueOf(postObject.getKm()));
@@ -139,6 +143,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
             getUid();
             loadData();
             clearData();
+
             this.onPostListener = onPostListener;
             itemView.setOnClickListener(this);
             get_order.setOnClickListener(new View.OnClickListener() {
@@ -152,45 +157,44 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     document.getData();
-                                    rate_score = Integer.parseInt(document.get("rate_star").toString());
-                                    if (rate_score > 0 && rate_score <= 50)
-                                        star=2;
-                                    if (rate_score >= 50 && rate_score < 100)
-                                        star=3;
-                                    if (rate_score >= 100 && rate_score < 150)
-                                        star=4;
-                                    if (rate_score >= 150)
-                                        star=5;
-                                    if (countPost <= star) {
-                                        String ten_nguoi_gui = postList.get(getAdapterPosition()).ten_nguoi_gui;
-                                        String sdt_nguoi_gui = postList.get(getAdapterPosition()).getSdt_nguoi_gui();
-                                        String noi_nhan = postList.get(getAdapterPosition()).noi_nhan;
-                                        String noi_giao = postList.get(getAdapterPosition()).noi_giao;
-                                        String sdt_nguoi_nhan = postList.get(getAdapterPosition()).sdt_nguoi_nhan;
-                                        String ten_nguoi_nhan = postList.get(getAdapterPosition()).ten_nguoi_nhan;
-                                        String ghi_chu = postList.get(getAdapterPosition()).ghi_chu;
-                                        String thoi_gian = postList.get(getAdapterPosition()).thoi_gian;
-                                        String id_shop = postList.get(getAdapterPosition()).id_shop;
-                                        String phi_giao = postList.get(getAdapterPosition()).phi_giao;
-                                        String phi_ung = postList.get(getAdapterPosition()).phi_ung;
-                                        String km = postList.get(getAdapterPosition()).km;
-                                        String id_post = postList.get(getAdapterPosition()).id_post;
-                                        Long tsLong = System.currentTimeMillis()/1000;
-                                        String timestamp = tsLong.toString();
-                                        PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan,
-                                                ten_nguoi_nhan, ghi_chu, timestamp, id_shop, phi_giao, phi_ung, km, id_post, "0");
-                                        databaseReference.child("received_order_status").child(IdUser).child(postObject.getId_post()).setValue(postObject);
-                                        databaseReference.child("newsfeed").child(postObject.getId_post()).setValue(null);
-                                        postList.remove(getAdapterPosition());
-                                        notifyItemRemoved(getAdapterPosition());
-                                        mainActivity.setCountOrder(mainActivity.getmCountOrder() + 1);
+                                    String role = document.get("role").toString();
+                                    if (role.equals("1")) {
+                                        star = Double.parseDouble(document.get("rate_star").toString());
+                                        if (countPost <= star) {
+                                            String ten_nguoi_gui = postList.get(getAdapterPosition()).ten_nguoi_gui;
+                                            String sdt_nguoi_gui = postList.get(getAdapterPosition()).getSdt_nguoi_gui();
+                                            String noi_nhan = postList.get(getAdapterPosition()).noi_nhan;
+                                            String noi_giao = postList.get(getAdapterPosition()).noi_giao;
+                                            String sdt_nguoi_nhan = postList.get(getAdapterPosition()).sdt_nguoi_nhan;
+                                            String ten_nguoi_nhan = postList.get(getAdapterPosition()).ten_nguoi_nhan;
+                                            String ghi_chu = postList.get(getAdapterPosition()).ghi_chu;
+                                            String thoi_gian = postList.get(getAdapterPosition()).thoi_gian;
+                                            String id_shop = postList.get(getAdapterPosition()).id_shop;
+                                            String phi_giao = postList.get(getAdapterPosition()).phi_giao;
+                                            String phi_ung = postList.get(getAdapterPosition()).phi_ung;
+                                            String km = postList.get(getAdapterPosition()).km;
+                                            String id_post = postList.get(getAdapterPosition()).id_post;
+                                            Long tsLong = System.currentTimeMillis() / 1000;
+                                            String timestamp = tsLong.toString();
+                                            PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan,
+                                                    ten_nguoi_nhan, ghi_chu, timestamp, id_shop, phi_giao, phi_ung, km, id_post, "0");
+                                            databaseReference.child("received_order_status").child(IdUser).child(postObject.getId_post()).setValue(postObject);
+                                            databaseReference.child("newsfeed").child(postObject.getId_post()).setValue(null);
+                                            postList.remove(getAdapterPosition());
+                                            notifyItemRemoved(getAdapterPosition());
+                                            mainActivity.setCountOrder(mainActivity.getmCountOrder() + 1);
 
-                                        databaseReference.child("Transaction").child(postObject.getId_post()).child("id_shipper").setValue(IdUser);
-                                        databaseReference.child("OrderStatus").child(postObject.getId_shop()).child(postObject.getId_post()).child("status").setValue("1");
-                                        databaseReference.child("Transaction").child(postObject.getId_post()).child("status").setValue("1");
-                                        //saveData(String.valueOf(countPost));
+                                            NotificationWebObject noti = new NotificationWebObject(id_post, IdUser, "1", timestamp);
+                                            databaseReference.child("Transaction").child(postObject.getId_post()).child("id_shipper").setValue(IdUser);
+                                            databaseReference.child("OrderStatus").child(postObject.getId_shop()).child(postObject.getId_post()).child("status").setValue("1");
+                                            databaseReference.child("Notification").child(id_shop).push().setValue(noti);
+                                            databaseReference.child("Transaction").child(postObject.getId_post()).child("status").setValue("1");
+                                            //saveData(String.valueOf(countPost));\
+                                        } else {
+                                            Toast.makeText(mContext.getApplicationContext(), "Bạn không thể nhận thêm", Toast.LENGTH_LONG).show();
+                                        }
                                     }else{
-                                        Toast.makeText(mContext.getApplicationContext(), "Bạn không thể nhận thêm", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(mContext, "Tài khoản tạm thời bị khóa chức năng này", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }
@@ -206,6 +210,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
         }
     }
 
+
     public void saveData(String count){
         SharedPreferences.Editor editor = sharedpreferencesCurrentCountReceived.edit();
         editor.putString(countPostReceived, count);
@@ -218,7 +223,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
     }
 
     private void loadData() {
-            countPost = Integer.parseInt(sharedpreferencesCurrentCountReceived.getString(countPostReceived, "0"));
+            countPost = Double.parseDouble(sharedpreferencesCurrentCountReceived.getString(countPostReceived, "0"));
     }
     public interface OnPostListener {
         void onPostClick(int position);

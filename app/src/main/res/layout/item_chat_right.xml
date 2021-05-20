@@ -42,4 +42,12 @@
             android:layout_alignParentEnd="true">
         </ImageView>
     </RelativeLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avt_shop"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="25dp"
+        android:visibility="gone"/>
 </RelativeLayout>

@@ -34,11 +34,11 @@
             android:text="Thống Kê" />
     </com.google.android.material.tabs.TabLayout>
 
-    <androidx.viewpager.widget.ViewPager
+    <com.example.AmateurShipper.CustomViewPager
         android:id="@+id/viewpage_profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </androidx.viewpager.widget.ViewPager>
+    </com.example.AmateurShipper.CustomViewPager>
 
 </LinearLayout>

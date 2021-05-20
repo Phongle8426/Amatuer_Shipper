@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -13,24 +14,35 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.AmateurShipper.Model.ProfileObject;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseDatabase rootNode;
     DatabaseReference databaseReference;
+    private FirebaseFirestore mFireStore;
     private CircularProgressButton loginButton;
     private EditText name, email, password, repassword;
     SharedPreferences sharedPreferences;
     String save_phonenumber;
     private String iName, iEmail, iRePassword, iPassword, codeSent;
+    public static final String iEmalvalue = "mail";
+    public static final String iPhonevalue = "phone";
+    public static final String iNamevalue = "name";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +51,14 @@ public class RegisterActivity extends AppCompatActivity {
         changeStatusBarColor();
 
         mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
         name = findViewById(R.id.editTextName);
         email = findViewById(R.id.editTextEmail);
         repassword = findViewById(R.id.editTextRepassword);
         password = findViewById(R.id.editTextPassword);
         loginButton = findViewById(R.id.cirRegisterButton);
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        mFireStore = FirebaseFirestore.getInstance();
 
         iEmail = email.getText().toString();
 //        iPhonen = phonenumber.getText().toString();
@@ -59,17 +73,8 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
                 signUpByEmail();
-
-                   // FirebaseApp.initializeApp(getApplicationContext());
-                  //  rootNode = FirebaseDatabase.getInstance();
-                   // databaseReference = rootNode.getReference("users");
                 databaseReference.child("Account_Shipper").child(save_phonenumber).setValue(email.getText().toString());
-//                    UserAccountObject ur = new UserAccountObject(name.getText().toString(), email.getText().toString(),
-//                                                            password.getText().toString(), save_phonenumber);
-//                    databaseReference.child(save_phonenumber).setValue(ur);
-                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
-                    mAuth = FirebaseAuth.getInstance();
+                signIn();
                 }
             });
         }
@@ -81,13 +86,31 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(RegisterActivity.this, "Dang ky thanh cong!!", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
+                         //   startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        //    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
                         } else {
                              Toast.makeText(RegisterActivity.this, "Loi!!!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    public void signIn(){
+        mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                Intent intent = new Intent(getBaseContext(), RegisterSuccessful.class);
+                intent.putExtra(iEmalvalue, iEmail);
+                intent.putExtra(iPhonevalue, save_phonenumber);
+                intent.putExtra(iNamevalue, iName);
+                startActivity(intent);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(RegisterActivity.this, "dang nhap bai", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void loadData() {
@@ -125,9 +148,9 @@ public class RegisterActivity extends AppCompatActivity {
             return true;
         }
     }
-
-    //    private boolean validatePhone(){
-//        iPhonen = phonenumber.getText().toString();
+//
+//        private boolean validatePhone(){
+//        iPhone = phonenumber.getText().toString();
 //        if(iPhonen.isEmpty()){
 //            phonenumber.setError("Field cannot be empty");
 //            return false;
@@ -198,5 +221,9 @@ public class RegisterActivity extends AppCompatActivity {
     public void onLoginClick(View view) {
         startActivity(new Intent(this, LoginActivity.class));
         overridePendingTransition(R.anim.slide_in_left, android.R.anim.slide_out_right);
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }

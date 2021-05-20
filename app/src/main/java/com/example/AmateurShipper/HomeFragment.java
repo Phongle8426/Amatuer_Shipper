@@ -1,38 +1,41 @@
 package com.example.AmateurShipper;
 
+import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.AmateurShipper.Dialog.FilterPaymentDialog;
-import com.example.AmateurShipper.Util.PostDiffUtilCallback;
+import com.example.AmateurShipper.Util.LocationService;
+import com.example.AmateurShipper.Util.NetworkChangeListener;
+import com.example.AmateurShipper.Util.formatTimeStampToDate;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -50,8 +53,7 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 //import static com.example.AmateurShipper.LoginActivity.IDUSER;
-import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
-import static com.example.AmateurShipper.LoginActivity.USERNAME;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,6 +71,7 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostListener
     private String mParam1;
     private String mParam2;
     ShimmerFrameLayout layout_shimmer;
+    LinearLayout layout_block;
     String iDUser;
     int index = -1;
     LinearLayoutManager mLayoutManager;
@@ -76,14 +79,16 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostListener
     PostAdapter postAdapter;
    private List<PostObject> mData = new ArrayList<>();
    final ArrayList<String> mLocationItem = new ArrayList<>();
-   final String[] location = {"Hai Chau","Thanh Khe","Cam Le","Hoa Khanh"};
+   final String[] location = {"Thanh Khê","Hải Châu","Sơn Trà","Liên Chiểu","Cẩm Lệ","Ngũ Hành Sơn","Hoà Vang"};
    boolean selected[] = new boolean[]{false, false, false, false};
-    com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment;
+    com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment,getlocation;
     ImageView btn_notify_new_order;
+    TextView time_block,tv_reason;
     private DatabaseReference mDatabase;
     private FirebaseFirestore mFireStore;
     public int filter_payment = 0, rate_score;
     List<PostObject> insertList1 = new ArrayList<>();
+
     public HomeFragment() {
 
         // Required empty public constructor
@@ -110,6 +115,9 @@ public static HomeFragment newInstance(){
         HomeFragment fragment = new HomeFragment();
         return fragment;
 }
+
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,73 +134,110 @@ public static HomeFragment newInstance(){
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View view = inflater.inflate(R.layout.fragment_home,container,false);
         layout_shimmer = view.findViewById(R.id.shimmer_newfeed);
+        layout_block = view.findViewById(R.id.layout_block);
         btn_filter_location = view.findViewById(R.id.btn_filter_location);
         btn_filter_payment = view.findViewById(R.id.btn_filter_payment);
         btn_notify_new_order = view.findViewById(R.id.btn_notify_new_order);
+        time_block = view.findViewById(R.id.time_block);
+        tv_reason = view.findViewById(R.id.tv_reason);
+        getlocation = view.findViewById(R.id.btn_location);
         NewsRecyclerview = view.findViewById(R.id.rcv_post);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mFireStore = FirebaseFirestore.getInstance();
-        getUid();
-        loadStar();
-        mLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
-        mLayoutManager.setReverseLayout(true);
-        NewsRecyclerview.setHasFixedSize(true);
-        mLayoutManager.setStackFromEnd(true);
-        NewsRecyclerview.setLayoutManager(mLayoutManager);
-        getChildList();
-        loadshimer();
-        postAdapter = new PostAdapter(mData, getContext(), this);
-        NewsRecyclerview.setAdapter(postAdapter);
+        //availableInternet isAvailable = new availableInternet();
+            getUid();
+            checkBlock();
+            loadStar();
+            mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+            mLayoutManager.setReverseLayout(true);
+            NewsRecyclerview.setHasFixedSize(true);
+            mLayoutManager.setStackFromEnd(true);
+            NewsRecyclerview.setLayoutManager(mLayoutManager);
+            getChildList();
+            loadshimer();
+            postAdapter = new PostAdapter(mData, getContext(), this);
+            NewsRecyclerview.setAdapter(postAdapter);
 
-        checkScroll();
-        btn_filter_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mLocationItem.clear();
-                showDialog();
-            }
-        });
-        btn_filter_payment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FilterPaymentDialog filterPaymentDialog = new FilterPaymentDialog();
-                filterPaymentDialog.setTargetFragment(HomeFragment.this,1);
-                filterPaymentDialog.show(getFragmentManager(),"filter by payment");
-            }
-        });
+            checkScroll();
 
-        btn_notify_new_order.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NewsRecyclerview.scrollToPosition(NewsRecyclerview.getAdapter().getItemCount()-1);
-                btn_notify_new_order.setVisibility(View.INVISIBLE);
-            }
-        });
-        return view;
+            btn_filter_location.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mLocationItem.clear();
+                    showDialog();
+                }
+            });
+            btn_filter_payment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FilterPaymentDialog filterPaymentDialog = new FilterPaymentDialog();
+                    filterPaymentDialog.setTargetFragment(HomeFragment.this, 1);
+                    filterPaymentDialog.show(getFragmentManager(), "filter by payment");
+                }
+            });
+
+            btn_notify_new_order.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NewsRecyclerview.scrollToPosition(NewsRecyclerview.getAdapter().getItemCount() - 1);
+                    btn_notify_new_order.setVisibility(View.INVISIBLE);
+                }
+            });
+
+            getlocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions( getActivity(), new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},1);
+                    }
+                    Intent intent = new Intent(getActivity(), LocationService.class);
+                    intent.setAction("Start");
+                    getContext().startService(intent);
+                }
+            });
+
+            return view;
     }
 
+    public void checkBlock(){
+        DocumentReference docRef = mFireStore.collection("ProfileShipper").document(iDUser);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.getResult().exists()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        document.getData();
+                        formatTimeStampToDate fm = new formatTimeStampToDate();
+                        String time = fm.convertTimeForBlock(Long.parseLong(document.get("role").toString()));
+                        String role = document.get("role").toString();
+                        String reason = document.get("reason").toString();
+                        if (role.equals("2"))
+                            layout_block.setVisibility(View.VISIBLE);
+                            tv_reason.setText(reason);
+                            time_block.setText(time);
+                    }
+                }
+            }
+        });
+    }
     public void loadStar(){
         mDatabase.child("Ratting_Star").child(iDUser).addValueEventListener(new ValueEventListener() {
-            int star1=0;
-            String star;
+            double sumStar=0;
+            double countRate=0;
+            double star;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
                     for (DataSnapshot snap : snapshot.getChildren()){
-                        star1 += Integer.parseInt(snap.getValue(String.class));
+                        sumStar+=snap.child("rate").getValue(Double.class);
+                        countRate++;
                     }
-                    if (star1 > 0 && star1 <= 50)
-                        star="2";
-                    if (star1 >= 50 && star1 < 100)
-                        star="3";
-                    if (star1 >= 100 && star1 < 150)
-                        star="4";
-                    if (star1 >= 150)
-                        star="5";
-                    Log.i(TAG, "onDataChangeSSSSS: "+ star);
+                    star=sumStar/countRate;
+                    star = Math.ceil((star * 10.0))/10.0;
                     mFireStore.collection("ProfileShipper").document(iDUser).update("rate_star",star);
                 }
             }
@@ -211,43 +256,46 @@ public static HomeFragment newInstance(){
     }
 
     public void getChildList(){
+        Long currentTimestamp = System.currentTimeMillis()/1000;
         mDatabase.child("newsfeed").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 if (snapshot.exists()){
                     PostObject data = snapshot.getValue(PostObject.class);
-                    if(insertList1.isEmpty()){
-                        if(filter_payment !=0){ // kiểm tra giá trị lọc theo tiền ứng có lớn hơn 0 hay ko, nếu ko thì kiểm tra điều kiện lọc vị trí
-                            if(filter_payment >= Integer.parseInt(data.getPhi_ung())){
-                                insertList1.add(data);
-                            }
-                        }else if (mLocationItem.size()>0){ // kiểm tra list lọc vị trí có trống hay không, nếu k thì bỏ qua lọc
-                            for (int k = 0;k<mLocationItem.size();k++){
-                                if(data.getNoi_nhan().contains(mLocationItem.get(k)))
+                    if (Long.parseLong(data.getThoi_gian())-currentTimestamp < 86400) {
+                        if (insertList1.isEmpty()) {
+                            if (filter_payment != 0) { // kiểm tra giá trị lọc theo tiền ứng có lớn hơn 0 hay ko, nếu ko thì kiểm tra điều kiện lọc vị trí
+                                if (filter_payment >= Integer.parseInt(data.getPhi_ung())) {
                                     insertList1.add(data);
-                            }
-                        } else insertList1.add(data);
-                        postAdapter.addItem(0,data);
-                    }
-                    else{
-                        if(filter_payment !=0){ // kiểm tra giá trị lọc theo tiền ứng có lớn hơn 0 hay ko, nếu ko thì kiểm tra điều kiện lọc vị trí
-                            if(filter_payment >= Integer.parseInt(data.getPhi_ung())){
-                                insertList1.add(data);
-                            }
-                        }else if (mLocationItem.size()>0){ // kiểm tra list lọc vị trí có trống hay không, nếu k thì bỏ qua lọc
-                            for (int k = 0;k<mLocationItem.size();k++){
-                                if(data.getNoi_nhan().contains(mLocationItem.get(k)))
+                                }
+                            } else if (mLocationItem.size() > 0) { // kiểm tra list lọc vị trí có trống hay không, nếu k thì bỏ qua lọc
+                                for (int k = 0; k < mLocationItem.size(); k++) {
+                                    if (data.getNoi_nhan().contains(mLocationItem.get(k)))
+                                        insertList1.add(data);
+                                }
+                            } else insertList1.add(data);
+                            postAdapter.addItem(0, data);
+                        } else {
+                            if (filter_payment != 0) { // kiểm tra giá trị lọc theo tiền ứng có lớn hơn 0 hay ko, nếu ko thì kiểm tra điều kiện lọc vị trí
+                                if (filter_payment >= Integer.parseInt(data.getPhi_ung())) {
                                     insertList1.add(data);
-                            }
-                        } else insertList1.add(data);
-                        postAdapter.addItem(postAdapter.getItemCount(),data);
-                        if (index == -1){
-                            NewsRecyclerview.scrollToPosition(NewsRecyclerview.getAdapter().getItemCount()-1);
-                            btn_notify_new_order.setVisibility(View.INVISIBLE);
-                        }else if (index < NewsRecyclerview.getAdapter().getItemCount()-2){
-                            btn_notify_new_order.setVisibility(View.VISIBLE);
-                            Log.i(TAG, "position: "+ index + "\n"+NewsRecyclerview.getAdapter().getItemCount());
-                        }else NewsRecyclerview.scrollToPosition(NewsRecyclerview.getAdapter().getItemCount()-1);
+                                }
+                            } else if (mLocationItem.size() > 0) { // kiểm tra list lọc vị trí có trống hay không, nếu k thì bỏ qua lọc
+                                for (int k = 0; k < mLocationItem.size(); k++) {
+                                    if (data.getNoi_nhan().contains(mLocationItem.get(k)))
+                                        insertList1.add(data);
+                                }
+                            } else insertList1.add(data);
+                            postAdapter.addItem(postAdapter.getItemCount(), data);
+                            if (index == -1) {
+                                NewsRecyclerview.scrollToPosition(NewsRecyclerview.getAdapter().getItemCount() - 1);
+                                btn_notify_new_order.setVisibility(View.INVISIBLE);
+                            } else if (index < NewsRecyclerview.getAdapter().getItemCount() - 2) {
+                                btn_notify_new_order.setVisibility(View.VISIBLE);
+                                Log.i(TAG, "position: " + index + "\n" + NewsRecyclerview.getAdapter().getItemCount());
+                            } else
+                                NewsRecyclerview.scrollToPosition(NewsRecyclerview.getAdapter().getItemCount() - 1);
+                        }
                     }
                 }
             }
@@ -273,6 +321,9 @@ public static HomeFragment newInstance(){
             }
         });
     }
+
+
+
     public void loadshimer(){
         Handler handler=new Handler();
         handler.postDelayed(new Runnable() {
@@ -314,7 +365,7 @@ public static HomeFragment newInstance(){
                         }else{
                             ((AlertDialog) dialogInterface).getListView().setItemChecked(position, false);
                             checkedItems[position]=false;
-                            Toast.makeText(getContext(), "can't add", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "tối đa", Toast.LENGTH_SHORT).show();
                         }
                 }else {
                     count--;
@@ -349,5 +400,19 @@ public static HomeFragment newInstance(){
         mLocationItem.clear(); // xóa đi điều kiện lọc theo vị trí
         getChildList(); // lọc lại
         filter_payment = Integer.parseInt(dialog_payment);
+    }
+
+    @Override
+    public void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        requireActivity().registerReceiver(networkChangeListener,filter);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        requireActivity().unregisterReceiver(networkChangeListener);
+
+        super.onStop();
     }
 }

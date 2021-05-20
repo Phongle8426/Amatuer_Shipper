@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.AmateurShipper.Model.NotificationWebObject;
 import com.example.AmateurShipper.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -98,6 +99,10 @@ public class SecurityCodeDialog extends DialogFragment {
                             handler.removeCallbacks(this);
                         }
                     }, SPLASH_SCREEN);
+                    Long tsLong = System.currentTimeMillis()/1000;
+                    String timestamp = tsLong.toString();
+                    NotificationWebObject noti = new NotificationWebObject(idpost,iDUser,"2",timestamp);
+                    mDatabase.child("Notification").child(idshop).push().setValue(noti);
                     mDatabase.child("OrderStatus").child(idshop).child(idpost).child("status").setValue("2");
                     saveData(String.valueOf(countPost-1));
                     mOnInputSelected.sendInput(position);

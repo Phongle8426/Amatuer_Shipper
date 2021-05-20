@@ -22,8 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/circel_border">
+                android:layout_marginTop="20dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -45,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imgUser"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="15sp"
+                android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif-light"
                 android:hint="Tên"
                 android:textColor="@color/colorText"
@@ -65,41 +64,27 @@
                 android:textColor="@color/colorText"
                 android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/aa"
+            <LinearLayout
+                android:id="@+id/layout_level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_address"
-                android:layout_centerHorizontal="true"
-                android:fontFamily="sans-serif"
-                android:text="Tu vi: Tam Trọng Thiên"
-                android:textAllCaps="false"
-                android:textColor="@color/colorText"
-                android:textSize="14sp" />
-            <TextView
-                android:id="@+id/bb"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/aa"
-                android:layout_centerHorizontal="true"
-                android:fontFamily="sans-serif"
-                android:text="Độ uy tín: 75"
-                android:textAllCaps="false"
-                android:textColor="@color/colorText"
-                android:textSize="14sp" />
-            <RatingBar
-                android:id="@+id/star_rate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/bb"
-                android:layout_centerHorizontal="true"
-                android:isIndicator="true"
-                android:numStars="5"
-                android:progressBackgroundTint="@color/colorText"
-                android:stepSize="0.5"
-                android:scaleX="0.5"
-                android:scaleY="0.5"/>
-
+                android:layout_centerHorizontal="true">
+                <TextView
+                    android:id="@+id/level_now"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif"
+                    android:text="Cấp "
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorText"
+                    android:textSize="14sp" />
+                <ProgressBar
+                    android:id="@+id/progressLV"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/btn_setting"
@@ -125,6 +110,7 @@
                 android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/layout_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"

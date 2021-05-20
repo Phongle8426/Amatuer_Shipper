@@ -1,43 +1,33 @@
 package com.example.AmateurShipper;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.SyncStateContract;
-import android.util.Log;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
-import com.example.AmateurShipper.Dialog.FilterPaymentDialog;
 import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
-import com.google.android.material.badge.BadgeDrawable;
+import com.example.AmateurShipper.Model.NotificationWebObject;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -46,7 +36,6 @@ import java.util.List;
 import Helper.MyButtonClickListner;
 import Helper.MySwipeHelper;
 
-import static android.content.ContentValues.TAG;
 
 
 /**
@@ -61,11 +50,13 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public static final String idpostvalue = "123";
+    public static final String idtabvalue = "tab";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     RecyclerView NewsRecyclerview;
+    ShimmerFrameLayout layout_shimmer;
     FrameLayout framChat;
     MainActivity mainActivity;
     private DatabaseReference mDatabase;
@@ -74,6 +65,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     ChatFragment chatFragment;
     String iDUser;
     FragmentManager fragmentManager;
+    final String[] reasonList = {"reason1","reason2"};
 
     public tab_nhan() {
         // Required empty public constructor
@@ -114,6 +106,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         View view = inflater.inflate(R.layout.fragment_tab_nhan,container,false);
         NewsRecyclerview = view.findViewById(R.id.rcv_tab_nhan);
         framChat =view.findViewById(R.id.frag_container_detail);
+        layout_shimmer = view.findViewById(R.id.shimmer_status);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         getUid();
@@ -121,6 +114,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         mainActivity.setCountOrder(0);
         mainActivity.disableNotification();
         getListStatusReceived();
+        loadshimer();
         FragmentManager fm = getActivity().getSupportFragmentManager();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setReverseLayout(true);
@@ -130,29 +124,14 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         MySwipeHelper mySwipeHelper = new MySwipeHelper(getActivity(), NewsRecyclerview , 200) {
             @Override
             public void instaniatMyButton(final RecyclerView.ViewHolder viewHolder, List<MyButton> buff) {
-                buff.add(new MyButton("Huy Don", 30, Color.parseColor("#DC143C"), new MyButtonClickListner(){
+                buff.add(new MyButton("Hủy", 30, Color.parseColor("#DC143C"), new MyButtonClickListner(){
                     @Override
                     public void onClick(final int pos) {
                         // String deleteItem = null;
-                        final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-                        dialog.setTitle("Xoa don!");
-                        dialog.setMessage("Bạn thực sự muốn xoa don?");
-                        dialog.setPositiveButton("Có", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                deleteItem(pos, viewHolder);
-                            }
-                        }).setNegativeButton("Không", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        });
-                        AlertDialog al = dialog.create();
-                        al.show();
+                        showReasonDelete(pos,viewHolder);
                     }
                 }, getContext()));
-                buff.add(new MyButton("Nhan Hang",30, Color.parseColor("#FF4BB54F"), new MyButtonClickListner(){
+                buff.add(new MyButton("Nhận hàng",30, Color.parseColor("#FF4BB54F"), new MyButtonClickListner(){
                     @Override
                     public void onClick(int pos) {
                         pos = viewHolder.getAdapterPosition();
@@ -179,17 +158,47 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     }
 
 
-    public void deleteItem(int pos, RecyclerView.ViewHolder viewHolder){
-        String idshop = null;
-        String idpost = null;
+    public void deleteItem(int pos,String reason, RecyclerView.ViewHolder viewHolder){
+        Long tsLong = System.currentTimeMillis()/1000;
+        String timestamp = tsLong.toString();
         pos = viewHolder.getAdapterPosition();
-        idshop = mData.get(pos).id_shop;
-        idpost = mData.get(pos).id_post;
+        String idshop = mData.get(pos).id_shop;
+        String idpost = mData.get(pos).id_post;
         //  deleteItem = String.valueOf(mData.get(pos));
         mData.remove(pos);
         receivedOrderAdapter.notifyItemChanged(pos);
+        NotificationWebObject noti = new NotificationWebObject(idpost,iDUser,"3",timestamp);
         mDatabase.child("received_order_status").child(iDUser).child(idpost).setValue(null);
         mDatabase.child("OrderStatus").child(idshop).child(idpost).child("status").setValue("3");
+        mDatabase.child("OrderStatus").child(idshop).child(idpost).child("reason").setValue(reason);
+        mDatabase.child("Notification").child(idshop).push().setValue(noti);
+        mDatabase.child("Transaction").child(idpost).child("status").setValue("3");
+    }
+    public void showReasonDelete(int pos,RecyclerView.ViewHolder viewHolder){
+        final String[] reason = new String[1];
+            final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("@string/titleReasonDelete");
+            builder.setSingleChoiceItems(reasonList,0, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    reason[0] = reasonList[which];
+
+                }
+            }).setPositiveButton("Đồng ý",new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    deleteItem(pos,reason[0],viewHolder);
+                    dialogInterface.dismiss();
+                }
+            }).setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            AlertDialog mDialog = builder.create();
+            mDialog.show();
+
     }
 
     public void getListStatusReceived(){
@@ -222,7 +231,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     @Override
     public void onItemClick(int position) {
         String idPost = mData.get(position).getId_post();
-        Log.i(TAG, "onItemClick: "+idPost);
+        //Log.i(TAG, "onItemClick: "+idPost);
         //NewsRecyclerview.setVisibility(View.INVISIBLE);
         framChat.setVisibility(View.VISIBLE);
         DetailOrderFragment detailFragment = new DetailOrderFragment();
@@ -230,10 +239,24 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
 
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         bundle.putString(idpostvalue,idPost); // use as per your need
+        bundle.putString(idtabvalue,"tabnhan");
         detailFragment.setArguments(bundle);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.add(R.id.frame_cart,detailFragment);
+        fragmentTransaction.replace(R.id.frame_cart,detailFragment);
         fragmentTransaction.commit();
+    }
+
+    public void loadshimer(){
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                layout_shimmer.stopShimmer();
+                layout_shimmer.hideShimmer();
+                layout_shimmer.setVisibility(View.GONE);
+                NewsRecyclerview.setVisibility(View.VISIBLE);
+            }
+        },1000);
     }
 
     @Override

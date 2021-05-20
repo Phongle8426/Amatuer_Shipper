@@ -206,4 +206,7 @@ public class VerifyOTP extends AppCompatActivity {
         });
 
     }
+    @Override
+    public void onBackPressed() {
+    }
 }

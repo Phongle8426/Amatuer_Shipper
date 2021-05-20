@@ -21,6 +21,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.AmateurShipper.Util.CheckRoleUser;
+import com.example.AmateurShipper.Util.availableInternet;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -46,7 +48,6 @@ import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 
 
 public class LoginActivity extends AppCompatActivity {
-    ImageView loginFacebook;
     FirebaseAuth mAuth;
     EditText editTextPhonenumber, editTextPassword;
     String phonenumber, password;
@@ -88,12 +89,11 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         databaseReference = rootNode.getInstance().getReference();
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-       // sharedpreferencesIdUser = getSharedPreferences(MyPREFERENCESIDUSER,Context.MODE_PRIVATE);
         FirebaseUser user = mAuth.getCurrentUser();
         if (user!=null){
-            Intent is = new Intent(this,MainActivity.class);
+            Intent is = new Intent(this,CheckRoleUser.class);
             startActivity(is);
-        }else
+        }
             //loadData();
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,16 +119,23 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!validatePassword() | !validatePhone()){
+                if (!validatePassword() | !validatePhone()) {
                     return;
                 }
-                if(editTextPhonenumber.getText().toString() != "Email"){
-                    loginByPhone();
-                }else{
-                    login(editTextPhonenumber.getText().toString(),editTextPassword.getText().toString());
+                availableInternet isConnect = new availableInternet();
+                if (isConnect.isNetworkAvailable(LoginActivity.this)) {
+                    if (editTextPhonenumber.getText().toString() != "Email") {
+                        loginByPhone();
+                    } else {
+                        login(editTextPhonenumber.getText().toString(), editTextPassword.getText().toString());
+                    }
+                    //loginWithPhoneNumber(editTextPhonenumber.getText().toString());
+                    //loginByPhone(editTextPhonenumber.getText().toString(),editTextPassword.getText().toString());
+                }else {
+                    Toast.makeText(LoginActivity.this, "khong chay", Toast.LENGTH_LONG).show();
+                    editTextPhonenumber.setText(null);
+                    editTextPassword.setText(null);
                 }
-                //loginWithPhoneNumber(editTextPhonenumber.getText().toString());
-                //loginByPhone(editTextPhonenumber.getText().toString(),editTextPassword.getText().toString());
             }
         });
     }
@@ -202,23 +209,22 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void login(final String Email, final String Password){
-        mAuth.signInWithEmailAndPassword(Email, Password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            if (saveAcount.isChecked())
-                                saveData(Email,Password);
-                            else
-                                clearData();
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_mid_left);
-                        }else {
-                            Toast.makeText(LoginActivity.this, "Datasnapshot is not exist!!!!", Toast.LENGTH_SHORT).show();
+            mAuth.signInWithEmailAndPassword(Email, Password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                if (saveAcount.isChecked())
+                                    saveData(Email,Password);
+                                else
+                                    clearData();
+                                Intent intent = new Intent(getApplicationContext(), CheckRoleUser.class);
+                                startActivity(intent);
+                            }else {
+                                Toast.makeText(LoginActivity.this, "Tài khoản hoặc mật khẩu không tồn tại1", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
     }
 
     private boolean validatePhone(){
@@ -279,5 +285,9 @@ public class LoginActivity extends AppCompatActivity {
         }
         else
             saveAcount.setChecked(false);
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }

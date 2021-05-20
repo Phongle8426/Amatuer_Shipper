@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- Bottom 2dp Shadow -->
-    <item android:right="40px">
-        <shape  android:shape="rectangle">
-
-            <solid android:color="@color/colorText" />
-            <corners android:topRightRadius="200dp"
-                        android:bottomLeftRadius="200dp"/>
+    <item>
+        <shape android:shape="oval">
+            <stroke
+                android:width="20dp"
+                android:color="#47C6BB" />
         </shape>
     </item>
-
+    <item>
+        <inset android:inset="20dp">
+            <shape android:shape="oval">
+                <stroke
+                    android:width="20dp"
+                    android:color="#5F5995" />
+            </shape>
+        </inset>
+    </item>
+    <item>
+        <inset android:inset="20dp">
+            <shape android:shape="oval">
+                <stroke
+                    android:width="20dp"
+                    android:color="#453F6B" />
+            </shape>
+        </inset>
+    </item>
+    <item>
+        <inset android:inset="20dp">
+            <shape android:shape="oval">
+                <stroke
+                    android:width="1dp"
+                    android:color="@color/white" />
+            </shape>
+        </inset>
+    </item>
 </layer-list>

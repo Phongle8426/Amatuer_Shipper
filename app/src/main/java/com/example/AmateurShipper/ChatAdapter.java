@@ -83,6 +83,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewAdapterCla
     public class ViewAdapterClass extends RecyclerView.ViewHolder {
         public TextView showMessage,seenMessage,timeMessage;
         public ImageView showImageMessage,seen;
+        de.hdodenhof.circleimageview.CircleImageView avt;
 
 
         public ViewAdapterClass(@NonNull final View itemView) {
@@ -92,6 +93,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewAdapterCla
             //seenMessage = itemView.findViewById(R.id.tv_seen);
             timeMessage = itemView.findViewById(R.id.time_message);
             seen = itemView.findViewById(R.id.seen);
+            avt = itemView.findViewById(R.id.avt_shop);
         }
     }
 

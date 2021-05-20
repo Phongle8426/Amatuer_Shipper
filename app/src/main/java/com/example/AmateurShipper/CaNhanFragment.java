@@ -1,5 +1,7 @@
 package com.example.AmateurShipper;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.AmateurShipper.Util.NetworkChangeListener;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 
@@ -28,7 +31,7 @@ public class CaNhanFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    private com.example.AmateurShipper.CustomViewPager viewPager;
     private TabItem tab_profile, tab_statis;
     public PageAdapterProfile pagerAdapterProfile;
 
@@ -62,6 +65,8 @@ public class CaNhanFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
+    NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,5 +106,18 @@ public class CaNhanFragment extends Fragment {
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        requireActivity().registerReceiver(networkChangeListener,filter);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        requireActivity().unregisterReceiver(networkChangeListener);
+        super.onStop();
     }
 }
