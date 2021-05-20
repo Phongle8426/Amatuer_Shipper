@@ -1,7 +1,10 @@
 package com.example.AmateurShipper;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -27,6 +30,7 @@ import android.widget.Toast;
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
@@ -87,6 +91,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
@@ -143,7 +148,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
     private static final String ROUTE_SOURCE_ID = "ROUTE-SOURCE-ID";
 
     private static final String ICON_LAYER_ID = "icon-layer-id";
-
+    private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
 
     int storedPosition = 0;
 
@@ -240,6 +245,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
     public MapFragment() {
         // Required empty public constructor
     }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -257,6 +263,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -265,6 +272,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -304,16 +312,57 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
 
         mapView = (MapView) view.findViewById(R.id.mapView);
         mapView.getMapAsync(this);
-        stops.clear();
-        shop_lists.clear();
-
-
         return view;
     }
 
     public void createNewAdapter() {
         mapAdapter = new MapAdapter(mData, MapFragment.this, fm, this);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE) {
+
+            // Retrieve selected location's CarmenFeature
+            CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
+
+            // Create a new FeatureCollection and add a new Feature to it using selectedCarmenFeature above.
+            // Then retrieve and update the source designated for showing a selected location's symbol layer icon
+
+            if (mapboxMap != null) {
+                Style style = mapboxMap.getStyle();
+                if (style != null) {
+                    GeoJsonSource source = style.getSourceAs(geojsonSourceLayerId);
+                    if (source != null) {
+                        source.setGeoJson(FeatureCollection.fromFeatures(
+                                new Feature[]{Feature.fromJson(selectedCarmenFeature.toJson())}));
+                    }
+
+                    // Move map camera to the selected location
+                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                            new CameraPosition.Builder()
+                                    .target(new LatLng(((Point) selectedCarmenFeature.geometry()).latitude(),
+                                            ((Point) selectedCarmenFeature.geometry()).longitude()))
+                                    .zoom(14)
+                                    .build()), 4000);
+                }
+
+            }
+        }
+        /*if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+// Retrieve the information from the selected location's CarmenFeature
+            CarmenFeature carmenFeature = PlacePicker.getPlace(data);
+// Set the TextView text to the entire CarmenFeature. The CarmenFeature
+// also be parsed through to grab and display certain information such as
+// its placeName, text, or coordinates.
+            if (carmenFeature != null) {
+                Toast.makeText(MapsActivity.this, String.format(address
+                        , carmenFeature.toJson()), Toast.LENGTH_SHORT).show();
+            }
+        }*/
+    }
+
     public void getListStatusReceived() {
         mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("1").addValueEventListener(new ValueEventListener() {
             @Override
@@ -340,11 +389,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             }
         });
     }
+
     //Load ID User
     public void getUid() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         iDUser = user.getUid();
     }
+
     //clear map styles
     public void clearStyle(int position) {
         //shop
@@ -460,6 +511,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             });
         }
     }
+
     /**
      * Invoked when a network exception occurred talking to the server or when an unexpected
      * exception occurred creating the request or processing the response.
@@ -471,6 +523,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
     public void onFailure(Call<DirectionsResponse> call, Throwable t) {
 
     }
+
     public void navigationRoute() {
         NavigationRoute.builder(getActivity())
                 .accessToken("pk.eyJ1IjoidHJvbmd0aW4iLCJhIjoiY2tubGluaDk5MGk2MDJvcGJubXBmYjAybSJ9.iod8C2tfXJYSq3sA9ngCtA")
@@ -536,6 +589,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         getActivity().findViewById(R.id.get_location).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i(TAG, "onClick fab: " + currentLong +"/"+currentLat);
                 CameraPosition position = new CameraPosition.Builder()
                         .target(new LatLng(currentLat, currentLong))
                         .zoom(18)
@@ -548,7 +602,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             @Override
             public void onClick(View view) {
                 for (int i = 1; i < locationAfterSort.size(); i++) {
-                    Log.i(TAG, "onCreateView: " + locationAfterSort.get(i).getType() + "/" + locationAfterSort.get(i).getDiem_thu());
+                    Log.i(TAG, "onCreateView overview: " + currentLat + "/"+ currentLong);
                     if (locationAfterSort.get(i).getType() == 1) {
                         get_route_options_shop("ICON_IMAGE_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
                                 "OPTIMIZED_ROUTE_SOURCE_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
@@ -573,17 +627,25 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         });
     }
 
-    @SuppressLint("MissingPermission")
+
     public void initLocationEngine() {
         Log.i(TAG, "initLocationEngine: " + 0);
         locationEngine = LocationEngineProvider.getBestLocationEngine(getActivity());
         LocationEngineRequest request = new LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
                 .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
                 .setMaxWaitTime(DEFAULT_MAX_WAIT_TIME).build();
-
-        locationEngine.requestLocationUpdates(request, callback, Looper.getMainLooper());
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         locationEngine.getLastLocation(callback);
-
+        locationEngine.requestLocationUpdates(request, callback, Looper.getMainLooper());
 
         Log.i(TAG, "initLocationEngine: " + locationEngine.toString());
     }
@@ -595,13 +657,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             public void onStyleLoaded(@NonNull Style style) {
 
                 enableLocationComponent(style);
-                addFirstStopToStopsList();
-
-                Log.i(TAG, "onStyleLoaded + onmapready: " + currentLong + "/" + currentLat + "=" + callback.toString());
                 mapboxMap.addOnMapClickListener(MapFragment.this::onMapClick);
                 mapboxMap.addOnMapLongClickListener(MapFragment.this::onMapClick);
                 initSearchFab();
-
+                Log.i(TAG, "onStyleLoaded + onmapready: " + currentLong + "/" + currentLat + "=" + callback.toString());
                 if (alreadyTwelveMarkersOnMap()) {
                     Toast.makeText(getActivity(), R.string.only_twelve_stops_allowed, Toast.LENGTH_LONG).show();
                 } else {
@@ -863,7 +922,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
                 }
 
                 drawOptimizedRoute_user(mapboxMap.getStyle(), response.body().routes().get(0), source_id);
-                Toast.makeText(getActivity(), "distanace1" + response.body().routes().get(0).distance(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), "distanace1" + response.body().routes().get(0).distance(), Toast.LENGTH_LONG).show();
 
             }
 
@@ -898,7 +957,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
                     return;
                 }
                 drawOptimizedRoute_shop(mapboxMap.getStyle(), response.body().routes().get(0), source_id);
-                Toast.makeText(getActivity(), "distanace1" + response.body().routes().get(0).distance(), Toast.LENGTH_LONG).show();
+               // Toast.makeText(getActivity(), "distanace1" + response.body().routes().get(0).distance(), Toast.LENGTH_LONG).show();
 
             }
 
@@ -925,7 +984,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
                 @Override
                 public void onStyleLoaded(@NonNull Style style) {
                     enableLocationComponent(style);
-                    addFirstStopToStopsList();
                 }
             });
         } else {
@@ -974,21 +1032,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
     public void onLongItemClick(int position) {
 
     }
-
     @Override
     public void onReceivedItem(int position) {
 
     }
-
-    private class LocationChangeListeningActivityLocationCallback
+    public class LocationChangeListeningActivityLocationCallback
             implements LocationEngineCallback<LocationEngineResult> {
-
-        private final WeakReference<MapFragment> activityWeakReference;
-
+        public WeakReference<MapFragment> activityWeakReference;
         LocationChangeListeningActivityLocationCallback(MapFragment activity) {
             this.activityWeakReference = new WeakReference<>(activity);
         }
-
         /**
          * The LocationEngineCallback interface's method which fires when the device's location has changed.
          *
@@ -998,23 +1051,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         @Override
         public void onSuccess(LocationEngineResult result) {
             MapFragment activity = activityWeakReference.get();
-
             if (activity != null) {
                 Location location = result.getLastLocation();
-
                 if (location == null) {
-                    Toast.makeText(activity.getContext(), "Location on null" + location.getLatitude() + "/" + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                    Log.i(TAG, "onSuccess: location null");
                     return;
                 }
-
-                if (activity.mapboxMap != null && result.getLastLocation() != null) {
-
-                    activity.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
-
+                if (activity.mapboxMap != null && location != null) {
+                    Toast.makeText(mainActivity, "location+++"+ location.getLatitude(), Toast.LENGTH_SHORT).show();
+                    activity.mapboxMap.getLocationComponent().forceLocationUpdate(location);
                     currentLat = locationComponent.getLastKnownLocation().getLatitude();
                     currentLong = locationComponent.getLastKnownLocation().getLongitude();
-
                 }
+            }
+            else{
+                Log.i(TAG, "onSuccess: null");
             }
         }
 
@@ -1053,7 +1104,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             // Set the component's render mode
             locationComponent.setRenderMode(RenderMode.COMPASS);
             initLocationEngine();
-            Log.i(TAG, "onCameraTrackingChanged: " + currentLat + "-" + currentLong);
         } else {
             permissionsManager = new PermissionsManager(this);
             permissionsManager.requestLocationPermissions(getActivity());

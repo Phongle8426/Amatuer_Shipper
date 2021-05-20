@@ -2,11 +2,9 @@ package com.example.AmateurShipper;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -19,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.AmateurShipper.Dialog.FilterPaymentDialog;
-import com.example.AmateurShipper.Util.LocationService;
 import com.example.AmateurShipper.Util.NetworkChangeListener;
 import com.example.AmateurShipper.Util.formatTimeStampToDate;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -186,18 +182,18 @@ public static HomeFragment newInstance(){
                 }
             });
 
-            getlocation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions( getActivity(), new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},1);
-                    }
-                    Intent intent = new Intent(getActivity(), LocationService.class);
-                    intent.setAction("Start");
-                    getContext().startService(intent);
-                }
-            });
+//            getlocation.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+//                            && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                        ActivityCompat.requestPermissions( getActivity(), new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},1);
+//                    }
+//                    Intent intent = new Intent(getActivity(), LocationService.class);
+//                    intent.setAction("Start");
+//                    getContext().startService(intent);
+//                }
+//            });
 
             return view;
     }
