@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/overView"
+        android:title="Overview"
+        android:icon="@drawable/blue_marker"></item>
+    <item
+        android:id="@+id/location_1"
+        android:title="location1"
+        android:icon="@drawable/blue_marker"></item>
+    <item
+        android:id="@+id/location_2"
+        android:title="location2"
+        android:icon="@drawable/blue_marker"></item>
+    <item
+        android:id="@+id/location_3"
+        android:title="location3"
+        android:icon="@drawable/blue_marker"></item>
+    <item
+        android:id="@+id/location_4"
+        android:title="location4"
+        android:icon="@drawable/blue_marker"></item>
+    <item
+        android:id="@+id/location_5"
+        android:title="location5"
+        android:icon="@drawable/blue_marker"></item>
+</menu>

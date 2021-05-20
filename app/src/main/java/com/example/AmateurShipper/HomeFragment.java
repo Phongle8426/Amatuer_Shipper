@@ -136,7 +136,7 @@ public static HomeFragment newInstance(){
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mFireStore = FirebaseFirestore.getInstance();
         getUid();
-        loadStar();
+        //loadStar();
         mLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         mLayoutManager.setReverseLayout(true);
         NewsRecyclerview.setHasFixedSize(true);
@@ -174,35 +174,35 @@ public static HomeFragment newInstance(){
         return view;
     }
 
-    public void loadStar(){
-        mDatabase.child("Ratting_Star").child(iDUser).addValueEventListener(new ValueEventListener() {
-            int star1=0;
-            String star;
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
-                    for (DataSnapshot snap : snapshot.getChildren()){
-                        star1 += Integer.parseInt(snap.getValue(String.class));
-                    }
-                    if (star1 > 0 && star1 <= 50)
-                        star="2";
-                    if (star1 >= 50 && star1 < 100)
-                        star="3";
-                    if (star1 >= 100 && star1 < 150)
-                        star="4";
-                    if (star1 >= 150)
-                        star="5";
-                    Log.i(TAG, "onDataChangeSSSSS: "+ star);
-                    mFireStore.collection("ProfileShipper").document(iDUser).update("rate_star",star);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
+//    public void loadStar(){
+//        mDatabase.child("Ratting_Star").child(iDUser).addValueEventListener(new ValueEventListener() {
+//            int star1=0;
+//            String star;
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (snapshot.exists()){
+//                    for (DataSnapshot snap : snapshot.getChildren()){
+//                        star1 += Integer.parseInt(snap.getValue(String.class));
+//                    }
+//                    if (star1 > 0 && star1 <= 50)
+//                        star="2";
+//                    if (star1 >= 50 && star1 < 100)
+//                        star="3";
+//                    if (star1 >= 100 && star1 < 150)
+//                        star="4";
+//                    if (star1 >= 150)
+//                        star="5";
+//                    Log.i(TAG, "onDataChangeSSSSS: "+ star);
+//                    mFireStore.collection("ProfileShipper").document(iDUser).update("rate_star",star);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
 
     //Load ID User
     public void getUid(){

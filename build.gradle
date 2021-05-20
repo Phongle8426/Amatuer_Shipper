@@ -4,6 +4,7 @@ buildscript {
         google()
         jcenter()
         mavenCentral()
+        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.0.0"
@@ -20,6 +21,7 @@ allprojects {
         jcenter()
         mavenCentral()
         maven {
+
             // url 'https://api.mapbox.com/downloads/v2/releases/maven'
             url 'https://mapbox.bintray.com/mapbox'
             authentication {
@@ -33,9 +35,9 @@ allprojects {
                 password = project.properties['pk.eyJ1IjoidHJvbmd0aW4iLCJhIjoiY2tubGluaDk5MGk2MDJvcGJubXBmYjAybSJ9.iod8C2tfXJYSq3sA9ngCtA'] ?: ""
             }
         }
+        maven { url "https://jitpack.io" }
     }
 }
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
