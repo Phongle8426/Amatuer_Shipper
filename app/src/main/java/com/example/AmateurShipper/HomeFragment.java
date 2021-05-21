@@ -322,8 +322,6 @@ public static HomeFragment newInstance(){
         });
     }
 
-
-
     public void loadshimer(){
         Handler handler=new Handler();
         handler.postDelayed(new Runnable() {

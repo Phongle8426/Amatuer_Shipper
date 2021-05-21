@@ -1,12 +1,25 @@
 package com.example.AmateurShipper;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ScrollView;
+
+import com.google.firebase.auth.FirebaseAuth;
+
+import static com.example.AmateurShipper.LoginActivity.MyPREFERENCES;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +36,13 @@ public class SettingFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    ScrollView layoutSetting;
+    CardView signOut,manageAccount;
+    ImageView back;
+
+    private FirebaseAuth mAuth;
+    SharedPreferences sharedpreferences;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -59,6 +79,85 @@ public class SettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false);
+        View view = inflater.inflate(R.layout.fragment_setting, container, false);
+
+        signOut = view.findViewById(R.id.card_sign_out);
+        manageAccount = view.findViewById(R.id.card_manage_acc);
+        back = view.findViewById(R.id.btn_back);
+        layoutSetting = view.findViewById(R.id.layout_setting);
+
+        mAuth = FirebaseAuth.getInstance();
+        sharedpreferences = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+        manageAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToManageAccount();
+            }
+        });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                backToProfile();
+            }
+        });
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogLogOut();
+            }
+        });
+        return view;
     }
+
+    public void sigOut(){
+        mAuth.signOut();
+        clearData();
+        Intent intent_toLogin = new Intent(getActivity(),LoginActivity.class);
+        intent_toLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent_toLogin);
+    }
+    private void clearData() {
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.clear();
+        editor.commit();
+    }
+    public void dialogLogOut(){
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        dialog.setTitle("Đăng Xuất!");
+        dialog.setMessage("Bạn thực sự muốn đăng xuất?");
+        dialog.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                sigOut();
+            }
+        });
+        dialog.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog al = dialog.create();
+        al.show();
+    }
+
+
+    public void goToManageAccount(){
+        layoutSetting.setVisibility(View.GONE);
+        ManageAccountFragment tabManageAcc= new ManageAccountFragment();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.setting_frame,tabManageAcc);
+        fragmentTransaction.commit();
+    }
+    public void backToProfile(){
+        layoutSetting.setVisibility(View.GONE);
+        EditProfileFragment tabProfile= new EditProfileFragment();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.setting_frame,tabProfile);
+        fragmentTransaction.commit();
+    }
+
 }

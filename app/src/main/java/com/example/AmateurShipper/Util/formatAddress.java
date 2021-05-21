@@ -10,7 +10,9 @@ public class formatAddress {
         street = strArr[0];
         ward = strArr[1];
         distreet = strArr[2];
+        if (ward.contains("Phường"))
         ward = ward.substring(8,ward.length());
+        if (distreet.contains("Quận"))
         distreet = distreet.substring(5,distreet.length());
         return street + ", " + ward + ", "+distreet;
     }

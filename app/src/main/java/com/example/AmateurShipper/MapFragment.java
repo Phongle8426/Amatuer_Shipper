@@ -198,7 +198,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
 
     private LocationEngine locationEngine;
     RecyclerView recyclerview_map;
-    FrameLayout framChat;
     MainActivity mainActivity;
     private DatabaseReference mDatabase;
     List<PostObject> mData = new ArrayList<>();
@@ -325,7 +324,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
                         PostObject data = dataSnapshot.getValue(PostObject.class);
                         mData.add(data);
                     }
-                    Log.i(TAG, "onDataChange: sdt ng gui " + mData.get(0).sdt_nguoi_gui);
                     createNewAdapter();
                     recyclerview_map.setAdapter(mapAdapter);
                     mapAdapter.notifyDataSetChanged();
@@ -471,67 +469,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
     public void onFailure(Call<DirectionsResponse> call, Throwable t) {
 
     }
-    public void navigationRoute() {
-        NavigationRoute.builder(getActivity())
-                .accessToken("pk.eyJ1IjoidHJvbmd0aW4iLCJhIjoiY2tubGluaDk5MGk2MDJvcGJubXBmYjAybSJ9.iod8C2tfXJYSq3sA9ngCtA")
-                .origin(origin)
-                .destination(destination)
-                .build()
-                .getRoute(new Callback<DirectionsResponse>() {
-
-                    @Override
-                    public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-                        if (response.body() == null) {
-                            Toast.makeText(getActivity(), "No routes found", Toast.LENGTH_LONG);
-                            return;
-                        } else if (response.body().routes().size() < 1) {
-                            Toast.makeText(getActivity(), "No routes found", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        final DirectionsRoute currentRoute = response.body().routes().get(0);
-                        boolean simulateRoute = true;
-
-
-                        NavigationLauncherOptions options = NavigationLauncherOptions.builder()
-                                .directionsRoute(currentRoute)
-                                .shouldSimulateRoute(simulateRoute)
-                                .build();
-
-                        NavigationLauncher.startNavigation(getActivity(), options);
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<DirectionsResponse> call, Throwable t) {
-
-                    }
-                });
-    }
-
-//    public void get_route_options(String image_shop, String image_user, String source_shop, String geojson_source_shop,
-//                                  String geojson_source_user, String icon_layer_id_user, String icon_layer_id_shop,
-//                                  String source_user, int start_index, int end_index, String layer_id_bottom_shop,
-//                                  String layer_id_bottom_user, String destination_layer_shop, String destination_source_shop,
-//                                  String feature_properties_shop, String destination_layer_user, String destination_source_user,
-//                                  String feature_properties_user) {
-//        //init Route and Marker for shop and user
-//        initMarkerIconSymbolLayer_shop(mapboxMap.getStyle(), image_shop, geojson_source_shop, icon_layer_id_shop, start_index);
-//        initOptimizedRouteLineLayer_shop(mapboxMap.getStyle(), source_shop, layer_id_bottom_shop, icon_layer_id_shop, 1);
-//        initMarkerIconSymbolLayer_user(mapboxMap.getStyle(), image_user, geojson_source_user, icon_layer_id_user, end_index);
-//        initOptimizedRouteLineLayer_user(mapboxMap.getStyle(), source_user, layer_id_bottom_user, icon_layer_id_user, 1);
-//
-//        Point destination = fromLngLat(shop_lists.get(start_index).longitude(), shop_lists.get(start_index).latitude());
-//        addDestinationMarker_shop(mapboxMap.getStyle(), new LatLng(shop_lists.get(start_index).latitude(), shop_lists.get(start_index).longitude()),
-//                destination_layer_shop, destination_source_shop, feature_properties_shop);
-//        addDestinationMarker_user(mapboxMap.getStyle(), new LatLng(user_lists.get(end_index).latitude(), user_lists.get(end_index).longitude()),
-//                destination_layer_user, destination_source_user, feature_properties_user);
-//
-//        // get route from user current location to shop
-//        getRoute_shop(destination, source_shop);
-//////        //get route from shop to end destinataion
-//        getRoute_user(destination, fromLngLat(user_lists.get(end_index).longitude(), user_lists.get(end_index).latitude()), source_user);
-//    }
-
     private void initSearchFab() {
         getActivity().findViewById(R.id.get_location).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -547,6 +484,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         getActivity().findViewById(R.id.get_overview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                PlaceObject currentLatLng= new PlaceObject(currentLat, currentLong, -1, 2, 0);
+                locationAfterSort.set(0,currentLatLng);
                 for (int i = 1; i < locationAfterSort.size(); i++) {
                     Log.i(TAG, "onCreateView: " + locationAfterSort.get(i).getType() + "/" + locationAfterSort.get(i).getDiem_thu());
                     if (locationAfterSort.get(i).getType() == 1) {
@@ -584,7 +523,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         locationEngine.requestLocationUpdates(request, callback, Looper.getMainLooper());
         locationEngine.getLastLocation(callback);
 
-
         Log.i(TAG, "initLocationEngine: " + locationEngine.toString());
     }
     @Override
@@ -593,101 +531,112 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
+                mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("1").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            locationObjects.add(new PlaceObject(currentLat, currentLong, -1, 2, 0));
+                            int diem = 1;
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                double receive_lat = Double.parseDouble(snap.child("receiveLat").getValue(String.class));
+                                double receive_lng = Double.parseDouble(snap.child("receiveLng").getValue(String.class));
+                                double ship_lat = Double.parseDouble(snap.child("shipLat").getValue(String.class));
+                                double ship_lng = Double.parseDouble(snap.child("shipLng").getValue(String.class));
+                                locationObjects.add(new PlaceObject(receive_lat, receive_lng,1, 2, diem));
+                                locationObjects.add(new PlaceObject(ship_lat, ship_lng, 2, 0, diem));
+                                diem++;
+                            }
+                            for (int i = 0; i < locationObjects.size(); i++)
+                                Log.i(TAG, "onDataChange: " + locationObjects.get(i).getLatitude() + "/" + locationObjects.get(i).getLongitude());
+                            enableLocationComponent(style);
+                            Log.i(TAG, "onStyleLoaded + onmapready: " + currentLong + "/" + currentLat + "=" + callback.toString());
+                            mapboxMap.addOnMapClickListener(MapFragment.this::onMapClick);
+                            mapboxMap.addOnMapLongClickListener(MapFragment.this::onMapClick);
+                            initSearchFab();
 
-                enableLocationComponent(style);
-                addFirstStopToStopsList();
+                            if (alreadyTwelveMarkersOnMap()) {
+                                Toast.makeText(getActivity(), R.string.only_twelve_stops_allowed, Toast.LENGTH_LONG).show();
+                            } else {
+//                    locationObjects.add(new PlaceObject(currentLat, currentLong, -1, 2, 0));
+//                    locationObjects.add(new PlaceObject(16.06631377702285, 108.20579592212839, 1, 2, 1));
+//                    locationObjects.add(new PlaceObject(16.066396255320264, 108.20515219196177, 1, 2, 2));
+//                    locationObjects.add(new PlaceObject(16.067231346155886, 108.2073086880199, 1, 2, 3));
+//                    locationObjects.add(new PlaceObject(16.06782931027943, 108.20788804516984, 2, 0, 1));
+//                    locationObjects.add(new PlaceObject(16.05116619419552, 108.21383599400859, 2, 0, 2));
+//                    locationObjects.add(new PlaceObject(16.067975595656062, 108.21731185477657, 2, 0, 3));
+                                int luu = 0;
+                                for (int i = 0; i < locationObjects.size(); i++) {
+                                    LatLng shop1 = new LatLng(locationObjects.get(i).getLatitude(), locationObjects.get(i).getLongitude());
+                                    LatLng shop2 = new LatLng(locationObjects.get(i + 1).getLatitude(), locationObjects.get(i + 1).getLongitude());
+                                    distance = shop1.distanceTo(shop2);
+                                    for (int j = i + 1; j < locationObjects.size(); j++) {
+                                        LatLng from = new LatLng(locationObjects.get(i).getLatitude(), locationObjects.get(i).getLongitude());
+                                        if (locationObjects.get(j).getCheck() != 0) {
 
-                Log.i(TAG, "onStyleLoaded + onmapready: " + currentLong + "/" + currentLat + "=" + callback.toString());
-                mapboxMap.addOnMapClickListener(MapFragment.this::onMapClick);
-                mapboxMap.addOnMapLongClickListener(MapFragment.this::onMapClick);
-                initSearchFab();
-
-                if (alreadyTwelveMarkersOnMap()) {
-                    Toast.makeText(getActivity(), R.string.only_twelve_stops_allowed, Toast.LENGTH_LONG).show();
-                } else {
-                    locationObjects.add(new PlaceObject(currentLat, currentLong, -1, 2, 0));
-                    locationObjects.add(new PlaceObject(16.06631377702285, 108.20579592212839, 1, 2, 1));
-                    locationObjects.add(new PlaceObject(16.066396255320264, 108.20515219196177, 1, 2, 2));
-                    locationObjects.add(new PlaceObject(16.067231346155886, 108.2073086880199, 1, 2, 3));
-                    locationObjects.add(new PlaceObject(16.06782931027943, 108.20788804516984, 2, 0, 1));
-                    locationObjects.add(new PlaceObject(16.05116619419552, 108.21383599400859, 2, 0, 2));
-                    locationObjects.add(new PlaceObject(16.067975595656062, 108.21731185477657, 2, 0, 3));
-                    shop_lists.add(fromLngLat(108.20579592212839, 16.06631377702285));
-                    shop_lists.add(fromLngLat(108.20515219196177, 16.066396255320264));
-                    shop_lists.add(fromLngLat(108.2073086880199, 16.067231346155886));
-                    shop_lists.add(fromLngLat(108.20788804516984, 16.06782931027943));
-                    shop_lists.add(fromLngLat(108.21383599400859, 16.05116619419552));
-                    shop_lists.add(fromLngLat(108.21731185477657, 16.067975595656062));
-                    LatLng curLocation = new LatLng(currentLat, currentLong);
-                    int luu = 0;
-                    for (int i = 0; i < locationObjects.size(); i++) {
-                        LatLng shop1 = new LatLng(locationObjects.get(i).getLatitude(), locationObjects.get(i).getLongitude());
-                        LatLng shop2 = new LatLng(locationObjects.get(i + 1).getLatitude(), locationObjects.get(i + 1).getLongitude());
-                        distance = shop1.distanceTo(shop2);
-                        for (int j = i + 1; j < locationObjects.size(); j++) {
-                            LatLng from = new LatLng(locationObjects.get(i).getLatitude(), locationObjects.get(i).getLongitude());
-                            if (locationObjects.get(j).getCheck() != 0) {
-
-                                Log.i(TAG, "onStyleLoaded+++++: " + distance);
-                                LatLng to = new LatLng(locationObjects.get(j).getLatitude(), locationObjects.get(j).getLongitude());
-                                double distanceTo = from.distanceTo(to);
-                                if (distanceTo <= distance) {
-                                    distance = distanceTo;
-                                    luu = j;
+                                            Log.i(TAG, "onStyleLoaded+++++: " + distance);
+                                            LatLng to = new LatLng(locationObjects.get(j).getLatitude(), locationObjects.get(j).getLongitude());
+                                            double distanceTo = from.distanceTo(to);
+                                            if (distanceTo <= distance) {
+                                                distance = distanceTo;
+                                                luu = j;
+                                            }
+                                        }
+                                    }
+                                    Log.i(TAG, "Checkk: " + luu);
+                                    if (locationObjects.size() == 2)
+                                        luu--;
+                                    if (locationObjects.get(luu).getType() == 1) {
+                                        Log.i(TAG, "AAA: chay" + locationObjects.get(luu).getDiem_thu() + "/" + locationObjects.get(luu).getType());
+                                        for (int ch = 0; ch < locationObjects.size(); ch++) {
+                                            if (locationObjects.get(ch).getType() == 2 &&
+                                                    locationObjects.get(ch).getDiem_thu() == locationObjects.get(luu).getDiem_thu()) {
+                                                locationObjects.get(ch).setCheck(1);
+                                            }
+                                        }
+                                    } else
+                                        Log.i(TAG, "BBB: chay" + locationObjects.get(luu).getDiem_thu() + "/" + locationObjects.get(luu).getType());
+                                    locationAfterSort.add(locationObjects.get(i));
+                                    locationObjects.set(0, locationObjects.get(luu));
+                                    locationObjects.remove(luu);
+                                    //Collections.swap(locationShopObjects,0,luu);
+                                    i--;
+                                    if (locationObjects.size() == 1) {
+                                        locationAfterSort.add(locationObjects.get(0));
+                                        break;
+                                    }
+                                }
+                                for (int i = 1; i < locationAfterSort.size(); i++) {
+                                    Log.i(TAG, "onCreateView: " + locationAfterSort.get(i).getType() + "/" + locationAfterSort.get(i).getDiem_thu());
+                                    if (locationAfterSort.get(i).getType() == 1) {
+                                        get_route_options_shop("ICON_IMAGE_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
+                                                "OPTIMIZED_ROUTE_SOURCE_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
+                                                "ICON_GEOJSON_SOURCE_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
+                                                " ICON_LAYER_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
+                                                i, "LAYER_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
+                                                "DESTINATION_LAYER_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
+                                                "DESTINATION_SOURCE_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
+                                                " FEATURE_PROPERTY_KEY_SHOP_" + locationAfterSort.get(i).getDiem_thu(), i,
+                                                fromLngLat(locationAfterSort.get(i - 1).getLongitude(), locationAfterSort.get(i - 1).getLatitude()), locationAfterSort.get(i).getDiem_thu() - 1);
+                                    } else if (locationAfterSort.get(i).getType() == 2) {
+                                        get_route_options_user("ICON_IMAGE_USER_" + locationAfterSort.get(i).getDiem_thu(), "OPTIMIZED_ROUTE_SOURCE_ID_USER_" + locationAfterSort.get(i).getDiem_thu(), "ICON_GEOJSON_SOURCE_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
+                                                " ICON_LAYER_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
+                                                i, "LAYER_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
+                                                "DESTINATION_LAYER_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
+                                                "DESTINATION_SOURCE_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
+                                                " FEATURE_PROPERTY_KEY_USER_" + locationAfterSort.get(i).getDiem_thu(), i,
+                                                fromLngLat(locationAfterSort.get(i - 1).getLongitude(), locationAfterSort.get(i - 1).getLatitude()), i - 1, locationAfterSort.get(i).getDiem_thu() - 1);
+                                    }
                                 }
                             }
-                        }
-                        Log.i(TAG, "Checkk: " + luu);
-                        if (locationObjects.size() == 2)
-                            luu--;
-                        if (locationObjects.get(luu).getType() == 1) {
-                            Log.i(TAG, "AAA: chay" + locationObjects.get(luu).getDiem_thu() + "/" + locationObjects.get(luu).getType());
-                            for (int ch = 0; ch < locationObjects.size(); ch++) {
-                                if (locationObjects.get(ch).getType() == 2 &&
-                                        locationObjects.get(ch).getDiem_thu() == locationObjects.get(luu).getDiem_thu()) {
-                                    locationObjects.get(ch).setCheck(1);
-                                }
-                            }
-                        } else
-                            Log.i(TAG, "BBB: chay" + locationObjects.get(luu).getDiem_thu() + "/" + locationObjects.get(luu).getType());
-                        locationAfterSort.add(locationObjects.get(i));
-                        locationObjects.set(0, locationObjects.get(luu));
-                        locationObjects.remove(luu);
-                        //Collections.swap(locationShopObjects,0,luu);
-                        i--;
-                        if (locationObjects.size() == 1) {
-                            locationAfterSort.add(locationObjects.get(0));
-                            break;
-                        }
-                    }
-                    LatLng pq1 = new LatLng(16.06782931027943, 108.20788804516984);
-                    LatLng pq2 = new LatLng(16.05116619419552, 108.21383599400859);
-                    LatLng pq3 = new LatLng(16.067975595656062, 108.21731185477657);
-                    Log.i(TAG, "onStyleLoaded: " + pq1.distanceTo(pq2) + "///" + pq1.distanceTo(pq3));
-                    for (int i = 1; i < locationAfterSort.size(); i++) {
-                        Log.i(TAG, "onCreateView: " + locationAfterSort.get(i).getType() + "/" + locationAfterSort.get(i).getDiem_thu());
-                        if (locationAfterSort.get(i).getType() == 1) {
-                            get_route_options_shop("ICON_IMAGE_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                    "OPTIMIZED_ROUTE_SOURCE_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                    "ICON_GEOJSON_SOURCE_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                    " ICON_LAYER_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                    i, "LAYER_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                    "DESTINATION_LAYER_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                    "DESTINATION_SOURCE_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                    " FEATURE_PROPERTY_KEY_SHOP_" + locationAfterSort.get(i).getDiem_thu(), i,
-                                    fromLngLat(locationAfterSort.get(i - 1).getLongitude(), locationAfterSort.get(i - 1).getLatitude()), locationAfterSort.get(i).getDiem_thu() - 1);
-                        } else if (locationAfterSort.get(i).getType() == 2) {
-                            get_route_options_user("ICON_IMAGE_USER_" + locationAfterSort.get(i).getDiem_thu(), "OPTIMIZED_ROUTE_SOURCE_ID_USER_" + locationAfterSort.get(i).getDiem_thu(), "ICON_GEOJSON_SOURCE_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
-                                    " ICON_LAYER_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
-                                    i, "LAYER_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
-                                    "DESTINATION_LAYER_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
-                                    "DESTINATION_SOURCE_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
-                                    " FEATURE_PROPERTY_KEY_USER_" + locationAfterSort.get(i).getDiem_thu(), i,
-                                    fromLngLat(locationAfterSort.get(i - 1).getLongitude(), locationAfterSort.get(i - 1).getLatitude()), i - 1, locationAfterSort.get(i).getDiem_thu() - 1);
-                        }
+                        }else
+                            Log.i(TAG, "onDataChange: XUI");
                     }
 
-                }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
     }

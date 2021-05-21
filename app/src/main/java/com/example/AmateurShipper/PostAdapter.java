@@ -174,10 +174,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                             String phi_ung = postList.get(getAdapterPosition()).phi_ung;
                                             String km = postList.get(getAdapterPosition()).km;
                                             String id_post = postList.get(getAdapterPosition()).id_post;
+                                            String receiveLat = postList.get(getAdapterPosition()).receiveLat;
+                                            String receiveLng = postList.get(getAdapterPosition()).receiveLng;
+                                            String shipLat = postList.get(getAdapterPosition()).shipLat;
+                                            String shipLng = postList.get(getAdapterPosition()).shipLng;
+                                            String estimateTime = postList.get(getAdapterPosition()).time_estimate;
+
                                             Long tsLong = System.currentTimeMillis() / 1000;
                                             String timestamp = tsLong.toString();
                                             PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan,
-                                                    ten_nguoi_nhan, ghi_chu, timestamp, id_shop, phi_giao, phi_ung, km, id_post, "0");
+                                                    ten_nguoi_nhan, ghi_chu, timestamp, id_shop, phi_giao, phi_ung, km, id_post, "0",receiveLat,
+                                                    receiveLng,shipLat,shipLng,estimateTime);
                                             databaseReference.child("received_order_status").child(IdUser).child(postObject.getId_post()).setValue(postObject);
                                             databaseReference.child("newsfeed").child(postObject.getId_post()).setValue(null);
                                             postList.remove(getAdapterPosition());

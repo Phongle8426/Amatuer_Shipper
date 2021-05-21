@@ -37,6 +37,12 @@
     <string name="user_location_permission_not_granted">user location permission not granted</string>
     <string name="disconnect">Thiết bị mất kết nối Internet</string>
     <string name="titleReasonDelete">Vì răng mi lại muốn hủy đơn ni?</string>
-
+    <string name="setting">Cài đăt</string>
+    <string name="privacy">Quyền riêng tư</string>
+    <string name="manage_account">Quản lý tài khoản</string>
+    <string name="infor_account">Thông tin tài khoản</string>
+    <string name="infor_phone_number">Số điện thoại</string>
+    <string name="infor_email">Email</string>
+    <string name="infor_password">Mật khẩu</string>
 
 </resources>

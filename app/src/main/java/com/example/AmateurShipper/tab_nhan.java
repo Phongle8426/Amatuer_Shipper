@@ -127,7 +127,6 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                 buff.add(new MyButton("Hủy", 30, Color.parseColor("#DC143C"), new MyButtonClickListner(){
                     @Override
                     public void onClick(final int pos) {
-                        // String deleteItem = null;
                         showReasonDelete(pos,viewHolder);
                     }
                 }, getContext()));
@@ -138,11 +137,9 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                         String idshop = mData.get(pos).id_shop;
                         String idpost = mData.get(pos).id_post;
                         PostObject post = mData.get(pos);
-                        //  deleteItem = String.valueOf(mData.get(pos));
                         mData.remove(pos);
                         receivedOrderAdapter.notifyItemChanged(pos);
                         mDatabase.child("received_order_status").child(iDUser).child(idpost).child("status").setValue("1");
-                        //mDatabase.child("received_order_status").child(iDUser).child(idpost).setValue(null);
                     }
                 }, getContext()));
             }
@@ -164,7 +161,6 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         pos = viewHolder.getAdapterPosition();
         String idshop = mData.get(pos).id_shop;
         String idpost = mData.get(pos).id_post;
-        //  deleteItem = String.valueOf(mData.get(pos));
         mData.remove(pos);
         receivedOrderAdapter.notifyItemChanged(pos);
         NotificationWebObject noti = new NotificationWebObject(idpost,iDUser,"3",timestamp);
@@ -177,7 +173,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     public void showReasonDelete(int pos,RecyclerView.ViewHolder viewHolder){
         final String[] reason = new String[1];
             final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("@string/titleReasonDelete");
+            builder.setTitle(R.string.titleReasonDelete);
             builder.setSingleChoiceItems(reasonList,0, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {

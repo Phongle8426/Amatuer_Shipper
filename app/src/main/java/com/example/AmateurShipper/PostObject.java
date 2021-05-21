@@ -3,22 +3,15 @@ package com.example.AmateurShipper;
 
 public class PostObject {
     String ten_nguoi_gui,sdt_nguoi_gui,noi_nhan,noi_giao,sdt_nguoi_nhan,ten_nguoi_nhan,
-            ghi_chu,thoi_gian,id_shop,phi_giao,phi_ung,km, id_post,status;
+            ghi_chu,thoi_gian,id_shop,phi_giao,phi_ung,km, id_post,status,receiveLat,receiveLng,shipLat,shipLng,time_estimate;
 
     public PostObject() {
     }
 
-    public String getId_post() {
-        return id_post;
-    }
-
-    public void setId_post(String id_post) {
-        this.id_post = id_post;
-    }
-
     public PostObject(String ten_nguoi_gui, String sdt_nguoi_gui, String noi_nhan, String noi_giao,
                       String sdt_nguoi_nhan, String ten_nguoi_nhan, String ghi_chu, String thoi_gian,
-                      String id_shop, String phi_giao, String phi_ung, String km, String id_post,String status) {
+                      String id_shop, String phi_giao, String phi_ung, String km, String id_post, String status,
+                      String receiveLat, String receiveLng, String shipLat, String shipLng, String time_estimate) {
         this.ten_nguoi_gui = ten_nguoi_gui;
         this.sdt_nguoi_gui = sdt_nguoi_gui;
         this.noi_nhan = noi_nhan;
@@ -33,6 +26,59 @@ public class PostObject {
         this.km = km;
         this.id_post = id_post;
         this.status = status;
+        this.receiveLat = receiveLat;
+        this.receiveLng = receiveLng;
+        this.shipLat = shipLat;
+        this.shipLng = shipLng;
+        this.time_estimate = time_estimate;
+    }
+
+    public String getReceiveLat() {
+        return receiveLat;
+    }
+
+    public void setReceiveLat(String receiveLat) {
+        this.receiveLat = receiveLat;
+    }
+
+    public String getReceiveLng() {
+        return receiveLng;
+    }
+
+    public void setReceiveLng(String receiveLng) {
+        this.receiveLng = receiveLng;
+    }
+
+    public String getShipLat() {
+        return shipLat;
+    }
+
+    public void setShipLat(String shipLat) {
+        this.shipLat = shipLat;
+    }
+
+    public String getShipLng() {
+        return shipLng;
+    }
+
+    public void setShipLng(String shipLng) {
+        this.shipLng = shipLng;
+    }
+
+    public String getTime_estimate() {
+        return time_estimate;
+    }
+
+    public void setTime_estimate(String time_estimate) {
+        this.time_estimate = time_estimate;
+    }
+
+    public String getId_post() {
+        return id_post;
+    }
+
+    public void setId_post(String id_post) {
+        this.id_post = id_post;
     }
 
     public String getTen_nguoi_gui() {
