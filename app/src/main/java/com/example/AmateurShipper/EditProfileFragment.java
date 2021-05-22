@@ -141,15 +141,15 @@ public class EditProfileFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
                     for (DataSnapshot snap : snapshot.getChildren()){
-                        if (snap.getValue(Integer.class)==5)
+                        if (snap.child("rate").getValue(Integer.class)==5)
                             sumPoint+=3;
-                        else if (snap.getValue(Integer.class)==4)
+                        else if (snap.child("rate").getValue(Integer.class)==4)
                             sumPoint+=2;
-                        else if (snap.getValue(Integer.class)==3)
+                        else if (snap.child("rate").getValue(Integer.class)==3)
                             sumPoint+=1;
-                        else if (snap.getValue(Integer.class)==2)
+                        else if (snap.child("rate").getValue(Integer.class)==2)
                             sumPoint-=2;
-                        else if (snap.getValue(Integer.class)==1)
+                        else if (snap.child("rate").getValue(Integer.class)==1)
                             sumPoint-=3;
                     }
 

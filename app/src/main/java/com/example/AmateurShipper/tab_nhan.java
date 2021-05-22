@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,8 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     String iDUser;
     FragmentManager fragmentManager;
     final String[] reasonList = {"reason1","reason2"};
+    final Handler handler = new Handler(Looper.getMainLooper());
+    private static int SPLASH_SCREEN = 500;
 
     public tab_nhan() {
         // Required empty public constructor
@@ -139,6 +142,16 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                         PostObject post = mData.get(pos);
                         mData.remove(pos);
                         receivedOrderAdapter.notifyItemChanged(pos);
+                        Long time_get_order = System.currentTimeMillis()/1000;
+                        String time_stamp = time_get_order.toString();
+                        mDatabase.child("OrderStatus").child(idshop).child(idpost).child("picked_time").setValue(time_stamp);
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDatabase.child("Transaction").child(idpost).child("picked_time").setValue(time_stamp);
+                                handler.removeCallbacks(this);
+                            }
+                        }, SPLASH_SCREEN);
                         mDatabase.child("received_order_status").child(iDUser).child(idpost).child("status").setValue("1");
                     }
                 }, getContext()));
