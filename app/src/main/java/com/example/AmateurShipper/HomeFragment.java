@@ -215,10 +215,15 @@ public static HomeFragment newInstance(){
                         String time = fm.convertTimeForBlock(Long.parseLong(document.get("role").toString()));
                         String role = document.get("role").toString();
                         String reason = document.get("reason").toString();
-                        if (role.equals("2"))
-                            layout_block.setVisibility(View.VISIBLE);
-                            tv_reason.setText(reason);
-                            time_block.setText(time);
+                        if (role.equals("2")){
+                            Long current_time = System.currentTimeMillis() / 1000;
+                            long lock_time= Long.parseLong(document.get("lock_time").toString());
+                            if (current_time < lock_time) {
+                                layout_block.setVisibility(View.VISIBLE);
+                                tv_reason.setText(reason);
+                                time_block.setText(time);
+                            }else docRef.update("role","1");
+                        }
                     }
                 }
             }
@@ -229,16 +234,45 @@ public static HomeFragment newInstance(){
             double sumStar=0;
             double countRate=0;
             double star;
+            int sumPoint =0;
+            int mlevel;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
                     for (DataSnapshot snap : snapshot.getChildren()){
+                        int mtp = snap.child("rate").getValue(Integer.class);
+                        if (mtp==5)
+                            sumPoint+=3;
+                        else if (mtp==4)
+                            sumPoint+=2;
+                        else if (mtp==3)
+                            sumPoint+=1;
+                        else if (mtp==2)
+                            sumPoint-=2;
+                        else if (mtp==1)
+                            sumPoint-=3;
+
                         sumStar+=snap.child("rate").getValue(Double.class);
                         countRate++;
+                    }
+                    if (sumPoint < 50){
+                        mlevel =2;
+                    }
+                    if (sumPoint >= 50 && sumPoint < 100){
+                        mlevel =3;
+                    }
+                    if (sumPoint >= 100 && sumPoint < 150){
+                        mlevel =4;
+                    }
+                    if (sumPoint >= 150){
+                        mlevel =5;
                     }
                     star=sumStar/countRate;
                     star = Math.ceil((star * 10.0))/10.0;
                     mFireStore.collection("ProfileShipper").document(iDUser).update("rate_star",star);
+                    mFireStore.collection("ProfileShipper").document(iDUser).update("level",mlevel);
+
+
                 }
             }
 
