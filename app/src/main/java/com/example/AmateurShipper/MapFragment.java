@@ -1,4 +1,5 @@
 package com.example.AmateurShipper;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -132,79 +133,42 @@ import com.example.AmateurShipper.Interface.statusInterfaceRecyclerView;
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback, Callback<DirectionsResponse>, PermissionsListener, MapboxMap.OnMapClickListener, MapboxMap.OnMapLongClickListener, statusInterfaceRecyclerView, ReceivedOrderAdapter.OnReceivedOderListener {
-
+public class MapFragment extends Fragment implements OnMapReadyCallback,  PermissionsListener, MapboxMap.OnMapClickListener, MapboxMap.OnMapLongClickListener, statusInterfaceRecyclerView, ReceivedOrderAdapter.OnReceivedOderListener {
     // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-
     private static final String ROUTE_SOURCE_ID = "ROUTE-SOURCE-ID";
-
     private static final String ICON_LAYER_ID = "icon-layer-id";
-
-
     int storedPosition = 0;
-
-
     Resources.Theme theme;
     private static final String ICON_GEOJSON_SOURCE_ID = "geojson-icon-source-id";
-    private static final String FIRST = "first";
-    private static final String ANY = "any";
-    private static final String FIRST_shop = "first-shop";
-    private static final String ANY_shop = "any-shop";
-    private static final String FIRST_user = "first-user";
-    private static final String ANY_user = "any-user";
-    private static final String TEAL_COLOR = "#23D2BE";
-    private static final String BLUE_COLOR = "#FF3C4673";
     private static final float POLYLINE_WIDTH = 5;
-    private static final String CARLOS = "Carlos";
     private long DEFAULT_INTERVAL_IN_MILLISECONDS = 1000L;
     private long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 2;
-    private DirectionsRoute optimizedRoute;
-    private MapboxOptimization optimizedClient;
     private static final List<Point> stops = new ArrayList<>();
     private static final List<Point> shop_lists = new ArrayList<>();
     private static final List<Point> user_lists = new ArrayList<>();
     private Point origin_new;
     private PermissionsManager permissionsManager;
     private LocationComponent locationComponent;
-
-    private CarmenFeature home;
-    private CarmenFeature work;
-    private String geojsonSourceLayerId = "geojsonSourceLayerId";
-    private String symbolIconId = "symbolIconId";
-
-
     ArrayList<PlaceObject> locationObjects = new ArrayList<>();
     ArrayList<PlaceObject> locationAfterSort = new ArrayList<>();
-    //to get location permissions.
-
-    Point origin = null;
-    Point destination = null;
     private LocationChangeListeningActivityLocationCallback callback = new LocationChangeListeningActivityLocationCallback(this);
     double distance;
     double currentLat;
-    TextView tv;
     double currentLong;
     MapView mapView;
     MapboxMap mapboxMap;
     int key = 0;
-    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     private LocationEngine locationEngine;
     RecyclerView recyclerview_map;
     MainActivity mainActivity;
     private DatabaseReference mDatabase;
     List<PostObject> mData = new ArrayList<>();
     MapAdapter mapAdapter;
-
     String iDUser;
-    FragmentManager fragmentManager;
     FragmentManager fm;
     String[] Colors = {
             "#536DFE",
@@ -214,12 +178,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             "#0084FF",
             "#F2C94C",
             "#11CFC5",
-            " #e91e63",
+            "#e91e63",
             "#FF0000",
             "#00FF00",
             "#0000FF",
             "#303963",
-            "#3C4673"
+            "#3C4673",
+            "#0084FF",
+            "#FFF4DE",
+            "#FFA800",
+            "#1BC5BD",
+            "#F64E60",
+            "#e91e63",
+            "#ec407a"
     };
     int[] locations_shop = {
             R.drawable.shop1,
@@ -239,6 +210,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
     public MapFragment() {
         // Required empty public constructor
     }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -256,6 +228,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -264,12 +237,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         PermissionsManager permissionsManager;
         if (PermissionsManager.areLocationPermissionsGranted(getContext())) {
-// Permission sensitive logic called here, such as activating the Maps SDK's LocationComponent to show the device's location
+            // Permission sensitive logic called here, such as activating the Maps SDK's LocationComponent to show the device's location
             Toast.makeText(getActivity(), " granted", Toast.LENGTH_SHORT).show();
         } else {
             permissionsManager = new PermissionsManager(this);
@@ -313,6 +287,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
     public void createNewAdapter() {
         mapAdapter = new MapAdapter(mData, MapFragment.this, fm, this);
     }
+
     public void getListStatusReceived() {
         mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("1").addValueEventListener(new ValueEventListener() {
             @Override
@@ -338,11 +313,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             }
         });
     }
+
     //Load ID User
     public void getUid() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         iDUser = user.getUid();
     }
+
     //clear map styles
     public void clearStyle(int position) {
         //shop
@@ -395,13 +372,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // Cancel the directions API request
-        if (optimizedClient != null) {
-            optimizedClient.cancelCall();
-        }
-        if (mapboxMap != null) {
-            mapboxMap.removeOnMapClickListener(this);
-        }
         // Prevent leaks
         if (locationEngine != null) {
             locationEngine.removeLocationUpdates(callback);
@@ -420,55 +390,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
-
-
-    /**
-     * Invoked for a received HTTP response.
-     * <p>
-     * Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
-     * Call {@link Response#isSuccessful()} to determine if the response indicates success.
-     *
-     * @param call
-     * @param response
-     */
-    @Override
-    public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-        if (response.body() == null) {
-            Toast.makeText(getActivity(), "No routes found", Toast.LENGTH_LONG);
-            return;
-        } else if (response.body().routes().size() < 1) {
-            Toast.makeText(getActivity(), "No routes found", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        final DirectionsRoute currentRoute = response.body().routes().get(0);
-
-        if (mapboxMap != null) {
-            mapboxMap.getStyle(new Style.OnStyleLoaded() {
-                @Override
-                public void onStyleLoaded(@NonNull Style style) {
-
-                    // Retrieve and update the source designated for showing the directions route
-                    GeoJsonSource source = style.getSourceAs(ROUTE_SOURCE_ID);
-                    // Create a LineString with the directions route's geometry and
-                    // reset the GeoJSON source for the route LineLayer source
-                    if (source != null) {
-                        source.setGeoJson(LineString.fromPolyline(currentRoute.geometry(), PRECISION_6));
-                    }
-                }
-            });
-        }
-    }
-    /**
-     * Invoked when a network exception occurred talking to the server or when an unexpected
-     * exception occurred creating the request or processing the response.
-     *
-     * @param call
-     * @param t
-     */
-    @Override
-    public void onFailure(Call<DirectionsResponse> call, Throwable t) {
-
-    }
     private void initSearchFab() {
         getActivity().findViewById(R.id.get_location).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -484,8 +405,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         getActivity().findViewById(R.id.get_overview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PlaceObject currentLatLng= new PlaceObject(currentLat, currentLong, -1, 2, 0);
-                locationAfterSort.set(0,currentLatLng);
+                PlaceObject currentLatLng = new PlaceObject(currentLat, currentLong, -1, 2, 0);
+                locationAfterSort.set(0, currentLatLng);
                 for (int i = 1; i < locationAfterSort.size(); i++) {
                     Log.i(TAG, "onCreateView: " + locationAfterSort.get(i).getType() + "/" + locationAfterSort.get(i).getDiem_thu());
                     if (locationAfterSort.get(i).getType() == 1) {
@@ -511,7 +432,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             }
         });
     }
-
     @SuppressLint("MissingPermission")
     public void initLocationEngine() {
         Log.i(TAG, "initLocationEngine: " + 0);
@@ -542,7 +462,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
                                 double receive_lng = Double.parseDouble(snap.child("receiveLng").getValue(String.class));
                                 double ship_lat = Double.parseDouble(snap.child("shipLat").getValue(String.class));
                                 double ship_lng = Double.parseDouble(snap.child("shipLng").getValue(String.class));
-                                locationObjects.add(new PlaceObject(receive_lat, receive_lng,1, 2, diem));
+                                locationObjects.add(new PlaceObject(receive_lat, receive_lng, 1, 2, diem));
                                 locationObjects.add(new PlaceObject(ship_lat, ship_lng, 2, 0, diem));
                                 diem++;
                             }
@@ -553,17 +473,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
                             mapboxMap.addOnMapClickListener(MapFragment.this::onMapClick);
                             mapboxMap.addOnMapLongClickListener(MapFragment.this::onMapClick);
                             initSearchFab();
-
                             if (alreadyTwelveMarkersOnMap()) {
                                 Toast.makeText(getActivity(), R.string.only_twelve_stops_allowed, Toast.LENGTH_LONG).show();
                             } else {
-//                    locationObjects.add(new PlaceObject(currentLat, currentLong, -1, 2, 0));
-//                    locationObjects.add(new PlaceObject(16.06631377702285, 108.20579592212839, 1, 2, 1));
-//                    locationObjects.add(new PlaceObject(16.066396255320264, 108.20515219196177, 1, 2, 2));
-//                    locationObjects.add(new PlaceObject(16.067231346155886, 108.2073086880199, 1, 2, 3));
-//                    locationObjects.add(new PlaceObject(16.06782931027943, 108.20788804516984, 2, 0, 1));
-//                    locationObjects.add(new PlaceObject(16.05116619419552, 108.21383599400859, 2, 0, 2));
-//                    locationObjects.add(new PlaceObject(16.067975595656062, 108.21731185477657, 2, 0, 3));
+
                                 int luu = 0;
                                 for (int i = 0; i < locationObjects.size(); i++) {
                                     LatLng shop1 = new LatLng(locationObjects.get(i).getLatitude(), locationObjects.get(i).getLongitude());
@@ -605,30 +518,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
                                         break;
                                     }
                                 }
-                                for (int i = 1; i < locationAfterSort.size(); i++) {
-                                    Log.i(TAG, "onCreateView: " + locationAfterSort.get(i).getType() + "/" + locationAfterSort.get(i).getDiem_thu());
-                                    if (locationAfterSort.get(i).getType() == 1) {
-                                        get_route_options_shop("ICON_IMAGE_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                                "OPTIMIZED_ROUTE_SOURCE_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                                "ICON_GEOJSON_SOURCE_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                                " ICON_LAYER_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                                i, "LAYER_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                                "DESTINATION_LAYER_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                                "DESTINATION_SOURCE_ID_SHOP_" + locationAfterSort.get(i).getDiem_thu(),
-                                                " FEATURE_PROPERTY_KEY_SHOP_" + locationAfterSort.get(i).getDiem_thu(), i,
-                                                fromLngLat(locationAfterSort.get(i - 1).getLongitude(), locationAfterSort.get(i - 1).getLatitude()), locationAfterSort.get(i).getDiem_thu() - 1);
-                                    } else if (locationAfterSort.get(i).getType() == 2) {
-                                        get_route_options_user("ICON_IMAGE_USER_" + locationAfterSort.get(i).getDiem_thu(), "OPTIMIZED_ROUTE_SOURCE_ID_USER_" + locationAfterSort.get(i).getDiem_thu(), "ICON_GEOJSON_SOURCE_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
-                                                " ICON_LAYER_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
-                                                i, "LAYER_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
-                                                "DESTINATION_LAYER_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
-                                                "DESTINATION_SOURCE_ID_USER_" + locationAfterSort.get(i).getDiem_thu(),
-                                                " FEATURE_PROPERTY_KEY_USER_" + locationAfterSort.get(i).getDiem_thu(), i,
-                                                fromLngLat(locationAfterSort.get(i - 1).getLongitude(), locationAfterSort.get(i - 1).getLatitude()), i - 1, locationAfterSort.get(i).getDiem_thu() - 1);
-                                    }
-                                }
                             }
-                        }else
+                        } else
                             Log.i(TAG, "onDataChange: XUI");
                     }
 
@@ -861,6 +752,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             }
         });
     }
+
     @Override
     public void onExplanationNeeded(List<String> permissionsToExplain) {
         Toast.makeText(getActivity(), R.string.user_location_permission_explanation,
@@ -918,7 +810,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             }
         }
     }
-
     @Override
     public void onLongItemClick(int position) {
 
@@ -928,16 +819,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
     public void onReceivedItem(int position) {
 
     }
-
     private class LocationChangeListeningActivityLocationCallback
             implements LocationEngineCallback<LocationEngineResult> {
-
         private final WeakReference<MapFragment> activityWeakReference;
-
         LocationChangeListeningActivityLocationCallback(MapFragment activity) {
             this.activityWeakReference = new WeakReference<>(activity);
         }
-
         /**
          * The LocationEngineCallback interface's method which fires when the device's location has changed.
          *
@@ -947,26 +834,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         @Override
         public void onSuccess(LocationEngineResult result) {
             MapFragment activity = activityWeakReference.get();
-
             if (activity != null) {
                 Location location = result.getLastLocation();
-
                 if (location == null) {
-                    Toast.makeText(activity.getContext(), "Location on null" + location.getLatitude() + "/" + location.getLongitude(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(activity.getContext(), "Location on null" + location.getLatitude() + "/" + location.getLongitude(), Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 if (activity.mapboxMap != null && result.getLastLocation() != null) {
-
                     activity.mapboxMap.getLocationComponent().forceLocationUpdate(result.getLastLocation());
-
                     currentLat = locationComponent.getLastKnownLocation().getLatitude();
                     currentLong = locationComponent.getLastKnownLocation().getLongitude();
-
                 }
             }
         }
-
         /**
          * The LocationEngineCallback interface's method which fires when the device's location can't be captured
          *
@@ -981,18 +861,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         }
     }
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-
         if (PermissionsManager.areLocationPermissionsGranted(getActivity())) {
-
             locationComponent = mapboxMap.getLocationComponent();
-
             LocationComponentActivationOptions locationComponentActivationOptions =
                     LocationComponentActivationOptions.builder(getActivity(), loadedMapStyle)
                             .useDefaultLocationEngine(false)
                             .build();
-
             locationComponent.activateLocationComponent(locationComponentActivationOptions);
-
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
@@ -1009,7 +884,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         }
         // tv.setText(currentLat + "");
     }
-
     /**
      * Called when the user clicks on the map view.
      *
@@ -1020,10 +894,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
     @Override
     public boolean onMapClick(@NonNull LatLng point) {
         // Optimization API is limited to 12 coordinate sets
-
         return true;
     }
-
     /**
      * Called when the user long clicks on the map view.
      *
@@ -1041,39 +913,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
             optimizedLineSource.setGeoJson(FeatureCollection.fromFeatures(new Feature[]{}));
         }
     }
-
     private boolean alreadyTwelveMarkersOnMap() {
         return stops.size() == 12;
-    }
-
-    private void addDestinationMarker(@NonNull Style style, LatLng point) {
-        List<Feature> destinationMarkerList = new ArrayList<>();
-        for (Point singlePoint : stops) {
-            destinationMarkerList.add(Feature.fromGeometry(
-                    fromLngLat(singlePoint.longitude(), singlePoint.latitude())));
-        }
-        destinationMarkerList.add(Feature.fromGeometry(fromLngLat(point.getLongitude(), point.getLatitude())));
-        GeoJsonSource iconSource = style.getSourceAs(ICON_GEOJSON_SOURCE_ID);
-        SymbolLayer symbolLayer = new SymbolLayer("layer-id", "source-id")
-                .withProperties(PropertyFactory.textField(Expression.get("FEATURE-PROPERTY-KEY")));
-        if (iconSource != null) {
-            iconSource.setGeoJson(FeatureCollection.fromFeatures(destinationMarkerList));
-        }
-    }
-
-    private void addDestinationMarker_shop(@NonNull Style style, LatLng point, String layerID_shop, String sourceID_shop, String feature_property_key_shop) {
-        List<Feature> destinationMarkerList = new ArrayList<>();
-        for (Point singlePoint : shop_lists) {
-            destinationMarkerList.add(Feature.fromGeometry(
-                    fromLngLat(singlePoint.longitude(), singlePoint.latitude())));
-        }
-        destinationMarkerList.add(Feature.fromGeometry(fromLngLat(point.getLongitude(), point.getLatitude())));
-        GeoJsonSource iconSource = style.getSourceAs(ICON_GEOJSON_SOURCE_ID);
-        SymbolLayer symbolLayer = new SymbolLayer(layerID_shop, sourceID_shop)
-                .withProperties(PropertyFactory.textField(Expression.get(feature_property_key_shop)));
-        if (iconSource != null) {
-            iconSource.setGeoJson(FeatureCollection.fromFeatures(destinationMarkerList));
-        }
     }
     private void addFirstStopToStopsList() {
         // Set first stop
@@ -1081,17 +922,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Callbac
         Toast.makeText(getActivity(), "" + currentLat + "/" + currentLong, Toast.LENGTH_SHORT).show();
         stops.add(origin_new);
     }
-
-
     private void drawOptimizedRoute_shop(@NonNull Style style, DirectionsRoute route, String sourceId) {
-
         GeoJsonSource optimizedLineSource = style.getSourceAs(sourceId);
         optimizedLineSource.setGeoJson(FeatureCollection.fromFeature(Feature.fromGeometry(
                 LineString.fromPolyline(route.geometry(), PRECISION_6))));
     }
-
     private void drawOptimizedRoute_user(@NonNull Style style, DirectionsRoute route, String sourceId) {
-
         GeoJsonSource optimizedLineSource = style.getSourceAs(sourceId);
         optimizedLineSource.setGeoJson(FeatureCollection.fromFeature(Feature.fromGeometry(
                 LineString.fromPolyline(route.geometry(), PRECISION_6))));

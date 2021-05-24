@@ -45,10 +45,10 @@ public class BindDataToBarChart {
 
     public void totalAmountMonthYear(ArrayList<DataStatisticObject> mlist,ArrayList<DataStatisticObject> mBeforeBind){
         int jan=0,feb=0,mar=0,apr=0,may=0,jun=0,jul=0,aug=0,sep=0,oct=0,nov=0,dec=0;
-        Log.i(TAG, "totalMOnth: "+mlist.get(0).getDate() + "/"+mlist.get(0).getAmount());
+       // Log.i(TAG, "totalMOnth: "+mlist.get(0).getDate() + "/"+mlist.get(0).getAmount());
         for (int i = 0; i<mlist.size();i++){
             int amount = Integer.parseInt(mlist.get(i).getAmount().replaceAll("\\s",""));
-            Log.i(TAG, "totalAmountMonthYear: "+ amount);
+           // Log.i(TAG, "totalAmountMonthYear: "+ amount);
             if (mlist.get(i).getDate().equals("01"))
                 jan+=amount;
             else if(mlist.get(i).getDate().equals("02"))
@@ -95,10 +95,10 @@ public class BindDataToBarChart {
         int day1=0,day2=0,day3=0,day4=0,day5=0,day6=0,day7=0,day8=0,day9=0,day10=0,day11=0,day12=0,
                 day13=0,day14=0,day15=0,day16=0,day17=0,day18=0,day19=0,day20=0,day21=0,day22=0,day23=0,day24=0,
                 day25=0,day26=0,day27=0,day28=0,day29=0,day30=0,day31=0;
-        Log.i(TAG, "totalMOnth: "+mlist.get(0).getDate() + "/"+mlist.get(0).getAmount());
+        //Log.i(TAG, "totalMOnth: "+mlist.get(0).getDate() + "/"+mlist.get(0).getAmount());
         for (int i = 0; i<mlist.size();i++){
             int amount = Integer.parseInt(mlist.get(i).getAmount().replaceAll("\\s",""));
-            Log.i(TAG, "totalAmountMonthYear: "+ amount);
+            //Log.i(TAG, "totalAmountMonthYear: "+ amount);
             if (mlist.get(i).getDate().equals("01"))
                 day1+=amount;
             else if(mlist.get(i).getDate().equals("02"))
