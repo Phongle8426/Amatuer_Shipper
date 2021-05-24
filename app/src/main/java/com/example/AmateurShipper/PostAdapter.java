@@ -33,7 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
+import static com.mapbox.services.android.navigation.ui.v5.feedback.FeedbackBottomSheet.TAG;
 
 //import static com.example.AmateurShipper.LoginActivity.IDUSER;
 
@@ -42,8 +42,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
     //private RecyclerViewClickInterface recyclerViewClickInterface;
     List<PostObject> postList;
     Context mContext;
-    public int get_position,rate_score;
-    double star,countPost;
+    public int get_position;
+    int level,countPost;
     String IdUser;
     public MainActivity mainActivity;
     private OnPostListener mOnPostListener;
@@ -53,7 +53,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
     private FirebaseFirestore mFireStore;
 
     public static final String countPostReceived = "0";
-    public static int star1 = 0;
     public PostAdapter(List<PostObject> postList, Context context, OnPostListener onPostListener) {
         this.postList = postList;
         mContext = context;
@@ -142,7 +141,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
             // attach_image = itemView.findViewById(R.id.img_attachment_image);
             getUid();
             loadData();
-            clearData();
+            //clearData();
 
             this.onPostListener = onPostListener;
             itemView.setOnClickListener(this);
@@ -154,13 +153,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.getResult().exists()) {
+                                Long tsLong = System.currentTimeMillis() / 1000;
+                                String timestamp = tsLong.toString();
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     document.getData();
                                     String role = document.get("role").toString();
                                     if (role.equals("1")) {
-                                        star = Double.parseDouble(document.get("rate_star").toString());
-                                        if (countPost <= star) {
+                                        loadData();
+                                        level =Integer.parseInt(document.get("level").toString());
+                                        if (countPost < level) {
                                             String ten_nguoi_gui = postList.get(getAdapterPosition()).ten_nguoi_gui;
                                             String sdt_nguoi_gui = postList.get(getAdapterPosition()).getSdt_nguoi_gui();
                                             String noi_nhan = postList.get(getAdapterPosition()).noi_nhan;
@@ -180,8 +182,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                             String shipLng = postList.get(getAdapterPosition()).shipLng;
                                             String estimateTime = postList.get(getAdapterPosition()).time_estimate;
 
-                                            Long tsLong = System.currentTimeMillis() / 1000;
-                                            String timestamp = tsLong.toString();
                                             PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan,
                                                     ten_nguoi_nhan, ghi_chu, timestamp, id_shop, phi_giao, phi_ung, km, id_post, "0",receiveLat,
                                                     receiveLng,shipLat,shipLng,estimateTime);
@@ -196,7 +196,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                             databaseReference.child("OrderStatus").child(postObject.getId_shop()).child(postObject.getId_post()).child("status").setValue("1");
                                             databaseReference.child("Notification").child(id_shop).push().setValue(noti);
                                             databaseReference.child("Transaction").child(postObject.getId_post()).child("status").setValue("1");
-                                            //saveData(String.valueOf(countPost));\
+                                            countPost++;
+                                            saveData(String.valueOf(countPost));
                                         } else {
                                             Toast.makeText(mContext.getApplicationContext(), "Bạn không thể nhận thêm", Toast.LENGTH_LONG).show();
                                         }
@@ -230,7 +231,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
     }
 
     private void loadData() {
-            countPost = Double.parseDouble(sharedpreferencesCurrentCountReceived.getString(countPostReceived, "0"));
+            countPost = Integer.parseInt(sharedpreferencesCurrentCountReceived.getString(countPostReceived, "0"));
     }
     public interface OnPostListener {
         void onPostClick(int position);

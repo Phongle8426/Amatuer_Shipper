@@ -59,21 +59,21 @@ public class TestNotification extends AppCompatActivity implements PopupMenu.OnM
     }
 
 
-    @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.action_5:
-                scheduleNotification(notification("5 second delay","1"), 5000,"1",1,1);
-                return true;
-            case R.id.action_10:
-                scheduleNotification(notification("10 second delay","2"), 10000,"2",2,2);
-                return true;
-            case R.id.action_30:
-                scheduleNotification(notification("30 second delay","3"), 30000,"3",3,3);
-                return true;
-            default:
-                return super.onOptionsItemSelected(menuItem);
-        }
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.action_5:
+                    scheduleNotification(notification("5 second delay","1"), 5000,"1",1,1);
+                    return true;
+                case R.id.action_10:
+                    scheduleNotification(notification("10 second delay","2"), 10000,"2",2,2);
+                    return true;
+                case R.id.action_30:
+                    scheduleNotification(notification("30 second delay","3"), 30000,"3",3,3);
+                    return true;
+                default:
+                    return super.onOptionsItemSelected(menuItem);
+            }
     }
 
     private void scheduleNotification(Notification notification, int delay,String id_channel,int request_code,int noti_id) {
