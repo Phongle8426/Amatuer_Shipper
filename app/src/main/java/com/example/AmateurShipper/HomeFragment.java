@@ -156,7 +156,7 @@ public static HomeFragment newInstance(){
             mLayoutManager.setStackFromEnd(true);
             NewsRecyclerview.setLayoutManager(mLayoutManager);
             getChildList();
-            loadshimer();
+            //loadshimer();
             postAdapter = new PostAdapter(mData, getContext(), this);
             NewsRecyclerview.setAdapter(postAdapter);
 
@@ -211,18 +211,22 @@ public static HomeFragment newInstance(){
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         document.getData();
-                        formatTimeStampToDate fm = new formatTimeStampToDate();
-                        String time = fm.convertTimeForBlock(Long.parseLong(document.get("role").toString()));
                         String role = document.get("role").toString();
-                        String reason = document.get("reason").toString();
                         if (role.equals("2")){
+                            formatTimeStampToDate fm = new formatTimeStampToDate();
+                            String time = fm.convertTimeForBlock(Long.parseLong(document.get("lock_time").toString()));
+                            String reason = document.get("reason").toString();
                             Long current_time = System.currentTimeMillis() / 1000;
                             long lock_time= Long.parseLong(document.get("lock_time").toString());
                             if (current_time < lock_time) {
                                 layout_block.setVisibility(View.VISIBLE);
                                 tv_reason.setText(reason);
                                 time_block.setText(time);
-                            }else docRef.update("role","1");
+                            }else {
+                                docRef.update("role","1");
+                                docRef.update("lock_time","");
+                                docRef.update("reason","");
+                            }
                         }
                     }
                 }
@@ -332,6 +336,10 @@ public static HomeFragment newInstance(){
                         }
                     }
                 }
+                layout_shimmer.stopShimmer();
+                layout_shimmer.hideShimmer();
+                layout_shimmer.setVisibility(View.GONE);
+                NewsRecyclerview.setVisibility(View.VISIBLE);
             }
 
             @Override

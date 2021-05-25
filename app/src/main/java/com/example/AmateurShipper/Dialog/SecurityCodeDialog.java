@@ -70,6 +70,7 @@ public class SecurityCodeDialog extends DialogFragment {
          idshop = mArgs.getString(idshopToSecurity);
          code = mArgs.getString(securitycodeToSecurity);
          position = mArgs.getInt(positionToSecurity);
+        Log.i(TAG, "onCreateDialog: "+position);
         getUid();
         loadData();
         setupOTPInputs();

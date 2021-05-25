@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseFirestore mFireStore;
     private CircularProgressButton loginButton;
     private EditText name, email, password, repassword;
+    CheckBox acceptRule;
     SharedPreferences sharedPreferences;
     String save_phonenumber;
     private String iName, iEmail, iRePassword, iPassword, codeSent;
@@ -57,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
         repassword = findViewById(R.id.editTextRepassword);
         password = findViewById(R.id.editTextPassword);
         loginButton = findViewById(R.id.cirRegisterButton);
+        acceptRule = findViewById(R.id.cbRule);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         mFireStore = FirebaseFirestore.getInstance();
 
@@ -80,19 +83,22 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
     public void signUpByEmail(){
-        mAuth.createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "Dang ky thanh cong!!", Toast.LENGTH_SHORT).show();
-                         //   startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                        //    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
-                        } else {
-                             Toast.makeText(RegisterActivity.this, "Loi!!!", Toast.LENGTH_SHORT).show();
+        if (acceptRule.isChecked()){
+            mAuth.createUserWithEmailAndPassword(email.getText().toString(),password.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                //Toast.makeText(RegisterActivity.this, "Dang ky thanh cong!!", Toast.LENGTH_SHORT).show();
+                                //   startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                //    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
+                            } else {
+                                Toast.makeText(RegisterActivity.this, "Loi!!!", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        } else Toast.makeText(this, R.string.accept_rule, Toast.LENGTH_SHORT).show();
+
     }
 
     public void signIn(){

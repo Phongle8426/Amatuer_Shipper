@@ -16,10 +16,12 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,13 +38,14 @@ import com.google.firebase.database.ValueEventListener;
 import static android.content.ContentValues.TAG;
 import static com.example.AmateurShipper.tab_nhan.idpostvalue;
 import static com.example.AmateurShipper.tab_nhan.idtabvalue;
+import static com.example.AmateurShipper.tab_nhan.idtshopvalue;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link DetailOrderFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback{
+public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback,PopupMenu.OnMenuItemClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -51,6 +54,9 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
     private static final int REQUEST_CALL = 1;
     public static final String id_room = "123";
     public static final String ten_shop = "Huynh Ba Thang";
+    public static final String ID_POST = "123";
+    public static final String ID_SHOP = "123";
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -60,9 +66,10 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
     private DatabaseReference mDatabase;
     String iDUser,sdt_nguoi_nhan_hang,sdt_shop,idRoom,fromTab;
     ImageView callShop,callCustomer,message_shop,back;
+    ImageButton report;
     TextView tng,sdtnguoigui,noinhan,noigiao,sdtnguoinhan,tennguoinhan,ghichu,thoigian,phigiao,phiung,sokm,tv_id_post,id_post2;
     String ten_nguoi_gui,sdt_nguoi_gui,noi_nhan,noi_giao,sdt_nguoi_nhan,ten_nguoi_nhan,ghi_chu,thoi_gian,
-            id_shop,phi_giao,phi_ung,km,id_post,id_cur_post;
+            id_shop,phi_giao,phi_ung,km,id_cur_shop,id_cur_post;
     public DetailOrderFragment() {
         // Required empty public constructor
     }
@@ -101,10 +108,12 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             id_cur_post = bundle.getString(idpostvalue, "1");
+            Toast.makeText(getContext(), id_cur_post, Toast.LENGTH_SHORT).show();
+            id_cur_shop = bundle.getString(idtshopvalue,"1");
             fromTab = bundle.getString(idtabvalue,"tab");
         }
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.dialogcontent, container, false);
+        final View view = inflater.inflate(R.layout.fragment_detail_order, container, false);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         layout_shimmer = view.findViewById(R.id.shimmer_detail_order);
         frame_shimmer = view.findViewById(R.id.frame_shimmer);
@@ -124,6 +133,7 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
          tv_id_post = view.findViewById(R.id.tv_id_post);
         id_post2 = view.findViewById(R.id.id_post);
         back = view.findViewById(R.id.btn_back);
+        report= view.findViewById(R.id.report);
                      //sokm = view.findViewById(R.id.editTextTextKm);
                    // close_btn = myview_dia.findViewById(R.id.close_chat);
 
@@ -155,7 +165,12 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
                 closeDetail();
             }
         });
-
+        report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openReport(view);
+            }
+        });
         return view;
     }
 
@@ -164,14 +179,15 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
         mDatabase.child("received_order_status").child(iDUser).child(id_cur_post).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                PostObject data = snapshot.getValue(PostObject.class);
-                if (data.getStatus().equals("2")){
-                    message_shop.setVisibility(View.GONE);
-                    callCustomer.setVisibility(View.GONE);
-                    callShop.setVisibility(View.GONE);
-                    sdtnguoinhan.setVisibility(View.GONE);
-                    sdtnguoigui.setVisibility(View.GONE);
-                }
+                if (snapshot.exists()) {
+                    PostObject data = snapshot.getValue(PostObject.class);
+                    if (data.getStatus().equals("2")) {
+                        message_shop.setVisibility(View.GONE);
+                        callCustomer.setVisibility(View.GONE);
+                        callShop.setVisibility(View.GONE);
+                        sdtnguoinhan.setVisibility(View.GONE);
+                        sdtnguoigui.setVisibility(View.GONE);
+                    }
                     tng.setText(data.getTen_nguoi_gui());
                     sdtnguoigui.setText(data.getSdt_nguoi_gui());
                     noinhan.setText(data.getNoi_nhan());
@@ -188,6 +204,7 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
                     sdt_nguoi_nhan_hang = data.getSdt_nguoi_nhan();
                     sdt_shop = data.getSdt_nguoi_gui();
                     ten_nguoi_gui = data.getTen_nguoi_gui();
+                }
             }
 
             @Override
@@ -198,6 +215,34 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
 
     }
 
+    public void openReport(View v){
+        PopupMenu popupMenu = new PopupMenu(getContext(), v);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.reoport_menu);
+        popupMenu.show();
+    }
+    // Hàm thực hiện các chức năng có trong setting
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.report:
+                    goToReport();
+                return true;
+            default: return false;
+        }
+    }
+
+    public void goToReport(){
+        ReportFragment reportFragment = new ReportFragment();
+        Bundle bundle = new Bundle();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        bundle.putString(ID_POST,id_cur_post); // use as per your need
+        bundle.putString(ID_SHOP,id_cur_shop);
+        reportFragment.setArguments(bundle);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.frame_cart,reportFragment);
+        fragmentTransaction.commit();
+    }
     public void loadshimer(){
         Handler handler=new Handler();
         handler.postDelayed(new Runnable() {

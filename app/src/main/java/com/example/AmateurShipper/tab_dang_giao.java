@@ -138,6 +138,8 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
         }
         getListOrder();
         loadshimer();
+        for (int i = 0; i< mListData.size();i++)
+            Log.i(TAG, "huhhhu: "+ mListData.get(i).getTen_nguoi_gui());
         return view;
     }
 
@@ -243,6 +245,7 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
 
     @Override
     public void sendInput(int position) {
-        mListData.remove(position-1);
+        mListData.remove(position);
+        shippingOrderAdapter.notifyDataSetChanged();
     }
 }

@@ -52,6 +52,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     private static final String ARG_PARAM2 = "param2";
     public static final String idpostvalue = "123";
     public static final String idtabvalue = "tab";
+    public static final String idtshopvalue = "123";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -240,6 +241,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     @Override
     public void onItemClick(int position) {
         String idPost = mData.get(position).getId_post();
+        String idShop = mData.get(position).getId_shop();
         //Log.i(TAG, "onItemClick: "+idPost);
         //NewsRecyclerview.setVisibility(View.INVISIBLE);
         framChat.setVisibility(View.VISIBLE);
@@ -248,6 +250,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
 
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         bundle.putString(idpostvalue,idPost); // use as per your need
+        bundle.putString(idtshopvalue,idShop); // use as per your need
         bundle.putString(idtabvalue,"tabnhan");
         detailFragment.setArguments(bundle);
         fragmentTransaction.addToBackStack(null);

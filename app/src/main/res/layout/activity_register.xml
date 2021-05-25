@@ -117,6 +117,23 @@
                             android:inputType="textPassword"
                             android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
+                        <CheckBox
+                            android:id="@+id/cbRule"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Đồng ý với tất cả"
+                            android:textColor="@color/cTextSecondary"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text=" Điều khoản của chúng tôi"
+                            android:textColor="@color/blue2"/>
+                    </LinearLayout>
 
                     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
                         android:id="@+id/cirRegisterButton"

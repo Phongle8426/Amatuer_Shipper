@@ -141,7 +141,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
             // attach_image = itemView.findViewById(R.id.img_attachment_image);
             getUid();
             loadData();
-            //clearData();
+            clearData();
 
             this.onPostListener = onPostListener;
             itemView.setOnClickListener(this);
@@ -196,8 +196,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                             databaseReference.child("OrderStatus").child(postObject.getId_shop()).child(postObject.getId_post()).child("status").setValue("1");
                                             databaseReference.child("Notification").child(id_shop).push().setValue(noti);
                                             databaseReference.child("Transaction").child(postObject.getId_post()).child("status").setValue("1");
-                                            countPost++;
-                                            saveData(String.valueOf(countPost));
+                                           // countPost++;
+                                           // saveData(String.valueOf(countPost));
                                         } else {
                                             Toast.makeText(mContext.getApplicationContext(), "Bạn không thể nhận thêm", Toast.LENGTH_LONG).show();
                                         }
