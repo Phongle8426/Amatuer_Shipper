@@ -8,17 +8,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationManagerCompat;
 
-import static com.example.AmateurShipper.TestNotification.CHANNEL_ID;
-import static com.example.AmateurShipper.TestNotification.NOTIFICATION;
-import static com.example.AmateurShipper.TestNotification.NOTIFICATION_ID;
+
+
 import static com.mapbox.services.android.navigation.ui.v5.feedback.FeedbackBottomSheet.TAG;
 
 public class NotificationPublisher extends BroadcastReceiver {
-
-
     public void onReceive(Context context, Intent intent) {
 //        String id_channel = intent.getStringExtra(CHANNEL_ID);
 //        Log.i(TAG, "onReceive: "+id_channel);
@@ -38,11 +36,11 @@ public class NotificationPublisher extends BroadcastReceiver {
 
        // NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Notification notification = intent.getParcelableExtra(NOTIFICATION);
-        int id = intent.getIntExtra(NOTIFICATION_ID,1);
-        //notificationManager.notify(id, notification);
+        Notification notification = intent.getParcelableExtra("NOTIFICATION");
+        int id = intent.getIntExtra("NOTIFICATION_ID",1);
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
         managerCompat.notify(id, notification);
+
 
     }
 }

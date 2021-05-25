@@ -1,7 +1,16 @@
 package com.example.AmateurShipper;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.AmateurShipper.Model.NotificationWebObject;
+import com.example.AmateurShipper.Util.NotificationPublisher;
 import com.example.AmateurShipper.Util.PostDiffUtilCallback;
 import com.example.AmateurShipper.Util.formatTimeStampToDate;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,9 +35,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,6 +65,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
     private FirebaseFirestore mFireStore;
 
     public static final String countPostReceived = "0";
+    public static int star1 = 0;
     public PostAdapter(List<PostObject> postList, Context context, OnPostListener onPostListener) {
         this.postList = postList;
         mContext = context;
@@ -102,24 +115,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
         viewAdapterClass.fee.setText(String.valueOf(postObject.getPhi_giao()));
         viewAdapterClass.payment.setText(String.valueOf(postObject.getPhi_ung()));
         viewAdapterClass.note.setText(postObject.getGhi_chu());
-
         // viewAdapterClass.image_poster.setImageResource(postObject.imgage_poster);
         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_in_right);
         holder.itemView.startAnimation(animation);
         //Toast.makeText(mContext, "position" + get_position, Toast.LENGTH_SHORT).show();
     }
-
     @Override
     public int getItemCount() {
         return postList.size();
     }
-
     public class ViewAdapterClass extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView name_poster, time, start_post, end_post, distance, fee, payment, note,tvcount;
         CircleImageView image_poster;
         Button get_order, attach_image;
         OnPostListener onPostListener;
-
         public ViewAdapterClass(@NonNull final View itemView, OnPostListener onPostListener) {
             super(itemView);
            // sharedpreferencesIdUser = itemView.getContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
@@ -196,8 +205,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                             databaseReference.child("OrderStatus").child(postObject.getId_shop()).child(postObject.getId_post()).child("status").setValue("1");
                                             databaseReference.child("Notification").child(id_shop).push().setValue(noti);
                                             databaseReference.child("Transaction").child(postObject.getId_post()).child("status").setValue("1");
-                                           // countPost++;
-                                           // saveData(String.valueOf(countPost));
+                                            int id = (int) new Date().getTime();
+                                            int estimated = Integer.parseInt(estimateTime)*1000;
+                                            scheduleNotification(notification(ten_nguoi_gui,estimateTime),20000 ,estimateTime,id, id);
+                                            Log.i(TAG, "onComplete: estimated " + estimated);
+                                            Log.i(TAG, "onComplete: schedule  created" + estimateTime);
+                                            countPost++;
+                                            saveData(String.valueOf(countPost));
                                         } else {
                                             Toast.makeText(mContext.getApplicationContext(), "Bạn không thể nhận thêm", Toast.LENGTH_LONG).show();
                                         }
@@ -252,5 +266,33 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
         distreet = distreet.substring(5,distreet.length());
         return street + ", " + ward + ", "+distreet;
     }
+    private void scheduleNotification(Notification notification, long delay, String id_channel, int request_code, int noti_id) {
+        Intent notificationIntent = new Intent(mContext.getApplicationContext(), NotificationPublisher.class);
+        notificationIntent.putExtra("NOTIFICATION_ID", noti_id);
+        notificationIntent.putExtra("NOTIFICATION", notification);
+        notificationIntent.putExtra("CHANNEL_ID", id_channel);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext.getApplicationContext(), request_code, notificationIntent, 0);
+//      long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager)mContext.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        long timeAtButtonclick = System.currentTimeMillis() + delay;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAtButtonclick, pendingIntent);
+//      mContext.getApplicationContext().sendBroadcast(notificationIntent);
+    }
+    public Notification notification(String content,String id_channel){
+        String title = "Đơn hàng của ";
 
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+            NotificationChannel notificationChannel = new NotificationChannel(id_channel,"n", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = mContext.getApplicationContext().getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(notificationChannel);
+
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext,id_channel)
+                .setSmallIcon(R.drawable.noti)
+                .setContentTitle(title)
+                .setContentText(content + " đang bị chậm trễ.")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE);
+        return builder.build();
+    }
 }

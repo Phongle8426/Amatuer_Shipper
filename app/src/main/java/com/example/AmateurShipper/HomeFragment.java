@@ -159,7 +159,6 @@ public static HomeFragment newInstance(){
             //loadshimer();
             postAdapter = new PostAdapter(mData, getContext(), this);
             NewsRecyclerview.setAdapter(postAdapter);
-
             checkScroll();
 
             btn_filter_location.setOnClickListener(new View.OnClickListener() {
@@ -201,7 +200,22 @@ public static HomeFragment newInstance(){
 
             return view;
     }
+    public void deleteOrder(){
+        mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("1").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    String de = ds.child("id_post").getValue(String.class);
+                    mDatabase.child("received_order_status").child(iDUser).child(de).setValue(null);
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     public void checkBlock(){
         DocumentReference docRef = mFireStore.collection("ProfileShipper").document(iDUser);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

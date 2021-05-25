@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 app:fab_colorNormal="@color/white"
                 app:fab_colorPressed="@color/white_pressed"
-                app:fab_icon="@drawable/ic_baseline_person_24"
+                app:fab_icon="@drawable/arrows"
                 app:fab_title="Vị Trí Hiện Tại" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 app:fab_colorNormal="@color/white"
                 app:fab_colorPressed="@color/white_pressed"
-                app:fab_icon="@drawable/ic_baseline_alarm"
+                app:fab_icon="@drawable/location"
                 app:fab_title="Đường đi tổng quát" />
 
         </com.getbase.floatingactionbutton.FloatingActionsMenu>

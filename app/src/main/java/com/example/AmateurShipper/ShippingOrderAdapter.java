@@ -61,8 +61,6 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
        this.fragmentManager = fm;
        this.clickInterface = clickInterface;
     }
-
-
     @NonNull
     @Override
     public ViewAdapterClass onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -70,9 +68,6 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
         ShippingOrderAdapter.ViewAdapterClass viewAdapterClass = new ShippingOrderAdapter.ViewAdapterClass(view);
         return viewAdapterClass;
     }
-
-
-
     @Override
     public void onBindViewHolder(@NonNull ViewAdapterClass holder, int position) {
     ViewAdapterClass viewAdapterClass = (ViewAdapterClass) holder;

@@ -1,10 +1,12 @@
 package com.example.AmateurShipper;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import Helper.MyButtonClickListner;
@@ -18,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -127,6 +130,7 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
                 buff.add(new MyButton("Hoan Thanh", 30, Color.parseColor("#DC143C"), new MyButtonClickListner(){
                     @Override
                     public void onClick(final int pos) {
+                        cancelNotification(pos);
                         openSecurityCode(pos);
                     }
                 }, getContext()));
@@ -142,13 +146,32 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
             Log.i(TAG, "huhhhu: "+ mListData.get(i).getTen_nguoi_gui());
         return view;
     }
+    public void cancelNotification(int position){
+        String estimatedid;
+       // int cancellSche ;
+        estimatedid = mListData.get(position).getTime_estimate();
+//        if (!TextUtils.isEmpty(estimatedid) && TextUtils.isDigitsOnly(estimatedid)) {
+//            cancellSche = Integer.parseInt(estimatedid);
+//        } else {
+//            cancellSche = 0;
+//        }
 
+        Toast.makeText(getActivity(), "cancelSche" + estimatedid, Toast.LENGTH_SHORT).show();
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        //notificationManager.cancel(cancellSche);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager.deleteNotificationChannel(estimatedid);
+        }
+        Log.i(TAG, "openSecurityCode: cancel" +estimatedid );
+    }
     public void openSecurityCode(int pos){
         String idpost;
         String idshop;
+
         idpost = mListData.get(pos).getId_post();
         idshop = mListData.get(pos).getId_shop();
-        Log.i(TAG, "openSecurityCode: " + idpost +"/" +idshop);
+
+
         mDatabase.child("Transaction").child(idpost).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

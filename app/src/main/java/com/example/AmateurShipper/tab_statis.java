@@ -31,6 +31,7 @@ import com.example.AmateurShipper.Util.formatTimeStampToDate;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -40,9 +41,11 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mapbox.mapboxsdk.plugins.annotation.Line;
@@ -94,7 +97,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
     ArrayList<Entry> listWeekCount = new ArrayList<>();
     ArrayList<Entry> listMonthCount = new ArrayList<>();
     ArrayList<Entry> listYearCount = new ArrayList<>();
-
+    ArrayList<Integer> myColors = new ArrayList<>();
     ImageView next,previous,nextLine,previousLine;
     TextView currentStatistic,currentStatisticLine;
     fecthDataStatistic fecthDataStatistic;
@@ -161,6 +164,12 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         soLuong = view.findViewById(R.id.tv_so_luong);
         thuNhap = view.findViewById(R.id.tv_thu_nhap);
 
+        myColors.add(Color.BLACK);
+        myColors.add(Color.YELLOW);
+        myColors.add(Color.BLUE);
+        myColors.add(Color.DKGRAY);
+        myColors.add(Color.GREEN);
+        myColors.add(Color.GRAY);
         fecthDataStatistic = new fecthDataStatistic(getActivity());
         /* starts before 1 month from now */
         getUid();
@@ -245,6 +254,9 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
 
     public void renderDataBarChart(){
         BarDataSet barDataSet = new BarDataSet(entryArrayList,"Amount");
+        barchat.clearFocus();
+        barchat.clear();
+        barchat.notifyDataSetChanged();
         barDataSet.setColors(Color.CYAN);
         Description des = new Description();
         des.setText("");
@@ -252,12 +264,20 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         BarData barData = new BarData(barDataSet);
         barchat.setData(barData);
         barchat.setTouchEnabled(true);
-//        if (labelName.size()>7){
-//            barchat.setVisibleXRangeMaximum(10);
-//        }
+        barchat.resetViewPortOffsets();
+        barchat.fitScreen();
+        barchat.animate();
+        Toast.makeText(getActivity(), "label name size" + labelName.size(), Toast.LENGTH_SHORT).show();
+
+        if (labelName.size()>7){
+            barchat.setVisibleXRange(0, 7);
+        }
+
+
         YAxis rightAxis = barchat.getAxisRight();
         rightAxis.setEnabled(false);
         XAxis xAxis = barchat.getXAxis();
+        xAxis.setLabelCount(7);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labelName));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawAxisLine(false);
@@ -270,11 +290,20 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         barchat.setDrawGridBackground(false);
         barchat.setDrawValueAboveBar(false);
         barchat.animateY(1000);
+        barchat.setDrawValueAboveBar(true);
+        //barchat.getData().clearValues();
+
         barchat.invalidate();
+//        barchat.invalidate();
+//        labelLineName.clear();
+
     }
 
     public void renderDataLineChart() {
         //Log.i(TAG, "renderData: " + labelLineName);
+//        lineChart.clearFocus();
+//        lineChart.clear();
+//        lineChart.notifyDataSetChanged();
         XAxis xAxis = lineChart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
 //        xAxis.setAxisMaximum(lineEntryList.size());
@@ -284,7 +313,12 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labelLineName));
         xAxis.setDrawLimitLinesBehindData(true);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
+
+
+//        xAxis.setAxisMinimum(0);
+//        xAxis.setValueFormatter(new IndexAxisValueFormatter(labelLineName));
         YAxis leftAxis = lineChart.getAxisLeft();
         leftAxis.setAxisMaximum(50f);
         leftAxis.setAxisMinimum(0f);
@@ -311,7 +345,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         lineDataSet.enableDashedHighlightLine(10f,5f,0f);
         lineDataSet.setColor(Color.CYAN);
         //lineDataSet.setCircleColor(Color.CYAN);
-        lineDataSet.setLineWidth(1f);
+        lineDataSet.setLineWidth(1.0f);
         //lineDataSet.setCircleRadius(2f);
         //lineDataSet.setDrawCircleHole(false);
         lineDataSet.setValueTextSize(9f);
@@ -324,8 +358,15 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         ArrayList<ILineDataSet> lineDataSetsArray = new ArrayList<>();
         lineDataSetsArray.add(lineDataSet);
         LineData data = new LineData(lineDataSetsArray);
+       // lineChart.setVisibleXRangeMaximum(7);
+        lineChart.setDragEnabled(true);
+        lineChart.setScaleEnabled(false);
         lineChart.setDrawGridBackground(false);
         lineChart.setData(data);
+
+        if(labelLineName.size() > 7){
+            lineChart.setVisibleXRangeMaximum(7);
+        }
         lineChart.animateY(1500);
         lineChart.invalidate();
   //  }
@@ -345,13 +386,50 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
             else if (day.equals("7.0")) day ="Sun";
             labelLineName.add(day);
             lineEntryList.add(listWeekCount.get(i));
+            Log.i(TAG, "fecthDataForLineChartWeek: " + day);
         }
     }
     public void fecthDataForLineChartMonth(){
+        labelLineName.clear();
         lineEntryList.clear();
         for (int i = 0 ; i< listMonthCount.size();i++){
+            String day = String.valueOf(listMonthCount.get(i).getX());
+            if (day.equals("1.0")) day ="1";
+            else if (day.equals("2.0")) day ="2";
+            else if (day.equals("3.0")) day ="3";
+            else if (day.equals("4.0")) day ="4";
+            else if (day.equals("5.0")) day ="5";
+            else if (day.equals("6.0")) day ="6";
+            else if (day.equals("7.0")) day ="7";
+            else if (day.equals("8.0")) day ="8";
+            else if (day.equals("9.0")) day ="9";
+            else if (day.equals("10.0")) day ="10";
+            else if (day.equals("11.0")) day ="11";
+            else if (day.equals("12.0")) day ="12";
+            else if (day.equals("13.0")) day ="13";
+            else if (day.equals("14.0")) day ="14";
+            else if (day.equals("15.0")) day ="15";
+            else if (day.equals("16.0")) day ="16";
+            else if (day.equals("17.0")) day ="17";
+            else if (day.equals("18.0")) day ="18";
+            else if (day.equals("19.0")) day ="19";
+            else if (day.equals("20.0")) day ="20";
+            else if (day.equals("21.0")) day ="21";
+            else if (day.equals("22.0")) day ="22";
+            else if (day.equals("23.0")) day ="23";
+            else if (day.equals("24.0")) day ="24";
+            else if (day.equals("25.0")) day ="25";
+            else if (day.equals("26.0")) day ="26";
+            else if (day.equals("27.0")) day ="27";
+            else if (day.equals("28.0")) day ="28";
+            else if (day.equals("29.0")) day ="29";
+            else if (day.equals("30.0")) day ="30";
+            else if (day.equals("31.0")) day ="31";
+            labelLineName.add(day);
             lineEntryList.add(listMonthCount.get(i));
+            Log.i(TAG, "fecthDataForLineChartMonth: " + day + "/" + lineEntryList.size());
         }
+
     }
     public void fecthDataForLineChartYear(){
         labelLineName.clear();
@@ -377,17 +455,21 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
 
     public void fecthDataForBarChartWeek(){
         entryArrayList.clear();
+        barchat.clear();
         labelName.clear();
         for (int i = 0 ; i< listWeekAmount.size();i++){
             String day = listWeekAmount.get(i).getDate();
             int amount = Integer.parseInt(listWeekAmount.get(i).getAmount());
             entryArrayList.add(new BarEntry(i,amount));
             labelName.add(day);
+            Log.i(TAG, "fecthDataForBarChartDay: "+labelName.get(i));
         }
     }
 
     public void fecthDataForBarChartYear(){
         entryArrayList.clear();
+        barchat.setFitBars(true);
+        barchat.clear();
         labelName.clear();
         for (int i = 0; i < listYearAmount.size(); i++) {
             String day = listYearAmount.get(i).getDate();
@@ -395,10 +477,13 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
             entryArrayList.add(new BarEntry(i, amount));
             labelName.add(day);
         }
+
     }
 
     public void fecthDataForBarChartMonth(){
         entryArrayList.clear();
+        barchat.setFitBars(true);
+        barchat.clear();
         labelName.clear();
         //fillDataMonth();
         for (int i = 0; i < listMonthAmount.size(); i++) {
@@ -541,6 +626,9 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
 
     public void loadData(int filter, int type){
         mListData.clear();
+        barchat.fitScreen();
+        barchat.clear();
+        barchat.invalidate();
         fecthDataStatistic.fecthData(new DataStatisticCallback() {
             @Override
             public void onSuccess(ArrayList<DataStatisticObject> lists) {
@@ -647,6 +735,21 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         popupMenu.show();
     }
 
+    public class MyFormatter implements IValueFormatter {
+
+        String[] text;
+
+        public MyFormatter(String[] text) {
+            this.text = text;
+        }
+
+
+
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return null;
+        }
+    }
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()){
@@ -656,10 +759,12 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                     filter_barChart.setText("Tuần");
                     currentStatistic.setText("Tuần này");
                     loadData(fmDate.getCurrentWeek(System.currentTimeMillis()/1000),1);
+                    barchat.fitScreen();
                 }else{
                     filter_lineChart.setText("Tuần");
                     currentStatisticLine.setText("Tuần này");
                     loadData(fmDate.getCurrentWeek(System.currentTimeMillis()/1000),2);
+                    barchat.fitScreen();
                 }
                 return true;
             case R.id.item_month:
@@ -668,10 +773,14 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                     filter_barChart.setText("Tháng");
                     currentStatistic.setText("Tháng này");
                     loadData(fmDate.getCurrentMonth(System.currentTimeMillis()/1000),1);
+                    barchat.fitScreen();
+//                    barchat.setVisibleXRangeMaximum(7);
                 }else{
                     filter_lineChart.setText("Tháng");
                     currentStatisticLine.setText("Tháng này");
                     loadData(fmDate.getCurrentMonth(System.currentTimeMillis()/1000),2);
+                    barchat.fitScreen();
+//                    barchat.setVisibleXRangeMaximum(7);
                 }
                 return true;
             case R.id.item_year:
@@ -680,10 +789,14 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                     filter_barChart.setText("Năm");
                     currentStatistic.setText("Năm này");
                     loadData(fmDate.getCurrentYear(System.currentTimeMillis()/1000),1);
+                    barchat.fitScreen();
+//                    barchat.setVisibleXRangeMaximum(7);
                 }else{
                     filter_lineChart.setText("Năm");
                     currentStatisticLine.setText("Năm này");
                     loadData(fmDate.getCurrentYear(System.currentTimeMillis()/1000),2);
+                    barchat.fitScreen();
+//                    barchat.setVisibleXRangeMaximum(7);
                 }
                 return true;
             default: return false;
