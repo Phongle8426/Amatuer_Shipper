@@ -35,6 +35,7 @@ import com.example.AmateurShipper.Util.NetworkChangeListener;
 import com.example.AmateurShipper.Util.formatTimeStampToDate;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -150,6 +151,7 @@ public static HomeFragment newInstance(){
             getUid();
             checkBlock();
             loadStar();
+            //deleteOrder();
             mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
             mLayoutManager.setReverseLayout(true);
             NewsRecyclerview.setHasFixedSize(true);
@@ -373,9 +375,9 @@ public static HomeFragment newInstance(){
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
+        loadshimer();
     }
 
     public void loadshimer(){
@@ -388,7 +390,7 @@ public static HomeFragment newInstance(){
                 layout_shimmer.setVisibility(View.GONE);
                 NewsRecyclerview.setVisibility(View.VISIBLE);
             }
-        },1000);
+        },4000);
     }
 
     public void checkScroll(){

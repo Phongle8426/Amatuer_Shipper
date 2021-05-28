@@ -299,23 +299,53 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
 
     }
 
+//    public void renderDataLineChart() {
+//        //Log.i(TAG, "renderData: " + labelLineName);
+////        lineChart.clearFocus();
+////        lineChart.clear();
+////        lineChart.notifyDataSetChanged();
+//        XAxis xAxis = lineChart.getXAxis();
+//        xAxis.enableGridDashedLine(10f, 10f, 0f);
+////        xAxis.setAxisMaximum(lineEntryList.size());
+////        xAxis.setAxisMinimum(0f);
+//        xAxis.setGranularity(1f);
+//        xAxis.setDrawGridLines(false);
+//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.setValueFormatter(new IndexAxisValueFormatter(labelLineName));
+//        xAxis.setDrawLimitLinesBehindData(true);
+//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//
+//
+//
+////        xAxis.setAxisMinimum(0);
+////        xAxis.setValueFormatter(new IndexAxisValueFormatter(labelLineName));
+//        YAxis leftAxis = lineChart.getAxisLeft();
+//        leftAxis.setAxisMaximum(50f);
+//        leftAxis.setAxisMinimum(0f);
+//        leftAxis.enableGridDashedLine(10f, 10f, 0f);
+//        leftAxis.setDrawZeroLine(false);
+//        leftAxis.setDrawLimitLinesBehindData(false);
+//
+//        lineChart.getAxisRight().setEnabled(false);
+//        showLineChart();
+//    }
+
     public void renderDataLineChart() {
-        //Log.i(TAG, "renderData: " + labelLineName);
-//        lineChart.clearFocus();
-//        lineChart.clear();
-//        lineChart.notifyDataSetChanged();
         XAxis xAxis = lineChart.getXAxis();
         xAxis.enableGridDashedLine(10f, 10f, 0f);
-//        xAxis.setAxisMaximum(lineEntryList.size());
-//        xAxis.setAxisMinimum(0f);
+
         xAxis.setGranularity(1f);
         xAxis.setDrawGridLines(false);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        //xAxis.setValueFormatter(new IndexAxisValueFormatter(labelLineName));
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labelLineName));
+
         xAxis.setDrawLimitLinesBehindData(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-
+        xAxis.setGranularity(1.0f);
+        xAxis.setCenterAxisLabels(false);
+        xAxis.setAxisMinimum(0.0f);
+        xAxis.setAxisMaximum(7.0f);
 
 //        xAxis.setAxisMinimum(0);
 //        xAxis.setValueFormatter(new IndexAxisValueFormatter(labelLineName));
@@ -329,8 +359,6 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         lineChart.getAxisRight().setEnabled(false);
         showLineChart();
     }
-
-
     public void showLineChart(){
     LineDataSet lineDataSet;
 //    if (lineChart.getData()!=null && lineChart.getData().getDataSetCount()>0){

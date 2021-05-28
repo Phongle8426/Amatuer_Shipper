@@ -67,7 +67,8 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     ChatFragment chatFragment;
     String iDUser;
     FragmentManager fragmentManager;
-    final String[] reasonList = {"reason1","reason2"};
+    final String[] reasonList = {"Không liên lạc được với người gửi","Bấm nhầm nhận bài đăng",
+                                "Không thể thực hiện đúng giờ","Người gửi yêu cầu hủy","Lý do khác"};
     final Handler handler = new Handler(Looper.getMainLooper());
     private static int SPLASH_SCREEN = 500;
 
@@ -181,6 +182,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         mDatabase.child("received_order_status").child(iDUser).child(idpost).setValue(null);
         mDatabase.child("OrderStatus").child(idshop).child(idpost).child("status").setValue("3");
         mDatabase.child("OrderStatus").child(idshop).child(idpost).child("reason").setValue(reason);
+        mDatabase.child("OrderStatus").child(idshop).child(idpost).child("read").setValue(0);
         mDatabase.child("Notification").child(idshop).push().setValue(noti);
         mDatabase.child("Transaction").child(idpost).child("status").setValue("3");
     }

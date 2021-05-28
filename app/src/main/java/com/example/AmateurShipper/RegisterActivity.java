@@ -89,9 +89,7 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                //Toast.makeText(RegisterActivity.this, "Dang ky thanh cong!!", Toast.LENGTH_SHORT).show();
-                                //   startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                                //    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_mid_left);
+                                Toast.makeText(RegisterActivity.this, "Dang ky thanh cong!!", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Loi!!!", Toast.LENGTH_SHORT).show();
                             }

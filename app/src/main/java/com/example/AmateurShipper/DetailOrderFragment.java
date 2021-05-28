@@ -108,8 +108,10 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             id_cur_post = bundle.getString(idpostvalue, "1");
-            Toast.makeText(getContext(), id_cur_post, Toast.LENGTH_SHORT).show();
             id_cur_shop = bundle.getString(idtshopvalue,"1");
+            Toast.makeText(getContext(), id_cur_shop, Toast.LENGTH_SHORT).show();
+            Log.i(TAG, "BBBBBBBBB: "+ id_cur_shop +"/"+ id_cur_post);
+
             fromTab = bundle.getString(idtabvalue,"tab");
         }
         // Inflate the layout for this fragment
