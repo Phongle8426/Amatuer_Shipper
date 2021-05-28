@@ -29,7 +29,8 @@ public class RegisterSuccessful extends AppCompatActivity {
         String iPhone = intent.getStringExtra(iPhonevalue);
         String iEmail = intent.getStringExtra(iEmalvalue);
 
-        ProfileObject profileObject = new ProfileObject(iName,iPhone,null,iEmail,null,null,"0");
+        ProfileObject profileObject = new ProfileObject(iName,iPhone,null,iEmail,null,null,
+                "0",null,"aa","0",null,"1");
         mFireStore.collection("ProfileShipper").document( mAuth.getCurrentUser().getUid())
                 .set(profileObject).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

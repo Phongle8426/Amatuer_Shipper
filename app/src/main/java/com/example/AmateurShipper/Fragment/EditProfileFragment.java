@@ -127,7 +127,7 @@ public class EditProfileFragment extends Fragment {
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openSetring();
+                openSetting();
             }
         });
         return view;
@@ -182,7 +182,7 @@ public class EditProfileFragment extends Fragment {
         });
     }
 
-    public void openSetring(){
+    public void openSetting(){
         layoutProfile.setVisibility(View.GONE);
         SettingFragment tabSetting = new SettingFragment();
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -212,8 +212,6 @@ public class EditProfileFragment extends Fragment {
                         address.setText(document.get("address").toString());
                         email.setText(document.get("email").toString());
                         phone.setText(document.get("phone").toString());
-                        //cmnd.setText(document.get("cmnd").toString());
-                        //star.setNumStars(Integer.parseInt(document.get("rate_star").toString()));
                         if(!document.get("avatar").toString().equals(null)){
                             Glide.with(getContext()).load(document.get("avatar").toString()).into((de.hdodenhof.circleimageview.CircleImageView )avata);
                         }

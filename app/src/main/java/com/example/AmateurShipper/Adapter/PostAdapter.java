@@ -49,7 +49,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.mapbox.services.android.navigation.ui.v5.feedback.FeedbackBottomSheet.TAG;
 
-//import static com.example.AmateurShipper.Activity.LoginActivity.IDUSER;
+//import static com.example.AmateurShipper.LoginActivity.IDUSER;
 
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterClass> {
@@ -152,7 +152,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
             // attach_image = itemView.findViewById(R.id.img_attachment_image);
             getUid();
             loadData();
-           clearData();
+            clearData();
+
             this.onPostListener = onPostListener;
             itemView.setOnClickListener(this);
             get_order.setOnClickListener(new View.OnClickListener() {
@@ -190,7 +191,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                             String receiveLng = postList.get(getAdapterPosition()).receiveLng;
                                             String shipLat = postList.get(getAdapterPosition()).shipLat;
                                             String shipLng = postList.get(getAdapterPosition()).shipLng;
-                                            String estimateTime = postList.get(getAdapterPosition()).time_estimate;
+                                            String estimateTime = postList.get(getAdapterPosition()).getTime_estimate();
+                                            Log.i(TAG, "AAAAAAA: "+estimateTime);
+
+                                            //String estimateTime = postList.get(getAdapterPosition()).time_estimate;
                                             PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan,
                                                     ten_nguoi_nhan, ghi_chu, timestamp, id_shop, phi_giao, phi_ung, km, id_post, "0",receiveLat,
                                                     receiveLng,shipLat,shipLng,estimateTime);
@@ -199,9 +203,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                             postList.remove(getAdapterPosition());
                                             notifyItemRemoved(getAdapterPosition());
                                             mainActivity.setCountOrder(mainActivity.getmCountOrder() + 1);
+
                                             NotificationWebObject noti = new NotificationWebObject(id_post, IdUser, "1", timestamp);
                                             databaseReference.child("Transaction").child(postObject.getId_post()).child("id_shipper").setValue(IdUser);
                                             databaseReference.child("OrderStatus").child(postObject.getId_shop()).child(postObject.getId_post()).child("status").setValue("1");
+                                            databaseReference.child("OrderStatus").child(postObject.getId_shop()).child(postObject.getId_post()).child("read").setValue(0);
                                             databaseReference.child("Notification").child(id_shop).push().setValue(noti);
                                             databaseReference.child("Transaction").child(postObject.getId_post()).child("status").setValue("1");
                                             int id = (int) new Date().getTime();

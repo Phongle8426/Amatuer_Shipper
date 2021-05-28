@@ -73,6 +73,7 @@ public class SecurityCodeDialog extends DialogFragment {
          code = mArgs.getString(securitycodeToSecurity);
          position = mArgs.getInt(positionToSecurity);
          estimateTime = mArgs.getString(estimatedTimeToSecurity);
+        Log.i(TAG, "onCreateDialog: "+position);
         getUid();
         loadData();
         setupOTPInputs();
@@ -107,6 +108,7 @@ public class SecurityCodeDialog extends DialogFragment {
                     NotificationWebObject noti = new NotificationWebObject(idpost,iDUser,"2",timestamp);
                     mDatabase.child("Notification").child(idshop).push().setValue(noti);
                     mDatabase.child("OrderStatus").child(idshop).child(idpost).child("status").setValue("2");
+                    mDatabase.child("OrderStatus").child(idshop).child(idpost).child("read").setValue(0);
                     mDatabase.child("OrderStatus").child(idshop).child(idpost).child("completed_time").setValue(timestamp);
                     saveData(String.valueOf(countPost-1));
                     mOnInputSelected.sendInput(position);

@@ -8,8 +8,7 @@
     <RelativeLayout
         android:id="@+id/frame_shimmer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:layout_height="wrap_content">
 <LinearLayout
 android:layout_width="match_parent"
 android:layout_height="wrap_content"
@@ -36,9 +35,15 @@ android:padding="5dp" android:id="@+id/container_chat">
             android:id="@+id/tv_id_post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:textColor="@color/colorText"
             android:textSize="16sp"
             android:text="20201421-222440164284"/>
+        <ImageButton
+            android:id="@+id/report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_baseline_report_24"/>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
@@ -323,6 +328,7 @@ android:padding="5dp" android:id="@+id/container_chat">
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:layout_centerVertical="true"
+        android:visibility="gone"
         android:id="@+id/shimmer_detail_order">
         <LinearLayout
             android:layout_width="match_parent"

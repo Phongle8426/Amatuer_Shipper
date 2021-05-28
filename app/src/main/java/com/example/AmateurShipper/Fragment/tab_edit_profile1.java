@@ -259,8 +259,10 @@ public class tab_edit_profile1 extends Fragment {
 
     public void updateProfile(String fullname2, String address2, String birthday2, String sexual2, String idcard2, String avatar2){
 
-        fullname2 = name.getText().toString();
-        address2 = address.getText().toString();
+        if (!name.getText().toString().equals(null))
+                fullname2 = name.getText().toString();
+        if (!address.getText().toString().equals(null))
+                address2 = address.getText().toString();
         birthday2 = birthday.getText().toString();
         sexual2 = sex.getText().toString();
 

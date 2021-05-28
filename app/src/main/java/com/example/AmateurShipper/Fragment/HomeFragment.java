@@ -35,6 +35,7 @@ import com.example.AmateurShipper.Util.NetworkChangeListener;
 import com.example.AmateurShipper.Util.formatTimeStampToDate;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -150,13 +151,14 @@ public static HomeFragment newInstance(){
             getUid();
             checkBlock();
             loadStar();
+            //deleteOrder();
             mLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
             mLayoutManager.setReverseLayout(true);
             NewsRecyclerview.setHasFixedSize(true);
             mLayoutManager.setStackFromEnd(true);
             NewsRecyclerview.setLayoutManager(mLayoutManager);
             getChildList();
-            loadshimer();
+            //loadshimer();
             postAdapter = new PostAdapter(mData, getContext(), this);
             NewsRecyclerview.setAdapter(postAdapter);
             checkScroll();
@@ -225,18 +227,22 @@ public static HomeFragment newInstance(){
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         document.getData();
-                        formatTimeStampToDate fm = new formatTimeStampToDate();
-                        String time = fm.convertTimeForBlock(Long.parseLong(document.get("role").toString()));
                         String role = document.get("role").toString();
-                        String reason = document.get("reason").toString();
                         if (role.equals("2")){
+                            formatTimeStampToDate fm = new formatTimeStampToDate();
+                            String time = fm.convertTimeForBlock(Long.parseLong(document.get("lock_time").toString()));
+                            String reason = document.get("reason").toString();
                             Long current_time = System.currentTimeMillis() / 1000;
                             long lock_time= Long.parseLong(document.get("lock_time").toString());
                             if (current_time < lock_time) {
                                 layout_block.setVisibility(View.VISIBLE);
                                 tv_reason.setText(reason);
                                 time_block.setText(time);
-                            }else docRef.update("role","1");
+                            }else {
+                                docRef.update("role","1");
+                                docRef.update("lock_time","");
+                                docRef.update("reason","");
+                            }
                         }
                     }
                 }
@@ -346,6 +352,10 @@ public static HomeFragment newInstance(){
                         }
                     }
                 }
+                layout_shimmer.stopShimmer();
+                layout_shimmer.hideShimmer();
+                layout_shimmer.setVisibility(View.GONE);
+                NewsRecyclerview.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -365,9 +375,9 @@ public static HomeFragment newInstance(){
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
+        loadshimer();
     }
 
     public void loadshimer(){
@@ -380,7 +390,7 @@ public static HomeFragment newInstance(){
                 layout_shimmer.setVisibility(View.GONE);
                 NewsRecyclerview.setVisibility(View.VISIBLE);
             }
-        },1000);
+        },4000);
     }
 
     public void checkScroll(){

@@ -15,6 +15,13 @@ public class formatTimeStampToDate {
     public formatTimeStampToDate() {
     }
 
+    public String convertTimeToId(long time_stamp){
+        Date currentDate = new Date (time_stamp*1000);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYYMMDD-HHmmssSSS");
+        String date = dateFormat.format(currentDate);
+        return date;
+    }
+
     public String convertTimeStamp(long time_stamp){
         Date currentDate = new Date (time_stamp*1000);
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, YYYY-MM-dd HH:mm:ss");

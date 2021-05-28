@@ -226,7 +226,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         Calendar endDate = Calendar.getInstance();
         endDate.add(Calendar.MONTH, 1);
         View calView = view.findViewById(R.id.calendarView);
-        HorizontalCalendar horizontalCalendar = new HorizontalCalendar.Builder(getActivity(), calView.getId())
+        HorizontalCalendar horizontalCalendar = new HorizontalCalendar.Builder(getActivity(),calView.getId())
                 .range(startDate, endDate)
                 .datesNumberOnScreen(5).configure()
                 .sizeTopText(10)
@@ -551,66 +551,65 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                 } else currentStatisticLine.setText("Tháng " + currentMonthLine);
                 loadData(currentMonthLine, 2);
             }
-        } else if (k == 2) {
-            int crtYear = fmDate.getCurrentYear(System.currentTimeMillis() / 1000);
-            if (currenYearLine < crtYear) {
+        }else if (k==2){
+            int crtYear = fmDate.getCurrentYear(System.currentTimeMillis()/1000);
+            if (currenYearLine < crtYear){
                 ++currenYearLine;
-                if (currenYearLine == crtYear) {
+                if (currenYearLine == crtYear){
                     currentStatisticLine.setText("Năm này");
-                } else currentStatisticLine.setText("Năm " + currenYearLine);
-                loadData(currenYearLine, 2);
+                }else currentStatisticLine.setText("Năm " + currenYearLine);
+                loadData(currenYearLine,2);
             }
         }
     }
-
-    public void previousLine() {
-        if (k == 0) {
-            if (currentWeekLine > 1) {
+    public void previousLine(){
+        if (k==0){
+            if (currentWeekLine > 1){
                 --currentWeekLine;
                 currentStatisticLine.setText("Tuần " + currentWeekLine);
-                loadData(currentWeekLine, 2);
+                loadData(currentWeekLine,2);
             }
-        } else if (k == 1) {
-            if (currentMonthLine > 1) {
+        }else if (k==1){
+            if (currentMonthLine > 1){
                 --currentMonthLine;
                 currentStatisticLine.setText("Tháng " + currentMonthLine);
-                loadData(currentMonthLine, 2);
+                loadData(currentMonthLine,2);
             }
-        } else if (k == 2) {
-            if (currenYearLine > 1) {
+        }else if (k==2){
+            if (currenYearLine > 1){
                 --currenYearLine;
                 currentStatisticLine.setText("Năm " + currenYearLine);
-                loadData(currenYearLine, 2);
+                loadData(currenYearLine,2);
             }
         }
     }
 
 
-    public void loadDataDay(long filter) {
-        String fill = fmDate.convertDayMonthYear(filter);
+    public void loadDataDay(long filter){
+        String fill  = fmDate.convertDayMonthYear(filter);
         fecthDataStatistic.fecthData(new DataStatisticCallback() {
             @Override
             public void onSuccess(ArrayList<DataStatisticObject> lists) {
-                // Log.i(TAG, "onSIZE: "+ lists.size());
-                int count = 0, amount = 0;
-                for (int i = 0; i < lists.size(); i++) {
+               // Log.i(TAG, "onSIZE: "+ lists.size());
+                int count=0,amount=0;
+                for (int i = 0; i< lists.size();i++) {
                     if (fmDate.convertDayMonthYear(Long.parseLong(lists.get(i).getDate())).equals(fill)) {
-                        amount += Integer.parseInt(lists.get(i).getAmount().replaceAll("\\s", ""));
-                        count++;
+                         amount += Integer.parseInt(lists.get(i).getAmount().replaceAll("\\s",""));
+                         count++;
                     }
                 }
-                soLuong.setText(count + "");
-                thuNhap.setText(amount + "");
+                soLuong.setText(count+"");
+                thuNhap.setText(amount+"");
             }
 
             @Override
             public void onError(String message) {
 
             }
-        }, uId);
+        },uId);
     }
 
-    public void loadData(int filter, int type) {
+    public void loadData(int filter, int type){
         mListData.clear();
         barchat.fitScreen();
         barchat.clear();
@@ -618,104 +617,103 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         fecthDataStatistic.fecthData(new DataStatisticCallback() {
             @Override
             public void onSuccess(ArrayList<DataStatisticObject> lists) {
-                if (k == 0) {
-                    for (int i = 0; i < lists.size(); i++) {
-                        if (fmDate.getCurrentWeek(Long.parseLong(lists.get(i).getDate())) == filter) {
+                if (k == 0){
+                    for (int i = 0; i< lists.size();i++){
+                        if (fmDate.getCurrentWeek(Long.parseLong(lists.get(i).getDate()))==filter){
                             String dayofweek = fmDate.convertToDayOfWeek(Long.parseLong(lists.get(i).getDate()));
-                            mListData.add(new DataStatisticObject(dayofweek, lists.get(i).getAmount()));
+                            mListData.add(new DataStatisticObject(dayofweek,lists.get(i).getAmount()));
                         }
                     }
-                    if (type == 1) {
+                    if (type==1){
                         BindDataToBarChart mbind = new BindDataToBarChart();
-                        mbind.totalAmountDayWeek(mListData, listWeekAmount);
+                        mbind.totalAmountDayWeek(mListData,listWeekAmount);
                         fecthDataForBarChartWeek();
-                    } else if (type == 2) {
+                    }else if (type==2){
                         BindDataToLineChart lbind = new BindDataToLineChart();
-                        lbind.totalCountDayWeek(mListData, listWeekCount);
+                        lbind.totalCountDayWeek(mListData,listWeekCount);
                         fecthDataForLineChartWeek();
 
-                    } else {
+                    }else{
                         BindDataToBarChart mbind = new BindDataToBarChart();
-                        mbind.totalAmountDayWeek(mListData, listWeekAmount);
+                        mbind.totalAmountDayWeek(mListData,listWeekAmount);
                         fecthDataForBarChartWeek();
 
                         BindDataToLineChart lbind = new BindDataToLineChart();
-                        lbind.totalCountDayWeek(mListData, listWeekCount);
+                        lbind.totalCountDayWeek(mListData,listWeekCount);
                         fecthDataForLineChartWeek();
                     }
-                } else if (k == 1) {
-                    for (int i = 0; i < lists.size(); i++) {
-                        if (fmDate.getCurrentMonth(Long.parseLong(lists.get(i).getDate())) == filter) {
+                }else if(k==1){
+                    for (int i = 0; i< lists.size();i++){
+                        if (fmDate.getCurrentMonth(Long.parseLong(lists.get(i).getDate()))==filter){
                             String monthofyear = fmDate.convertDayMonth(Long.parseLong(lists.get(i).getDate()));
-                            mListData.add(new DataStatisticObject(monthofyear, lists.get(i).getAmount()));
+                            mListData.add(new DataStatisticObject(monthofyear,lists.get(i).getAmount()));
                         }
                     }
 
-                    if (type == 1) {
+                    if (type==1){
                         BindDataToBarChart mbind = new BindDataToBarChart();
-                        mbind.totalMonth(mListData, listMonthAmount);
+                        mbind.totalMonth(mListData,listMonthAmount);
                         fecthDataForBarChartMonth();
-                    } else if (type == 2) {
+                    }else if (type==2){
                         BindDataToLineChart lbind = new BindDataToLineChart();
-                        lbind.totalCountDayMonth(mListData, listMonthCount);
+                        lbind.totalCountDayMonth(mListData,listMonthCount);
                         fecthDataForLineChartMonth();
 
-                    } else {
+                    }else{
                         BindDataToBarChart mbind = new BindDataToBarChart();
-                        mbind.totalMonth(mListData, listMonthAmount);
+                        mbind.totalMonth(mListData,listMonthAmount);
                         fecthDataForBarChartMonth();
 
                         BindDataToLineChart lbind = new BindDataToLineChart();
-                        lbind.totalCountDayMonth(mListData, listMonthCount);
+                        lbind.totalCountDayMonth(mListData,listMonthCount);
                         fecthDataForLineChartMonth();
                     }
 
-                } else if (k == 2) {
-                    for (int i = 0; i < lists.size(); i++) {
-                        if (fmDate.getCurrentYear(Long.parseLong(lists.get(i).getDate())) == filter) {
+                }else if(k==2){
+                    for (int i = 0; i< lists.size();i++){
+                        if (fmDate.getCurrentYear(Long.parseLong(lists.get(i).getDate()))==filter){
                             String dayofmonth = fmDate.convertToMonth(Long.parseLong(lists.get(i).getDate()));
-                            mListData.add(new DataStatisticObject(dayofmonth, lists.get(i).getAmount()));
+                            mListData.add(new DataStatisticObject(dayofmonth,lists.get(i).getAmount()));
                         }
                     }
 
-                    if (type == 1) {
+                    if (type==1){
                         BindDataToBarChart mbind = new BindDataToBarChart();
-                        mbind.totalAmountMonthYear(mListData, listYearAmount);
+                        mbind.totalAmountMonthYear(mListData,listYearAmount);
                         fecthDataForBarChartYear();
-                    } else if (type == 2) {
+                    }else if (type==2){
                         BindDataToLineChart lbind = new BindDataToLineChart();
-                        lbind.totalCountMonthYear(mListData, listYearCount);
+                        lbind.totalCountMonthYear(mListData,listYearCount);
                         fecthDataForLineChartYear();
 
-                    } else {
+                    }else{
                         BindDataToBarChart mbind = new BindDataToBarChart();
-                        mbind.totalAmountMonthYear(mListData, listYearAmount);
+                        mbind.totalAmountMonthYear(mListData,listYearAmount);
                         fecthDataForBarChartYear();
 
                         BindDataToLineChart lbind = new BindDataToLineChart();
-                        lbind.totalCountMonthYear(mListData, listYearCount);
+                        lbind.totalCountMonthYear(mListData,listYearCount);
                         fecthDataForLineChartYear();
                     }
                 }
                 renderDataBarChart();
                 renderDataLineChart();
-                // Log.i(TAG, "mListWeek: "+mListWeek.size() +"/"+ mListWeek.get(0).getDate()+"/"+fmDate.getCurrentMonth(Long.parseLong(lists.get(0).getDate())));
-                // showw.setText(mListData.size() +"/"+ mListData.get(0).getDate());
+               // Log.i(TAG, "mListWeek: "+mListWeek.size() +"/"+ mListWeek.get(0).getDate()+"/"+fmDate.getCurrentMonth(Long.parseLong(lists.get(0).getDate())));
+               // showw.setText(mListData.size() +"/"+ mListData.get(0).getDate());
             }
 
             @Override
             public void onError(String message) {
                 Toast.makeText(getContext(), "Loi rooi", Toast.LENGTH_LONG).show();
             }
-        }, uId);
+        },uId);
     }
-
-    public void getUid() {
+    public void getUid(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         uId = user.getUid();
     }
 
-    public void openFilter(View v) {
+    public void openFilter(View v){
         PopupMenu popupMenu = new PopupMenu(getContext(), v);
         popupMenu.setOnMenuItemClickListener(this);
         popupMenu.inflate(R.menu.filter_menu);
@@ -731,63 +729,62 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         }
 
 
+
         @Override
         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
             return null;
         }
     }
-
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
+        switch (item.getItemId()){
             case R.id.item_week:
-                k = 0;
-                if (checkChart == 1) {
+                k=0;
+                if (checkChart==1){
                     filter_barChart.setText("Tuần");
                     currentStatistic.setText("Tuần này");
-                    loadData(fmDate.getCurrentWeek(System.currentTimeMillis() / 1000), 1);
+                    loadData(fmDate.getCurrentWeek(System.currentTimeMillis()/1000),1);
                     barchat.fitScreen();
-                } else {
+                }else{
                     filter_lineChart.setText("Tuần");
                     currentStatisticLine.setText("Tuần này");
-                    loadData(fmDate.getCurrentWeek(System.currentTimeMillis() / 1000), 2);
+                    loadData(fmDate.getCurrentWeek(System.currentTimeMillis()/1000),2);
                     barchat.fitScreen();
                 }
                 return true;
             case R.id.item_month:
-                k = 1;
-                if (checkChart == 1) {
+                k=1;
+                if (checkChart==1){
                     filter_barChart.setText("Tháng");
                     currentStatistic.setText("Tháng này");
-                    loadData(fmDate.getCurrentMonth(System.currentTimeMillis() / 1000), 1);
+                    loadData(fmDate.getCurrentMonth(System.currentTimeMillis()/1000),1);
                     barchat.fitScreen();
 //                    barchat.setVisibleXRangeMaximum(7);
-                } else {
+                }else{
                     filter_lineChart.setText("Tháng");
                     currentStatisticLine.setText("Tháng này");
-                    loadData(fmDate.getCurrentMonth(System.currentTimeMillis() / 1000), 2);
+                    loadData(fmDate.getCurrentMonth(System.currentTimeMillis()/1000),2);
                     barchat.fitScreen();
 //                    barchat.setVisibleXRangeMaximum(7);
                 }
                 return true;
             case R.id.item_year:
-                k = 2;
-                if (checkChart == 1) {
+                k=2;
+                if(checkChart==1){
                     filter_barChart.setText("Năm");
                     currentStatistic.setText("Năm này");
-                    loadData(fmDate.getCurrentYear(System.currentTimeMillis() / 1000), 1);
+                    loadData(fmDate.getCurrentYear(System.currentTimeMillis()/1000),1);
                     barchat.fitScreen();
 //                    barchat.setVisibleXRangeMaximum(7);
-                } else {
+                }else{
                     filter_lineChart.setText("Năm");
                     currentStatisticLine.setText("Năm này");
-                    loadData(fmDate.getCurrentYear(System.currentTimeMillis() / 1000), 2);
+                    loadData(fmDate.getCurrentYear(System.currentTimeMillis()/1000),2);
                     barchat.fitScreen();
 //                    barchat.setVisibleXRangeMaximum(7);
                 }
                 return true;
-            default:
-                return false;
+            default: return false;
         }
     }
 }

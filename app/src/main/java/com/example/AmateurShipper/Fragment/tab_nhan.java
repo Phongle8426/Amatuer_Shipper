@@ -57,6 +57,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     private static final String ARG_PARAM2 = "param2";
     public static final String idpostvalue = "123";
     public static final String idtabvalue = "tab";
+    public static final String idtshopvalue = "123";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -72,7 +73,8 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     String iDUser;
     FragmentManager fm;
     FragmentManager fragmentManager;
-    final String[] reasonList = {"reason1","reason2"};
+    final String[] reasonList = {"Không liên lạc được với người gửi","Bấm nhầm nhận bài đăng",
+                                "Không thể thực hiện đúng giờ","Người gửi yêu cầu hủy","Lý do khác"};
     final Handler handler = new Handler(Looper.getMainLooper());
     private static int SPLASH_SCREEN = 500;
 
@@ -186,6 +188,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         mDatabase.child("received_order_status").child(iDUser).child(idpost).setValue(null);
         mDatabase.child("OrderStatus").child(idshop).child(idpost).child("status").setValue("3");
         mDatabase.child("OrderStatus").child(idshop).child(idpost).child("reason").setValue(reason);
+        mDatabase.child("OrderStatus").child(idshop).child(idpost).child("read").setValue(0);
         mDatabase.child("Notification").child(idshop).push().setValue(noti);
         mDatabase.child("Transaction").child(idpost).child("status").setValue("3");
     }
@@ -250,6 +253,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     @Override
     public void onItemClick(int position) {
         String idPost = mData.get(position).getId_post();
+        String idShop = mData.get(position).getId_shop();
         //Log.i(TAG, "onItemClick: "+idPost);
         //NewsRecyclerview.setVisibility(View.INVISIBLE);
         framChat.setVisibility(View.VISIBLE);
@@ -258,6 +262,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
 
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         bundle.putString(idpostvalue,idPost); // use as per your need
+        bundle.putString(idtshopvalue,idShop); // use as per your need
         bundle.putString(idtabvalue,"tabnhan");
         detailFragment.setArguments(bundle);
         fragmentTransaction.addToBackStack(null);

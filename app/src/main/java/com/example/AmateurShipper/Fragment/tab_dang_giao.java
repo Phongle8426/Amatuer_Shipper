@@ -139,6 +139,8 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
         }
         getListOrder();
         loadshimer();
+        for (int i = 0; i< mListData.size();i++)
+            Log.i(TAG, "huhhhu: "+ mListData.get(i).getTen_nguoi_gui());
         return view;
     }
 
