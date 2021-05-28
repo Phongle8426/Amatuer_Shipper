@@ -172,7 +172,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                     String role = document.get("role").toString();
                                     if (role.equals("1")) {
                                         loadData();
-                                        level =Integer.parseInt(document.get("level").toString());
+                                        level =Integer.parseInt(document.get("level").toString())+2;
                                         if (countPost < level) {
                                             String ten_nguoi_gui = postList.get(getAdapterPosition()).ten_nguoi_gui;
                                             String sdt_nguoi_gui = postList.get(getAdapterPosition()).getSdt_nguoi_gui();

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/report_frame"
     android:background="@color/white"
-    tools:context=".ReportFragment">
+    tools:context=".Fragment.ReportFragment">
 
     <ScrollView
         android:id="@+id/layout_manage_account"

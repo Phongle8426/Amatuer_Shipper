@@ -1,4 +1,4 @@
-package com.example.AmateurShipper;
+package com.example.AmateurShipper.Fragment;
 
 import android.os.Bundle;
 
@@ -11,11 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.AmateurShipper.Model.ReportObject;
+import com.example.AmateurShipper.R;
 import com.example.AmateurShipper.Util.formatTimeStampToDate;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,9 +27,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import static com.example.AmateurShipper.tab_nhan.idpostvalue;
-import static com.example.AmateurShipper.tab_nhan.idtabvalue;
-import static com.example.AmateurShipper.tab_nhan.idtshopvalue;
+import static com.example.AmateurShipper.Fragment.tab_nhan.idpostvalue;
+import static com.example.AmateurShipper.Fragment.tab_nhan.idtabvalue;
+import static com.example.AmateurShipper.Fragment.tab_nhan.idtshopvalue;
 
 /**
  * A simple {@link Fragment} subclass.

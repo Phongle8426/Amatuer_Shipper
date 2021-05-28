@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.AmateurShipper.Model.ProfileObject;
 import com.example.AmateurShipper.R;
@@ -28,10 +29,11 @@ public class RegisterSuccessful extends AppCompatActivity {
         String iName = intent.getStringExtra(iNamevalue);
         String iPhone = intent.getStringExtra(iPhonevalue);
         String iEmail = intent.getStringExtra(iEmalvalue);
-
-        ProfileObject profileObject = new ProfileObject(iName,iPhone,null,iEmail,null,null,
-                "0",null,"aa","0",null,"1");
-        mFireStore.collection("ProfileShipper").document( mAuth.getCurrentUser().getUid())
+        String idUser = mAuth.getCurrentUser().getUid();
+        Log.i("TAG", "onCreate: " + iName + "/" + iPhone + "/" + iEmail);
+        ProfileObject profileObject = new ProfileObject(iName,iPhone,"",iEmail,"","",
+                "0","",idUser,"0","","1");
+        mFireStore.collection("ProfileShipper").document(idUser)
                 .set(profileObject).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
