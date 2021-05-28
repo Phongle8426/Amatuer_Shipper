@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/setting_frame"
-    tools:context=".SettingFragment">
+    tools:context=".Fragment.SettingFragment">
 
     <ScrollView
         android:id="@+id/layout_setting"

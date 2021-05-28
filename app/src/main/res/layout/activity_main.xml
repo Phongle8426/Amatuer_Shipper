@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".Activity.MainActivity">
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/chipNavigation"
         android:layout_width="match_parent"

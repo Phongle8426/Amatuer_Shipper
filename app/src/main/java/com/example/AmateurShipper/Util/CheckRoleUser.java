@@ -9,8 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.AmateurShipper.LoginActivity;
-import com.example.AmateurShipper.MainActivity;
+import com.example.AmateurShipper.Activity.MainActivity;
 import com.example.AmateurShipper.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

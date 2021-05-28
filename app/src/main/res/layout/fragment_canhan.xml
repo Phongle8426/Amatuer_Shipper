@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".CartFragment">
+    tools:context=".Fragment.CartFragment">
 
     <com.google.android.material.tabs.TabLayout
         app:tabBackground="@color/background1"
@@ -34,11 +34,11 @@
             android:text="Thống Kê" />
     </com.google.android.material.tabs.TabLayout>
 
-    <com.example.AmateurShipper.CustomViewPager
+    <com.example.AmateurShipper.Activity.CustomViewPager
         android:id="@+id/viewpage_profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </com.example.AmateurShipper.CustomViewPager>
+    </com.example.AmateurShipper.Activity.CustomViewPager>
 
 </LinearLayout>

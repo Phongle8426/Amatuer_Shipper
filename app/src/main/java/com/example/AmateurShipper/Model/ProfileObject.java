@@ -1,7 +1,7 @@
 package com.example.AmateurShipper.Model;
 
 public class ProfileObject {
-    String name,phone,address,email,avatar,cmnd,rate_star;
+    String name,phone,address,email,avatar,cmnd,rate_star, role;
 
     public ProfileObject() {
     }

@@ -194,7 +194,6 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback{
 
         }
     }
-
     private Bitmap drawableToBitMap(Drawable d){
         if(d instanceof BitmapDrawable)
             return ((BitmapDrawable)d).getBitmap();
@@ -208,19 +207,14 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback{
     public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder){
         return  swipeThreshold;
     }
-
-
     @Override
     public float getSwipeEscapeVelocity(float defaultValue) {
         return 0.1f*defaultValue;
     }
-
     @Override
     public float getSwipeVelocityThreshold(float defaultValue) {
         return 5.0f*defaultValue;
     }
-
-
     @Override
     public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
         int pos = viewHolder.getAdapterPosition();
@@ -246,7 +240,6 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback{
         }
         super.onChildDraw(c, recyclerView, viewHolder, translationX, dY, actionState, isCurrentlyActive);
     }
-
     private void drawButton(Canvas c, View itemView, List<MyButton> buff, int pos, float translationX) {
         float right = itemView.getRight();
         float dButtonWidwth = -1*translationX/buff.size();
@@ -256,7 +249,5 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback{
             right = left;
         }
     }
-
     public abstract void instaniatMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buff);
-    
 }

@@ -4,8 +4,7 @@ import android.location.Location;
 
 import androidx.annotation.NonNull;
 
-import com.example.AmateurShipper.MainActivity;
-import com.example.AmateurShipper.MapFragment;
+import com.example.AmateurShipper.Fragment.MapFragment;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineResult;
 

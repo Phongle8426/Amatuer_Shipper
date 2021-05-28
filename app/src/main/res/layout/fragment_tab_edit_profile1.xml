@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/edit_profile_frame"
-    tools:context=".tab_edit_profile1">
+    tools:context=".Fragment.tab_edit_profile1">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout

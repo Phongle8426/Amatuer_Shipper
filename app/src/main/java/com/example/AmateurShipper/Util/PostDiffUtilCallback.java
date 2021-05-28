@@ -1,6 +1,6 @@
 package com.example.AmateurShipper.Util;
 
-import com.example.AmateurShipper.PostObject;
+import com.example.AmateurShipper.Model.PostObject;
 
 import java.util.List;
 

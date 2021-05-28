@@ -7,7 +7,7 @@
 
     android:overScrollMode="never"
     android:scrollbars="none"
-    tools:context=".VerifyOTP">
+    tools:context=".Activity.VerifyOTP">
 
 
     <LinearLayout

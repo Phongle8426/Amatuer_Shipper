@@ -2,10 +2,11 @@ package com.example.AmateurShipper.Dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -30,11 +31,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
-import static com.example.AmateurShipper.PostAdapter.countPostReceived;
-import static com.example.AmateurShipper.tab_dang_giao.idpostToSecurity;
-import static com.example.AmateurShipper.tab_dang_giao.idshopToSecurity;
-import static com.example.AmateurShipper.tab_dang_giao.positionToSecurity;
-import static com.example.AmateurShipper.tab_dang_giao.securitycodeToSecurity;
+import static com.example.AmateurShipper.Adapter.PostAdapter.countPostReceived;
+import static com.example.AmateurShipper.Fragment.tab_dang_giao.estimatedTimeToSecurity;
+import static com.example.AmateurShipper.Fragment.tab_dang_giao.idpostToSecurity;
+import static com.example.AmateurShipper.Fragment.tab_dang_giao.idshopToSecurity;
+import static com.example.AmateurShipper.Fragment.tab_dang_giao.positionToSecurity;
+import static com.example.AmateurShipper.Fragment.tab_dang_giao.securitycodeToSecurity;
 
 public class SecurityCodeDialog extends DialogFragment {
 
@@ -44,7 +46,7 @@ public class SecurityCodeDialog extends DialogFragment {
     SharedPreferences sharedpreferencesCountPost;
     EditText code1,code2,code3,code4;
     Button verify;
-    public String iDUser,idpost,idshop,code;
+    public String iDUser,idpost,idshop,code, estimateTime;
     public int position,countPost;
     DatabaseReference mDatabase;
     public OnInputSelected mOnInputSelected;
@@ -70,6 +72,7 @@ public class SecurityCodeDialog extends DialogFragment {
          idshop = mArgs.getString(idshopToSecurity);
          code = mArgs.getString(securitycodeToSecurity);
          position = mArgs.getInt(positionToSecurity);
+         estimateTime = mArgs.getString(estimatedTimeToSecurity);
         getUid();
         loadData();
         setupOTPInputs();
@@ -108,15 +111,22 @@ public class SecurityCodeDialog extends DialogFragment {
                     saveData(String.valueOf(countPost-1));
                     mOnInputSelected.sendInput(position);
                     dismiss();
+                    cancelNotification(estimateTime);
                 }else{
                     Toast.makeText(getContext(), "Mã xác nhận không chính xác", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
         return builder.create();
     }
-
+    public void cancelNotification(String time){
+        Toast.makeText(getActivity(), "cancelSche" + time, Toast.LENGTH_SHORT).show();
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        //notificationManager.cancel(cancellSche);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationManager.deleteNotificationChannel(time);
+        }
+    }
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
