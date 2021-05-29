@@ -98,16 +98,17 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
     String uId;
     int k = 0;
     int checkChart = 0;
+    long current_timeStamp = System.currentTimeMillis() / 1000;
     ArrayList<DataStatisticObject> mListData = new ArrayList<>();
     ArrayList<DataStatisticObject> mListDataDay = new ArrayList<>();
     formatTimeStampToDate fmDate = new formatTimeStampToDate();
-    int currentWeek = fmDate.getCurrentWeek(System.currentTimeMillis() / 1000);
-    int currentMonth = fmDate.getCurrentMonth(System.currentTimeMillis() / 1000);
-    int currenYear = fmDate.getCurrentYear(System.currentTimeMillis() / 1000);
+    int currentWeek = fmDate.getCurrentWeek(current_timeStamp);
+    int currentMonth = fmDate.getCurrentMonth(current_timeStamp);
+    int currenYear = fmDate.getCurrentYear(current_timeStamp);
 
-    int currentWeekLine = fmDate.getCurrentWeek(System.currentTimeMillis() / 1000);
-    int currentMonthLine = fmDate.getCurrentMonth(System.currentTimeMillis() / 1000);
-    int currenYearLine = fmDate.getCurrentYear(System.currentTimeMillis() / 1000);
+    int currentWeekLine = fmDate.getCurrentWeek(current_timeStamp);
+    int currentMonthLine = fmDate.getCurrentMonth(current_timeStamp);
+    int currenYearLine = fmDate.getCurrentYear(current_timeStamp);
 
 
     public tab_statis() {
@@ -167,6 +168,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         fecthDataStatistic = new fecthDataStatistic(getActivity());
         /* starts before 1 month from now */
         getUid();
+        loadDataDay(current_timeStamp);
         //Log.i(TAG, "onCreateView: "+ currenYear);
         filter_barChart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -357,7 +359,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         lineEntryList.clear();
         for (int i = 0; i < listWeekCount.size(); i++) {
             String day = String.valueOf(listWeekCount.get(i).getX());
-            Toast.makeText(getActivity(), "line entry list" + day, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "line entry list" + day, Toast.LENGTH_SHORT).show();
             if (day.equals("1.0")) day = "Mon";
             else if (day.equals("2.0")) day = "Tus";
             else if (day.equals("3.0")) day = "Web";
@@ -503,7 +505,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
 
     public void nextBar() {
         if (k == 0) {
-            int crtWeek = fmDate.getCurrentWeek(System.currentTimeMillis() / 1000);
+            int crtWeek = fmDate.getCurrentWeek(current_timeStamp);
             if (currentWeek < crtWeek) {
                 ++currentWeek;
                 if (currentWeek == crtWeek) {
@@ -512,7 +514,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                 loadData(currentWeek, 1);
             }
         } else if (k == 1) {
-            int crtMonth = fmDate.getCurrentMonth(System.currentTimeMillis() / 1000);
+            int crtMonth = fmDate.getCurrentMonth(current_timeStamp);
             if (currentMonth < crtMonth) {
                 ++currentMonth;
                 if (currentMonth == crtMonth) {
@@ -521,7 +523,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                 loadData(currentMonth, 1);
             }
         } else if (k == 2) {
-            int crtYear = fmDate.getCurrentYear(System.currentTimeMillis() / 1000);
+            int crtYear = fmDate.getCurrentYear(current_timeStamp);
             if (currenYear < crtYear) {
                 ++currenYear;
                 if (currenYear == crtYear) {
@@ -534,7 +536,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
 
     public void nextLine() {
         if (k == 0) {
-            int crtWeek = fmDate.getCurrentWeek(System.currentTimeMillis() / 1000);
+            int crtWeek = fmDate.getCurrentWeek(current_timeStamp);
             if (currentWeekLine < crtWeek) {
                 ++currentWeekLine;
                 if (currentWeekLine == crtWeek) {
@@ -543,7 +545,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                 loadData(currentWeekLine, 2);
             }
         } else if (k == 1) {
-            int crtMonth = fmDate.getCurrentMonth(System.currentTimeMillis() / 1000);
+            int crtMonth = fmDate.getCurrentMonth(current_timeStamp);
             if (currentMonthLine < crtMonth) {
                 ++currentMonthLine;
                 if (currentMonthLine == crtMonth) {
@@ -552,7 +554,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                 loadData(currentMonthLine, 2);
             }
         }else if (k==2){
-            int crtYear = fmDate.getCurrentYear(System.currentTimeMillis()/1000);
+            int crtYear = fmDate.getCurrentYear(current_timeStamp);
             if (currenYearLine < crtYear){
                 ++currenYearLine;
                 if (currenYearLine == crtYear){
@@ -743,12 +745,12 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                 if (checkChart==1){
                     filter_barChart.setText("Tuần");
                     currentStatistic.setText("Tuần này");
-                    loadData(fmDate.getCurrentWeek(System.currentTimeMillis()/1000),1);
+                    loadData(fmDate.getCurrentWeek(current_timeStamp),1);
                     barchat.fitScreen();
                 }else{
                     filter_lineChart.setText("Tuần");
                     currentStatisticLine.setText("Tuần này");
-                    loadData(fmDate.getCurrentWeek(System.currentTimeMillis()/1000),2);
+                    loadData(fmDate.getCurrentWeek(current_timeStamp),2);
                     barchat.fitScreen();
                 }
                 return true;
@@ -757,13 +759,13 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                 if (checkChart==1){
                     filter_barChart.setText("Tháng");
                     currentStatistic.setText("Tháng này");
-                    loadData(fmDate.getCurrentMonth(System.currentTimeMillis()/1000),1);
+                    loadData(fmDate.getCurrentMonth(current_timeStamp),1);
                     barchat.fitScreen();
 //                    barchat.setVisibleXRangeMaximum(7);
                 }else{
                     filter_lineChart.setText("Tháng");
                     currentStatisticLine.setText("Tháng này");
-                    loadData(fmDate.getCurrentMonth(System.currentTimeMillis()/1000),2);
+                    loadData(fmDate.getCurrentMonth(current_timeStamp),2);
                     barchat.fitScreen();
 //                    barchat.setVisibleXRangeMaximum(7);
                 }
@@ -773,13 +775,13 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                 if(checkChart==1){
                     filter_barChart.setText("Năm");
                     currentStatistic.setText("Năm này");
-                    loadData(fmDate.getCurrentYear(System.currentTimeMillis()/1000),1);
+                    loadData(fmDate.getCurrentYear(current_timeStamp),1);
                     barchat.fitScreen();
 //                    barchat.setVisibleXRangeMaximum(7);
                 }else{
                     filter_lineChart.setText("Năm");
                     currentStatisticLine.setText("Năm này");
-                    loadData(fmDate.getCurrentYear(System.currentTimeMillis()/1000),2);
+                    loadData(fmDate.getCurrentYear(current_timeStamp),2);
                     barchat.fitScreen();
 //                    barchat.setVisibleXRangeMaximum(7);
                 }

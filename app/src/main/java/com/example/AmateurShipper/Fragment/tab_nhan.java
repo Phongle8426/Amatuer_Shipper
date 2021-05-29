@@ -55,7 +55,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    public static final String idpostvalue = "123";
+    public static final String idpostvalue = "12345";
     public static final String idtabvalue = "tab";
     public static final String idtshopvalue = "123";
 
@@ -63,6 +63,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     private String mParam1;
     private String mParam2;
     RecyclerView NewsRecyclerview;
+    com.airbnb.lottie.LottieAnimationView empty;
     ShimmerFrameLayout layout_shimmer;
     FrameLayout framChat;
     MainActivity mainActivity;
@@ -118,6 +119,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         NewsRecyclerview = view.findViewById(R.id.rcv_tab_nhan);
         framChat =view.findViewById(R.id.frag_container_detail);
         layout_shimmer = view.findViewById(R.id.shimmer_status);
+        empty = view.findViewById(R.id.empty_view);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         fm = getActivity().getSupportFragmentManager();
         getUid();
@@ -125,7 +127,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         mainActivity.setCountOrder(0);
         mainActivity.disableNotification();
         getListStatusReceived();
-        loadshimer();
+        //loadshimer();
         FragmentManager fm = getActivity().getSupportFragmentManager();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setReverseLayout(true);
@@ -235,8 +237,12 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                     NewsRecyclerview.setAdapter(receivedOrderAdapter);
                     receivedOrderAdapter.notifyDataSetChanged();
                 }else{
-                    Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
+                    empty.setVisibility(View.VISIBLE);
                 }
+                layout_shimmer.stopShimmer();
+                layout_shimmer.hideShimmer();
+                layout_shimmer.setVisibility(View.GONE);
+                NewsRecyclerview.setVisibility(View.VISIBLE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

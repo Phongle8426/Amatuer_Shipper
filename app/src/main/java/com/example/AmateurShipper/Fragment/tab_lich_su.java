@@ -55,6 +55,7 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
     private String mParam2;
     RecyclerView TabLSuRecyclerview;
     ShimmerFrameLayout layout_shimmer;
+    com.airbnb.lottie.LottieAnimationView empty;
     DatabaseReference mDatabase;
     HistoryOrderAdapter historyOrderAdapter;
     FragmentManager fm;
@@ -101,6 +102,7 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
         TabLSuRecyclerview = view.findViewById(R.id.rcv_tab_lich_su);
         framChat =view.findViewById(R.id.frag_container_detail);
         layout_shimmer = view.findViewById(R.id.shimmer_status);
+        empty = view.findViewById(R.id.empty_view);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         getUid();
 
@@ -115,7 +117,7 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
             mListData.clear();
         }
         getListOrderHistory();
-        loadshimer();
+        //loadshimer();
         return view;
     }
 
@@ -134,11 +136,13 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
                     createNewAdapter();
                     TabLSuRecyclerview.setAdapter(historyOrderAdapter);
                     historyOrderAdapter.notifyDataSetChanged();
-
                 } else {
-                    Toast.makeText(getContext(), "Khong the tai", Toast.LENGTH_SHORT).show();
+                    empty.setVisibility(View.VISIBLE);
                 }
-
+                layout_shimmer.stopShimmer();
+                layout_shimmer.hideShimmer();
+                layout_shimmer.setVisibility(View.GONE);
+                TabLSuRecyclerview.setVisibility(View.VISIBLE);
                 mDatabase.child("received_order_status").child(iDUser).removeEventListener(this);
             }
 
@@ -158,8 +162,6 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
     public void onItemClick(int position) {
         String idPost = mListData.get(position).getId_post();
         Log.i(TAG, "onItemClick: "+idPost);
-//        Log.i(TAG, "onItemClick: "+idPost);
-//        //TabDGiaoRecyclerview.setVisibility(View.INVISIBLE);
          framChat.setVisibility(View.VISIBLE);
         DetailOrderFragment detailFragment = new DetailOrderFragment();
         Bundle bundle = new Bundle();

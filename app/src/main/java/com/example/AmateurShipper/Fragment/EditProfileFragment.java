@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -170,9 +171,12 @@ public class EditProfileFragment extends Fragment {
                         mlevel =3;
                         propress=sumPoint+"/150";
                     }
+                    level.setText(mlevel+"");
+                    propressLevel.setText(propress+"");
+                }else{
+                     level.setText("0");
+                     propressLevel.setText("0/50");
                 }
-                level.setText(mlevel+"");
-                propressLevel.setText(propress+"");
             }
 
             @Override

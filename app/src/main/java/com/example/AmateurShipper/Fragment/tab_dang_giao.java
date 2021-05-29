@@ -68,6 +68,7 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
     private String mParam2;
     RecyclerView TabDGiaoRecyclerview;
     ShimmerFrameLayout layout_shimmer;
+    com.airbnb.lottie.LottieAnimationView empty;
     ShippingOrderAdapter shippingOrderAdapter;
     DatabaseReference mDatabase;
     FragmentManager fm;
@@ -113,6 +114,7 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
         TabDGiaoRecyclerview = view.findViewById(R.id.rcv_tab_dang_giao);
         framChat =view.findViewById(R.id.frag_container_detail);
         layout_shimmer = view.findViewById(R.id.shimmer_status);
+        empty = view.findViewById(R.id.empty_view);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         getUid();
         fm = getActivity().getSupportFragmentManager();
@@ -138,7 +140,7 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
             mListData.clear();
         }
         getListOrder();
-        loadshimer();
+       // loadshimer();
         for (int i = 0; i< mListData.size();i++)
             Log.i(TAG, "huhhhu: "+ mListData.get(i).getTen_nguoi_gui());
         return view;
@@ -199,9 +201,13 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
                     TabDGiaoRecyclerview.setAdapter(shippingOrderAdapter);
                     shippingOrderAdapter.notifyDataSetChanged();
                 }else{
-                    Toast.makeText(getContext(), "Khong the tai", Toast.LENGTH_SHORT).show();
+                    empty.setVisibility(View.VISIBLE);
                 }
                 mDatabase.child("received_order_status").child(iDUser).removeEventListener(this);
+                layout_shimmer.stopShimmer();
+                layout_shimmer.hideShimmer();
+                layout_shimmer.setVisibility(View.GONE);
+                TabDGiaoRecyclerview.setVisibility(View.VISIBLE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

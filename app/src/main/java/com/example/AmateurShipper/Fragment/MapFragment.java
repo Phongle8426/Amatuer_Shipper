@@ -260,7 +260,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Permiss
     }
 
     public void getListStatusReceived() {
-        mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("1").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("received_order_status").child(iDUser).startAt("0").endAt("1").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -273,6 +273,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Permiss
                     createNewAdapter();
                     recyclerview_map.setAdapter(mapAdapter);
                     mapAdapter.notifyDataSetChanged();
+                    mDatabase.child("received_order_status").child(iDUser).removeEventListener(this);
                 } else {
                     Toast.makeText(getContext(), "khong the load", Toast.LENGTH_LONG).show();
                 }
@@ -426,7 +427,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Permiss
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 enableLocationComponent(style);
-                mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("1").addValueEventListener(new ValueEventListener() {
+                mDatabase.child("received_order_status").child(iDUser).orderByChild("status").startAt("0").endAt("1")
+                        .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
@@ -493,6 +495,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Permiss
                             }
                         } else
                             Log.i(TAG, "onDataChange: XUI");
+
+                        mDatabase.child("received_order_status").child(iDUser).removeEventListener(this);
                     }
 
                     @Override
