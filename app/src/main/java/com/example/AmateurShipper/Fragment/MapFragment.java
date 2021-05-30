@@ -260,7 +260,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Permiss
     }
 
     public void getListStatusReceived() {
-        mDatabase.child("received_order_status").child(iDUser).startAt("0").endAt("1").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("received_order_status").child(iDUser).orderByChild("status").startAt("0").endAt("1").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {

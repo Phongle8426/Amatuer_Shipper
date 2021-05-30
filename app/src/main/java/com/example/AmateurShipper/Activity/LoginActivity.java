@@ -167,8 +167,13 @@ public class LoginActivity extends AppCompatActivity {
         databaseReference.child("Account_Shipper").child(Phone).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String email1 = snapshot.getValue(String.class);
-                login(email1,Password);
+                if(snapshot.exists()){
+                    String email1 = snapshot.getValue(String.class);
+                    login(email1,Password);
+                }else {
+                    Toast.makeText(LoginActivity.this, "Số điện thoai không tồn tại", Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             @Override
@@ -176,23 +181,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-//            mAuth.signInWithEmailAndPassword(Email, Password)
-//                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<AuthResult> task) {
-//                            if (task.isSuccessful()) {
-//                                if (saveAcount.isChecked())
-//                                    saveData(Email,Password);
-//                                else
-//                                    clearData();
-//                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                                startActivity(intent);
-//                                overridePendingTransition(R.anim.slide_in_right,R.anim.slide_mid_left);
-//                            }else {
-//                                Toast.makeText(LoginActivity.this, "Datasnapshot is not exist!!!!", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
     }
 
 
@@ -209,7 +197,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Intent intent = new Intent(getApplicationContext(), CheckRoleUser.class);
                                 startActivity(intent);
                             }else {
-                                Toast.makeText(LoginActivity.this, "Tài khoản hoặc mật khẩu không tồn tại1", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Tài khoản hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -217,7 +205,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean validatePhone(){
         if(editTextPhonenumber.getText().toString().isEmpty()){
-            editTextPhonenumber.setError("Field cannot be empty");
+            editTextPhonenumber.setError("Không để trống");
             return false;
         }
         else{
@@ -228,7 +216,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean validatePassword(){
         if(editTextPassword.getText().toString().isEmpty()){
-            editTextPassword.setError("Field cannot be empty");
+            editTextPassword.setError("Không để trống");
             return false;
         }
         else{

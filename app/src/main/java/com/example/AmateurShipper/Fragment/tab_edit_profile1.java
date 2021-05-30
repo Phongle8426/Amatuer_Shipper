@@ -214,23 +214,25 @@ public class tab_edit_profile1 extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         document.getData();
-                        name.setText(document.get("fullname").toString());
-                        address.setText(document.get("address").toString());
-                        birthday.setText(document.get("birthday").toString());
-                        sex.setText(document.get("sexual").toString());
-                        if(!document.get("cmnd").toString().equals("")){
-                            Glide.with(getContext()).load(document.get("CMND").toString()).into((de.hdodenhof.circleimageview.CircleImageView )cmnd);
-                        }
-                        if(!document.get("avatar").toString().equals(null)){
-                            Glide.with(getContext()).load(document.get("avatar").toString()).into((de.hdodenhof.circleimageview.CircleImageView )avatar);
-                        }
-
                         fullname1 = document.get("fullname").toString();
                         address1 = document.get("address").toString();
                         birthday1 = document.get("birthday").toString();
                         sexual1 = document.get("sexual").toString();
                         idcard1 = document.get("cmnd").toString();
                         avatar1 = document.get("avatar").toString();
+                        name.setText(document.get("fullname").toString());
+                        if (!address1.equals("")) address.setText(address1);
+                        else address.setText(null);
+                        if (!birthday1.equals("")) birthday.setText(birthday1);
+                        else birthday.setText(null);
+                        if (!sexual1.equals("")) sex.setText(sexual1);
+                        else sex.setText(null);
+                        if(!document.get("cmnd").toString().equals("")){
+                            Glide.with(getContext()).load(document.get("CMND").toString()).into((de.hdodenhof.circleimageview.CircleImageView )cmnd);
+                        }
+                        if(!document.get("avatar").toString().equals(null)){
+                            Glide.with(getContext()).load(document.get("avatar").toString()).into((de.hdodenhof.circleimageview.CircleImageView )avatar);
+                        }
 
                         editProfile.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -259,10 +261,10 @@ public class tab_edit_profile1 extends Fragment {
 
     public void updateProfile(String fullname2, String address2, String birthday2, String sexual2, String idcard2, String avatar2){
 
-        if (!name.getText().toString().equals(null))
-                fullname2 = name.getText().toString();
-        if (!address.getText().toString().equals(null))
-                address2 = address.getText().toString();
+        if (!name.getText().toString().equals(""))
+                fullname2 = name.getText().toString().trim();
+        if (!address.getText().toString().equals(""))
+                address2 = address.getText().toString().trim();
         birthday2 = birthday.getText().toString();
         sexual2 = sex.getText().toString();
 

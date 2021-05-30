@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ import java.util.List;
 import Helper.MyButtonClickListner;
 import Helper.MySwipeHelper;
 
+import static com.mapbox.services.android.navigation.ui.v5.feedback.FeedbackBottomSheet.TAG;
 
 
 /**
@@ -134,39 +136,43 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         NewsRecyclerview.setHasFixedSize(true);
         mLayoutManager.setStackFromEnd(true);
         NewsRecyclerview.setLayoutManager(mLayoutManager);
-        MySwipeHelper mySwipeHelper = new MySwipeHelper(getActivity(), NewsRecyclerview , 200) {
-            @Override
-            public void instaniatMyButton(final RecyclerView.ViewHolder viewHolder, List<MyButton> buff) {
-                buff.add(new MyButton("Hủy", 30, Color.parseColor("#DC143C"), new MyButtonClickListner(){
-                    @Override
-                    public void onClick(final int pos) {
-                        showReasonDelete(pos,viewHolder);
-                    }
-                }, getContext()));
-                buff.add(new MyButton("Nhận hàng",30, Color.parseColor("#FF4BB54F"), new MyButtonClickListner(){
-                    @Override
-                    public void onClick(int pos) {
-                        pos = viewHolder.getAdapterPosition();
-                        String idshop = mData.get(pos).id_shop;
-                        String idpost = mData.get(pos).id_post;
-                        PostObject post = mData.get(pos);
-                        mData.remove(pos);
-                        receivedOrderAdapter.notifyItemChanged(pos);
-                        Long time_get_order = System.currentTimeMillis()/1000;
-                        String time_stamp = time_get_order.toString();
-                        mDatabase.child("OrderStatus").child(idshop).child(idpost).child("picked_time").setValue(time_stamp);
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mDatabase.child("Transaction").child(idpost).child("picked_time").setValue(time_stamp);
-                                handler.removeCallbacks(this);
-                            }
-                        }, SPLASH_SCREEN);
-                        mDatabase.child("received_order_status").child(iDUser).child(idpost).child("status").setValue("1");
-                    }
-                }, getContext()));
-            }
-        };
+        try {
+            MySwipeHelper mySwipeHelper = new MySwipeHelper(getActivity(), NewsRecyclerview , 200) {
+                @Override
+                public void instaniatMyButton(final RecyclerView.ViewHolder viewHolder, List<MyButton> buff) {
+                    buff.add(new MyButton("Hủy", 30, Color.parseColor("#DC143C"), new MyButtonClickListner(){
+                        @Override
+                        public void onClick(final int pos) {
+                            showReasonDelete(pos,viewHolder);
+                        }
+                    }, getContext()));
+                    buff.add(new MyButton("Nhận hàng",30, Color.parseColor("#FF4BB54F"), new MyButtonClickListner(){
+                        @Override
+                        public void onClick(int pos) {
+                            pos = viewHolder.getAdapterPosition();
+                            String idshop = mData.get(pos).id_shop;
+                            String idpost = mData.get(pos).id_post;
+                            PostObject post = mData.get(pos);
+                            mData.remove(pos);
+                            receivedOrderAdapter.notifyItemChanged(pos);
+                            Long time_get_order = System.currentTimeMillis()/1000;
+                            String time_stamp = time_get_order.toString();
+                            mDatabase.child("OrderStatus").child(idshop).child(idpost).child("picked_time").setValue(time_stamp);
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mDatabase.child("Transaction").child(idpost).child("picked_time").setValue(time_stamp);
+                                    handler.removeCallbacks(this);
+                                }
+                            }, SPLASH_SCREEN);
+                            mDatabase.child("received_order_status").child(iDUser).child(idpost).child("status").setValue("1");
+                        }
+                    }, getContext()));
+                }
+            };
+        }catch (Exception ex){
+            Log.i(TAG, "onCreateView: "+ ex);
+        }
         if(mData!=null){
             mData.clear();
         }

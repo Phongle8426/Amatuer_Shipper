@@ -24,6 +24,7 @@ import com.example.AmateurShipper.Activity.MainActivity;
 import com.example.AmateurShipper.Model.NotificationWebObject;
 import com.example.AmateurShipper.Model.PostObject;
 import com.example.AmateurShipper.R;
+import com.example.AmateurShipper.Util.FormatName;
 import com.example.AmateurShipper.Util.NotificationPublisher;
 import com.example.AmateurShipper.Util.PostDiffUtilCallback;
 import com.example.AmateurShipper.Util.formatTimeStampToDate;
@@ -108,7 +109,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
         ViewAdapterClass viewAdapterClass = (ViewAdapterClass) holder;
         PostObject postObject = postList.get(position);
         get_position = position;
-        viewAdapterClass.name_poster.setText(postObject.getTen_nguoi_gui());
+        String name = postObject.getTen_nguoi_gui();
+        FormatName fmn = new FormatName();
+        viewAdapterClass.name_poster.setText(fmn.formatName(name));
         formatTimeStampToDate fm = new formatTimeStampToDate();
         viewAdapterClass.time.setText(fm.convertToDay(Long.parseLong(postObject.getThoi_gian())));
         viewAdapterClass.start_post.setText(formatAddress(postObject.getNoi_nhan()));
@@ -117,10 +120,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
         viewAdapterClass.fee.setText(String.valueOf(postObject.getPhi_giao()));
         viewAdapterClass.payment.setText(String.valueOf(postObject.getPhi_ung()));
         viewAdapterClass.note.setText(postObject.getGhi_chu());
-        // viewAdapterClass.image_poster.setImageResource(postObject.imgage_poster);
         Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_in_right);
         holder.itemView.startAnimation(animation);
-        //Toast.makeText(mContext, "position" + get_position, Toast.LENGTH_SHORT).show();
     }
     @Override
     public int getItemCount() {
