@@ -202,6 +202,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     }
     public void showReasonDelete(int pos,RecyclerView.ViewHolder viewHolder){
         final String[] reason = new String[1];
+        reason[0]=reasonList[0];
             final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(R.string.titleReasonDelete);
             builder.setSingleChoiceItems(reasonList,0, new DialogInterface.OnClickListener() {
