@@ -26,7 +26,8 @@
                     style="@style/viewParent.headerText.NoMode"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:text="Here’s\nyour first\nstep with \nus! "
+
+                    android:text="Đây là \nbước đầu tiên \ncủa bạn với\nchúng tôi!"
                     android:textColor="@color/cTextSecondary" />
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/animation_view"
