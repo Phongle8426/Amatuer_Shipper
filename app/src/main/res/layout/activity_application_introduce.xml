@@ -41,8 +41,9 @@
             android:layout_below="@+id/image_owl"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/archivo_narrow"
-            android:text="Delivering happiness to you."
+            android:text="Mang lại hạnh phúc cho bạn."
             android:textColor="@color/colorText"
+            android:layout_marginTop="10dp"
             android:textSize="18sp"
             ></TextView>
     </LinearLayout>

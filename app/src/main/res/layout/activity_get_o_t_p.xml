@@ -36,32 +36,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="@string/otp_verification"
+            android:text="Mã xác nhận OTP"
             android:textColor="@color/colorText"
             android:textSize="20sp"
             android:textStyle="bold">
 
         </TextView>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="50dp"
-            android:text="@string/we_will_send_you_an_one_time_password_one_this_phone_number"
-            android:gravity="center"
-            android:textColor="@color/cTextSecondary"
-            android:textSize="14sp"
-            android:textStyle="bold"/>
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="30dp"
-            android:text="@string/enter_mobile_number"
+            android:text="Nhập số điện thoại."
             android:gravity="center_horizontal"
             android:textColor="@color/cTextSecondary"
             android:textSize="14sp"
@@ -97,10 +84,7 @@
                 android:importantForAutofill="no"
                 android:inputType="phone"
                 android:textColor="@color/cTextPrimary"></EditText>
-
-
         </LinearLayout>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
@@ -108,7 +92,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="70dp"
             android:background="@color/colorDivider"></View>
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -118,7 +101,7 @@
                 android:background="@drawable/backgournd_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/get_otp"
+                android:text="Nhận OTP"
                 android:textColor="@color/cWhite"
                 android:textStyle="bold"
                 android:textSize="16sp"></Button>
