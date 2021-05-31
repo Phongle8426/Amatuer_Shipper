@@ -48,6 +48,7 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
         viewAdapterClass.name_poster_tab_nhan.setText(postObject.getTen_nguoi_gui());
         viewAdapterClass.txt_start_place_tab_nhan.setText(faddress.formatAddress(postObject.getNoi_nhan()));
         viewAdapterClass.txt_end_place_tab_nhan.setText(faddress.formatAddress(postObject.getNoi_giao()));
+        viewAdapterClass.label_dang_giao.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -57,13 +58,14 @@ public class ShippingOrderAdapter extends RecyclerView.Adapter<ShippingOrderAdap
 
 
     public class ViewAdapterClass extends RecyclerView.ViewHolder {
-        TextView name_poster_tab_nhan, txt_start_place_tab_nhan, txt_end_place_tab_nhan,txt_time_stamp;
+        TextView name_poster_tab_nhan, txt_start_place_tab_nhan, txt_end_place_tab_nhan,txt_time_stamp,label_dang_giao;
         public ViewAdapterClass(@NonNull final View itemView) {
             super(itemView);
             name_poster_tab_nhan = itemView.findViewById(R.id.name_poster_tab_nhan);
             txt_start_place_tab_nhan = itemView.findViewById(R.id.txt_start_place_tab_nhan);
             txt_end_place_tab_nhan = itemView.findViewById(R.id.txt_end_place_tab_nhan);
             txt_time_stamp = itemView.findViewById(R.id.tv_time);
+            label_dang_giao = itemView.findViewById(R.id.label_dang_giao);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

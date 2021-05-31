@@ -37,10 +37,10 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         //BadgeDrawable badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.cart);
         //badgeDrawable.setNumber(3333);
         // Create items
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Bai dang", R.drawable.ic_home, R.color.whiteTextColor);
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem("Trang thai", R.drawable.ic_status, R.color.whiteTextColor);
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Tuyen duong", R.drawable.ic_map, R.color.whiteTextColor);
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem("Ca nhan", R.drawable.ic_profile, R.color.whiteTextColor);
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem("Bài đăng", R.drawable.ic_home, R.color.whiteTextColor);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem("Trạng thái", R.drawable.ic_status, R.color.whiteTextColor);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem("Tuyến đường", R.drawable.ic_map, R.color.whiteTextColor);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem("Cá nhân", R.drawable.ic_profile, R.color.whiteTextColor);
 
         bottomNavigationView.addItem(item1);
         bottomNavigationView.addItem(item2);

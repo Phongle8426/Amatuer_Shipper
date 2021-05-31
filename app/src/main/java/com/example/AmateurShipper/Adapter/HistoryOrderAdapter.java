@@ -47,12 +47,21 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
     public void onBindViewHolder(@NonNull HistoryOrderAdapter.ViewAdapterClass holder, int position) {
         HistoryOrderAdapter.ViewAdapterClass viewAdapterClass = (HistoryOrderAdapter.ViewAdapterClass) holder;
         PostObject postObject = historyList.get(position);
+        String status = postObject.getStatus();
         formatTimeStampToDate ts = new formatTimeStampToDate();
         formatAddress faddress = new formatAddress();
         viewAdapterClass.txt_time_stamp.setText(ts.convertTimeStamp(Long.parseLong(postObject.getThoi_gian())));
         viewAdapterClass.name_poster_tab_nhan.setText(postObject.getTen_nguoi_gui());
         viewAdapterClass.txt_start_place_tab_nhan.setText(faddress.formatAddress(postObject.getNoi_nhan()));
         viewAdapterClass.txt_end_place_tab_nhan.setText(faddress.formatAddress(postObject.getNoi_giao()));
+        if (status.equals("2")) {
+            viewAdapterClass.label_hoan_thanh.setVisibility(View.VISIBLE);
+            viewAdapterClass.label_huy.setVisibility(View.GONE);
+        }
+        else if (status.equals("3")){
+            viewAdapterClass.label_huy.setVisibility(View.VISIBLE);
+            viewAdapterClass.label_hoan_thanh.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -61,13 +70,15 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
     }
 
     public class ViewAdapterClass extends RecyclerView.ViewHolder {
-        TextView name_poster_tab_nhan, txt_start_place_tab_nhan, txt_end_place_tab_nhan,txt_time_stamp;
+        TextView name_poster_tab_nhan, txt_start_place_tab_nhan, txt_end_place_tab_nhan,txt_time_stamp,label_hoan_thanh,label_huy;
         public ViewAdapterClass(@NonNull View itemView) {
             super(itemView);
             name_poster_tab_nhan = itemView.findViewById(R.id.name_poster_tab_nhan);
             txt_start_place_tab_nhan = itemView.findViewById(R.id.txt_start_place_tab_nhan);
             txt_end_place_tab_nhan = itemView.findViewById(R.id.txt_end_place_tab_nhan);
             txt_time_stamp = itemView.findViewById(R.id.tv_time);
+            label_hoan_thanh = itemView.findViewById(R.id.label_hoan_thanh);
+            label_huy = itemView.findViewById(R.id.label_huy);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

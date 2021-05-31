@@ -105,6 +105,7 @@ public class SecurityCodeDialog extends DialogFragment {
                     }, SPLASH_SCREEN);
                     Long tsLong = System.currentTimeMillis()/1000;
                     String timestamp = tsLong.toString();
+                    mDatabase.child("received_order_status").child(iDUser).child(idpost).child("thoi_gian").setValue(timestamp);
                     NotificationWebObject noti = new NotificationWebObject(idpost,iDUser,"2",timestamp);
                     mDatabase.child("Notification").child(idshop).push().setValue(noti);
                     mDatabase.child("OrderStatus").child(idshop).child(idpost).child("status").setValue("2");
@@ -122,7 +123,7 @@ public class SecurityCodeDialog extends DialogFragment {
         return builder.create();
     }
     public void cancelNotification(String time){
-        Toast.makeText(getActivity(), "cancelSche" + time, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "cancelSche" + time, Toast.LENGTH_SHORT).show();
         NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         //notificationManager.cancel(cancellSche);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

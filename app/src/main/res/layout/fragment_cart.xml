@@ -30,21 +30,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:icon="@drawable/deliverybox"
-            android:text="Đơn đã nhận" />
+            android:text="Đã nhận" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_chua_nhan"
             android:icon="@drawable/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Đơn chờ gom" />
+            android:text="Đang giao" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_lich_su"
             android:layout_width="wrap_content"
             android:icon="@drawable/his"
             android:layout_height="wrap_content"
-            android:text="lịch sử" />
+            android:text="Lịch sử" />
 
     </com.google.android.material.tabs.TabLayout>
     <RelativeLayout

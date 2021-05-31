@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment implements PostAdapter.OnPostListener
    final ArrayList<String> mLocationItem = new ArrayList<>();
    final String[] location = {"Thanh Khê","Hải Châu","Sơn Trà","Liên Chiểu","Cẩm Lệ","Ngũ Hành Sơn","Hoà Vang"};
    boolean selected[] = new boolean[]{false, false, false, false};
-    com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment,getlocation;
+    com.getbase.floatingactionbutton.FloatingActionButton btn_filter_location,btn_filter_payment;
     ImageView btn_notify_new_order;
     TextView time_block,tv_reason;
     private DatabaseReference mDatabase;
@@ -143,7 +143,6 @@ public static HomeFragment newInstance(){
         btn_notify_new_order = view.findViewById(R.id.btn_notify_new_order);
         time_block = view.findViewById(R.id.time_block);
         tv_reason = view.findViewById(R.id.tv_reason);
-        getlocation = view.findViewById(R.id.btn_location);
         NewsRecyclerview = view.findViewById(R.id.rcv_post);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mFireStore = FirebaseFirestore.getInstance();
@@ -162,6 +161,7 @@ public static HomeFragment newInstance(){
             postAdapter = new PostAdapter(mData, getContext(), this);
             NewsRecyclerview.setAdapter(postAdapter);
             checkScroll();
+            getLocation();
 
             btn_filter_location.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -187,20 +187,17 @@ public static HomeFragment newInstance(){
                 }
             });
 
-            getlocation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                            && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions( getActivity(), new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},1);
-                    }
-                    Intent intent = new Intent(getActivity(), LocationService.class);
-                    intent.setAction("Start");
-                    getContext().startService(intent);
-                }
-            });
-
             return view;
+    }
+
+    public void getLocation(){
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions( getActivity(), new String[] {  android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},1);
+        }
+        Intent intent = new Intent(getActivity(), LocationService.class);
+        intent.setAction("Start");
+        getContext().startService(intent);
     }
     public void deleteOrder(){
         mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("1").addValueEventListener(new ValueEventListener() {

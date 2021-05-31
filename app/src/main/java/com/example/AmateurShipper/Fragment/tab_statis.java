@@ -27,6 +27,7 @@ import com.example.AmateurShipper.BindDataArray.BindDataToLineChart;
 import com.example.AmateurShipper.Callback.DataStatisticCallback;
 import com.example.AmateurShipper.Model.DataStatisticObject;
 import com.example.AmateurShipper.R;
+import com.example.AmateurShipper.Util.FormatName;
 import com.example.AmateurShipper.Util.fecthDataStatistic;
 import com.example.AmateurShipper.Util.formatTimeStampToDate;
 import com.github.mikephil.charting.charts.BarChart;
@@ -96,7 +97,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
     TextView currentStatistic, currentStatisticLine;
     fecthDataStatistic fecthDataStatistic;
     String uId;
-    int k = 0;
+    int k = 0,check_b=0, check_l = 0;
     int checkChart = 0;
     long current_timeStamp = System.currentTimeMillis() / 1000;
     ArrayList<DataStatisticObject> mListData = new ArrayList<>();
@@ -248,8 +249,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
 
 
     public void renderDataBarChart() {
-        BarDataSet barDataSet = new BarDataSet(entryArrayList, "Amount");
-
+        BarDataSet barDataSet = new BarDataSet(entryArrayList, "Tổng thu nhập");
         barchat.notifyDataSetChanged();
         barDataSet.setColors(Color.CYAN);
         Description des = new Description();
@@ -318,7 +318,10 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
 
     public void showLineChart() {
         LineDataSet lineDataSet;
-        lineDataSet = new LineDataSet(lineEntryList, "Thong ke");
+        lineDataSet = new LineDataSet(lineEntryList, "Tổng số đơn");
+        Description des = new Description();
+        des.setText("");
+        lineChart.setDescription(des);
         lineDataSet.setDrawIcons(false);
         lineDataSet.enableDashedLine(10f, 5f, 0f);
         lineDataSet.enableDashedHighlightLine(10f, 5f, 0f);
@@ -358,18 +361,19 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         labelLineName.clear();
         lineEntryList.clear();
         for (int i = 0; i < listWeekCount.size(); i++) {
+            float dayy = listWeekCount.get(i).getX()-1;
             String day = String.valueOf(listWeekCount.get(i).getX());
             //Toast.makeText(getActivity(), "line entry list" + day, Toast.LENGTH_SHORT).show();
-            if (day.equals("1.0")) day = "Mon";
-            else if (day.equals("2.0")) day = "Tus";
-            else if (day.equals("3.0")) day = "Web";
-            else if (day.equals("4.0")) day = "Thu";
-            else if (day.equals("5.0")) day = "Fri";
-            else if (day.equals("6.0")) day = "Sat";
-            else if (day.equals("7.0")) day = "Sun";
+            if (day.equals("0.0")) day = "Mon";
+            else if (day.equals("1.0")) day = "Tus";
+            else if (day.equals("2.0")) day = "Web";
+            else if (day.equals("3.0")) day = "Thu";
+            else if (day.equals("4.0")) day = "Fri";
+            else if (day.equals("5.0")) day = "Sat";
+            else if (day.equals("6.0")) day = "Sun";
             labelLineName.add(day);
             lineEntryList.add(listWeekCount.get(i));
-            Log.i(TAG, "fecthDataForLineChartWeek: " + day);
+           // Log.i(TAG, "fecthDataForLineChartWeek: " + day);
         }
     }
 
@@ -482,19 +486,20 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
     }
 
     public void previousBar() {
-        if (k == 0) {
+        Log.i(TAG, "previousBar:"+check_b);
+        if (check_b == 0) {
             if (currentWeek > 1) {
                 --currentWeek;
                 currentStatistic.setText("Tuần " + currentWeek);
                 loadData(currentWeek, 1);
             }
-        } else if (k == 1) {
+        } else if (check_b == 1) {
             if (currentMonth > 1) {
                 --currentMonth;
                 currentStatistic.setText("Tháng " + currentMonth);
                 loadData(currentMonth, 1);
             }
-        } else if (k == 2) {
+        } else if (check_b == 2) {
             if (currenYear > 1) {
                 --currenYear;
                 currentStatistic.setText("Năm " + currenYear);
@@ -504,7 +509,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
     }
 
     public void nextBar() {
-        if (k == 0) {
+        if (check_b == 0) {
             int crtWeek = fmDate.getCurrentWeek(current_timeStamp);
             if (currentWeek < crtWeek) {
                 ++currentWeek;
@@ -513,7 +518,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                 } else currentStatistic.setText("Tuần " + currentWeek);
                 loadData(currentWeek, 1);
             }
-        } else if (k == 1) {
+        } else if (check_b == 1) {
             int crtMonth = fmDate.getCurrentMonth(current_timeStamp);
             if (currentMonth < crtMonth) {
                 ++currentMonth;
@@ -522,7 +527,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                 } else currentStatistic.setText("Tháng " + currentMonth);
                 loadData(currentMonth, 1);
             }
-        } else if (k == 2) {
+        } else if (check_b == 2) {
             int crtYear = fmDate.getCurrentYear(current_timeStamp);
             if (currenYear < crtYear) {
                 ++currenYear;
@@ -535,7 +540,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
     }
 
     public void nextLine() {
-        if (k == 0) {
+        if (check_l == 0) {
             int crtWeek = fmDate.getCurrentWeek(current_timeStamp);
             if (currentWeekLine < crtWeek) {
                 ++currentWeekLine;
@@ -544,7 +549,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                 } else currentStatisticLine.setText("Tuần " + currentWeekLine);
                 loadData(currentWeekLine, 2);
             }
-        } else if (k == 1) {
+        } else if (check_l == 1) {
             int crtMonth = fmDate.getCurrentMonth(current_timeStamp);
             if (currentMonthLine < crtMonth) {
                 ++currentMonthLine;
@@ -553,7 +558,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
                 } else currentStatisticLine.setText("Tháng " + currentMonthLine);
                 loadData(currentMonthLine, 2);
             }
-        }else if (k==2){
+        }else if (check_l==2){
             int crtYear = fmDate.getCurrentYear(current_timeStamp);
             if (currenYearLine < crtYear){
                 ++currenYearLine;
@@ -565,19 +570,19 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         }
     }
     public void previousLine(){
-        if (k==0){
+        if (check_l==0){
             if (currentWeekLine > 1){
                 --currentWeekLine;
                 currentStatisticLine.setText("Tuần " + currentWeekLine);
                 loadData(currentWeekLine,2);
             }
-        }else if (k==1){
+        }else if (check_l==1){
             if (currentMonthLine > 1){
                 --currentMonthLine;
                 currentStatisticLine.setText("Tháng " + currentMonthLine);
                 loadData(currentMonthLine,2);
             }
-        }else if (k==2){
+        }else if (check_l==2){
             if (currenYearLine > 1){
                 --currenYearLine;
                 currentStatisticLine.setText("Năm " + currenYearLine);
@@ -588,20 +593,22 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
 
 
     public void loadDataDay(long filter){
+        FormatName fmn = new FormatName();
         String fill  = fmDate.convertDayMonthYear(filter);
         fecthDataStatistic.fecthData(new DataStatisticCallback() {
             @Override
             public void onSuccess(ArrayList<DataStatisticObject> lists) {
                // Log.i(TAG, "onSIZE: "+ lists.size());
-                int count=0,amount=0;
+                int count=0;
+                long amount=0;
                 for (int i = 0; i< lists.size();i++) {
                     if (fmDate.convertDayMonthYear(Long.parseLong(lists.get(i).getDate())).equals(fill)) {
-                         amount += Integer.parseInt(lists.get(i).getAmount().replaceAll("\\s",""));
+                         amount += Long.parseLong(lists.get(i).getAmount().replaceAll("\\s",""));
                          count++;
                     }
                 }
                 soLuong.setText(count+"");
-                thuNhap.setText(amount+"");
+                thuNhap.setText(fmn.formatMoney(amount));
             }
 
             @Override
@@ -619,7 +626,7 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         fecthDataStatistic.fecthData(new DataStatisticCallback() {
             @Override
             public void onSuccess(ArrayList<DataStatisticObject> lists) {
-                if (k == 0){
+                if (k== 0){
                     for (int i = 0; i< lists.size();i++){
                         if (fmDate.getCurrentWeek(Long.parseLong(lists.get(i).getDate()))==filter){
                             String dayofweek = fmDate.convertToDayOfWeek(Long.parseLong(lists.get(i).getDate()));
@@ -743,29 +750,37 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
             case R.id.item_week:
                 k=0;
                 if (checkChart==1){
+                    check_b=0;
                     filter_barChart.setText("Tuần");
                     currentStatistic.setText("Tuần này");
                     loadData(fmDate.getCurrentWeek(current_timeStamp),1);
+                    currentWeek = fmDate.getCurrentWeek(current_timeStamp);
                     barchat.fitScreen();
                 }else{
+                    check_l=0;
                     filter_lineChart.setText("Tuần");
                     currentStatisticLine.setText("Tuần này");
                     loadData(fmDate.getCurrentWeek(current_timeStamp),2);
+                    currentWeekLine = fmDate.getCurrentWeek(current_timeStamp);
                     barchat.fitScreen();
                 }
                 return true;
             case R.id.item_month:
                 k=1;
                 if (checkChart==1){
+                    check_b=1;
                     filter_barChart.setText("Tháng");
                     currentStatistic.setText("Tháng này");
                     loadData(fmDate.getCurrentMonth(current_timeStamp),1);
+                    currentMonth = fmDate.getCurrentMonth(current_timeStamp);
                     barchat.fitScreen();
 //                    barchat.setVisibleXRangeMaximum(7);
                 }else{
+                    check_l=1;
                     filter_lineChart.setText("Tháng");
                     currentStatisticLine.setText("Tháng này");
                     loadData(fmDate.getCurrentMonth(current_timeStamp),2);
+                    currentMonthLine = fmDate.getCurrentMonth(current_timeStamp);
                     barchat.fitScreen();
 //                    barchat.setVisibleXRangeMaximum(7);
                 }
@@ -773,15 +788,19 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
             case R.id.item_year:
                 k=2;
                 if(checkChart==1){
+                    check_b=2;
                     filter_barChart.setText("Năm");
                     currentStatistic.setText("Năm này");
                     loadData(fmDate.getCurrentYear(current_timeStamp),1);
+                    currenYear = fmDate.getCurrentYear(current_timeStamp);
                     barchat.fitScreen();
 //                    barchat.setVisibleXRangeMaximum(7);
                 }else{
+                    check_l=2;
                     filter_lineChart.setText("Năm");
                     currentStatisticLine.setText("Năm này");
                     loadData(fmDate.getCurrentYear(current_timeStamp),2);
+                    currenYearLine = fmDate.getCurrentYear(current_timeStamp);
                     barchat.fitScreen();
 //                    barchat.setVisibleXRangeMaximum(7);
                 }
