@@ -287,12 +287,13 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
     public void renderDataLineChart() {
         XAxis xAxis = lineChart.getXAxis();
         //xAxis.enableGridDashedLine(10f, 10f, 0f);
-        xAxis.setGranularity(1.0f);
+
         xAxis.setDrawGridLines(false);
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(labelLineName));
+        //nexAxis.setValueFormatter(new IndexAxisValueFormatter(labelLineName));
         xAxis.setAxisMinimum(0.0f);
         xAxis.setAxisMaximum(7.0f);
-        xAxis.setGridLineWidth(0f);
+        xAxis.setAvoidFirstLastClipping(true);
+        xAxis.setGridLineWidth(1.0f);
         xAxis.setDrawAxisLine(true);//Drawing axis
         xAxis.setDrawGridLines(true);//Set the line corresponding to each point on the x-axis
         xAxis.setDrawLabels(true);//Draw a label to refer to the corresponding value on the x-axis
@@ -302,55 +303,57 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         xAxis.isDrawGridLinesEnabled();
         xAxis.setDrawGridLines(true);
         YAxis leftAxis = lineChart.getAxisLeft();
-
         leftAxis.setAxisMaximum(50f);
         leftAxis.setAxisMinimum(0f);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
-        leftAxis.setDrawZeroLine(false);
+
         leftAxis.setDrawLimitLinesBehindData(false);
-        leftAxis.setSpaceBottom(0);
+        leftAxis.setSpaceBottom(10  );
         leftAxis.setSpaceTop(0);
         xAxis.setCenterAxisLabels(false);
-
-        showLineChart();
-    }
-
-
-    public void showLineChart() {
         LineDataSet lineDataSet;
         lineDataSet = new LineDataSet(lineEntryList, "Thong ke");
         lineDataSet.setDrawIcons(false);
-        lineDataSet.enableDashedLine(10f, 5f, 0f);
+        Toast.makeText(getActivity(), "hl;" + lineDataSet.getXMin() + "/" + lineDataSet.getYMin(), Toast.LENGTH_SHORT).show();
+                //lineDataSet.enableDashedLine(10f, 5f, 0f);
         lineDataSet.enableDashedHighlightLine(10f, 5f, 0f);
         lineDataSet.setColor(Color.CYAN);
-        lineDataSet.setLineWidth(1.0f);
+       // lineDataSet.setLineWidth(1.0f);
         lineDataSet.setValueTextSize(9f);
         lineDataSet.setDrawFilled(true);
-        lineDataSet.setFormLineWidth(1f);
+       // lineDataSet.setFormLineWidth(1f);
         lineDataSet.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
-        lineDataSet.setFormSize(15.f);
+        //lineDataSet.setFormSize(15.f);
         lineDataSet.setFillColor(Color.CYAN);
 
         ArrayList<ILineDataSet> lineDataSetsArray = new ArrayList<>();
         lineDataSetsArray.add(lineDataSet);
         LineData data = new LineData(lineDataSetsArray);
-      //  lineChart.setVisibleXRangeMaximum(7);
-       // lineChart.setDragEnabled(true);
-       // lineChart.setScaleEnabled(false);
+        //  lineChart.setVisibleXRangeMaximum(7);
+        // lineChart.setDragEnabled(true);
+        // lineChart.setScaleEnabled(false);
         //lineChart.setDrawGridBackground(false);
 
-        lineChart.moveViewToX(10.0f);
+        lineChart.moveViewToX(0.0f);
         lineChart.getAxisRight().setEnabled(false);
-        if (labelLineName.size() > 7) {
-            //lineChart.setVisibleXRangeMaximum(7);
-        }
+        final String[] weekdays = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+        lineChart.getXAxis().setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(weekdays));
+        lineChart.setFitsSystemWindows(true);
+        Toast.makeText(getActivity(), "hello"  + labelLineName.get(0).toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "hello 1"  + listWeekCount.get(0).getX(), Toast.LENGTH_SHORT).show();
         lineChart.getXAxis().setAxisMinimum(0.0f);
         lineChart.getAxisLeft().setAxisMinimum(0.0f);
+        lineChart.getAxisRight().setAxisMinimum(0.0f);
         lineChart.fitScreen();
         lineChart.notifyDataSetChanged();
         lineChart.animateY(1500);
         lineChart.setData(data);
         lineChart.invalidate();
+    }
+
+
+    public void showLineChart() {
+
         //  }
     }
 
@@ -359,17 +362,17 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         lineEntryList.clear();
         for (int i = 0; i < listWeekCount.size(); i++) {
             String day = String.valueOf(listWeekCount.get(i).getX());
-            //Toast.makeText(getActivity(), "line entry list" + day, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), String.format("line entry list%s", listWeekCount.get(i).getX()-1) , Toast.LENGTH_SHORT).show();
             if (day.equals("1.0")) day = "Mon";
             else if (day.equals("2.0")) day = "Tus";
-            else if (day.equals("3.0")) day = "Web";
+            else if (day.equals("3.0")) day = "Wed";
             else if (day.equals("4.0")) day = "Thu";
             else if (day.equals("5.0")) day = "Fri";
             else if (day.equals("6.0")) day = "Sat";
             else if (day.equals("7.0")) day = "Sun";
             labelLineName.add(day);
             lineEntryList.add(listWeekCount.get(i));
-            Log.i(TAG, "fecthDataForLineChartWeek: " + day);
+            Log.i(TAG, "hello" + day);
         }
     }
 
