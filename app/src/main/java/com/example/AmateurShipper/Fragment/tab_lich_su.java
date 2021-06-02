@@ -125,7 +125,7 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
         historyOrderAdapter = new HistoryOrderAdapter(mListData, tab_lich_su.this,fm,this);
     }
     public void getListOrderHistory() {
-        mDatabase.child("received_order_status").child(iDUser).orderByChild("status").equalTo("2").addValueEventListener(new ValueEventListener() {
+        mDatabase.child("received_order_status").child(iDUser).orderByChild("status").startAt("2").endAt("3").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {

@@ -35,12 +35,12 @@ public class myLocationBroadcast  extends BroadcastReceiver {
                     mDatabase.child("Location_Shipper").child(uid)
                             .child("lng").setValue(location.getLongitude());
                     try {
-                        Toast.makeText(context, location_string, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, location_string, Toast.LENGTH_SHORT).show();
                     }catch (Exception ex){
 
                     }
                 }
             }
-        }else Toast.makeText(context, "cc", Toast.LENGTH_SHORT).show();
+        }else Toast.makeText(context, "nothing", Toast.LENGTH_SHORT).show();
     }
 }

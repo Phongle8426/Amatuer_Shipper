@@ -87,6 +87,7 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
         viewAdapterClass.txt_time_stamp.setText(ts.convertTimeStamp(Long.parseLong(postObject.getThoi_gian())));
         viewAdapterClass.txt_start_place_tab_nhan.setText(faddress.formatAddress(postObject.getNoi_nhan()));
         viewAdapterClass.txt_end_place_tab_nhan.setText(faddress.formatAddress(postObject.getNoi_giao()));
+        viewAdapterClass.label_nhan_dơn.setVisibility(View.VISIBLE);
 //        Long currentTime = System.currentTimeMillis() / 1000;
 //        long time = Long.parseLong(postObject.getThoi_gian())-currentTime;
 //        if (time>2){
@@ -111,7 +112,7 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
     }
 
     public class ViewAdapterClass extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView name_poster_tab_nhan,txt_start_place_tab_nhan, txt_end_place_tab_nhan,txt_time_stamp;
+        TextView name_poster_tab_nhan,txt_start_place_tab_nhan, txt_end_place_tab_nhan,txt_time_stamp,label_nhan_dơn;
         ImageView img_timer;
         CountDownTimer timer;
 
@@ -122,6 +123,8 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
             txt_end_place_tab_nhan = itemView.findViewById(R.id.txt_end_place_tab_nhan);
             txt_time_stamp = itemView.findViewById(R.id.tv_time);
             img_timer= itemView.findViewById(R.id.img_timer);
+            label_nhan_dơn = itemView.findViewById(R.id.label_da_nhan);
+
 
             img_timer.setOnClickListener(new View.OnClickListener() {
                 @Override

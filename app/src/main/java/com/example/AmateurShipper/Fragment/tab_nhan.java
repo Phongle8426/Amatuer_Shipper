@@ -166,6 +166,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                                 }
                             }, SPLASH_SCREEN);
                             mDatabase.child("received_order_status").child(iDUser).child(idpost).child("status").setValue("1");
+                            mDatabase.child("received_order_status").child(iDUser).child(idpost).child("thoi_gian").setValue(time_stamp);
                         }
                     }, getContext()));
                 }
@@ -193,15 +194,17 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         mData.remove(pos);
         receivedOrderAdapter.notifyItemChanged(pos);
         NotificationWebObject noti = new NotificationWebObject(idpost,iDUser,"3",timestamp);
-        mDatabase.child("received_order_status").child(iDUser).child(idpost).setValue(null);
         mDatabase.child("OrderStatus").child(idshop).child(idpost).child("status").setValue("3");
         mDatabase.child("OrderStatus").child(idshop).child(idpost).child("reason").setValue(reason);
         mDatabase.child("OrderStatus").child(idshop).child(idpost).child("read").setValue(0);
         mDatabase.child("Notification").child(idshop).push().setValue(noti);
         mDatabase.child("Transaction").child(idpost).child("status").setValue("3");
+        mDatabase.child("received_order_status").child(iDUser).child(idpost).child("status").setValue("3");
+        mDatabase.child("received_order_status").child(iDUser).child(idpost).child("thoi_gian").setValue(timestamp);
     }
     public void showReasonDelete(int pos,RecyclerView.ViewHolder viewHolder){
         final String[] reason = new String[1];
+        reason[0]=reasonList[0];
             final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(R.string.titleReasonDelete);
             builder.setSingleChoiceItems(reasonList,0, new DialogInterface.OnClickListener() {

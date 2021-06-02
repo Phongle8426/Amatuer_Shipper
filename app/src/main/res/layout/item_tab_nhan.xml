@@ -19,11 +19,49 @@
             android:id="@+id/name_poster_tab_nhan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:fontFamily="@font/archivo_narrow"
+            android:layout_weight="1"
             android:text="Mac Van Khoa fanpage"
             android:textColor="@color/colorText"
             android:textSize="18sp"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp">
+            <TextView
+                android:id="@+id/label_da_nhan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Nhận đơn"
+                android:textSize="7sp"
+                android:background="@drawable/background_da_nhan"/>
+            <TextView
+                android:id="@+id/label_dang_giao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Nhận hàng"
+                android:textSize="7sp"
+                android:background="@drawable/background_dang_giao"/>
+            <TextView
+                android:id="@+id/label_hoan_thanh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Hoàn thành"
+                android:textSize="7sp"
+                android:background="@drawable/background_hoan_thanh"/>
+            <TextView
+                android:id="@+id/label_huy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Hủy"
+                android:textSize="7sp"
+                android:background="@drawable/background_huy"/>
+        </RelativeLayout>
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
