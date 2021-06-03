@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.example.AmateurShipper.Activity.LoginActivity;
 import com.example.AmateurShipper.R;
@@ -42,7 +43,7 @@ public class SettingFragment extends Fragment {
     ScrollView layoutSetting;
     CardView signOut,manageAccount;
     ImageView back;
-
+    TextView dieukhoandichvu;
     private FirebaseAuth mAuth;
     SharedPreferences sharedpreferences;
 
@@ -87,7 +88,7 @@ public class SettingFragment extends Fragment {
         manageAccount = view.findViewById(R.id.card_manage_acc);
         back = view.findViewById(R.id.btn_back);
         layoutSetting = view.findViewById(R.id.layout_setting);
-
+        dieukhoandichvu = view.findViewById(R.id.dieukhoandichvu);
         mAuth = FirebaseAuth.getInstance();
         sharedpreferences = this.getActivity().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
@@ -107,6 +108,19 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 dialogLogOut();
+            }
+        });
+
+        dieukhoandichvu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layoutSetting.setVisibility(View.GONE);
+                FragmentServiceRules fragmentServiceRules = new FragmentServiceRules();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.setting_frame, fragmentServiceRules);
+
+                fragmentTransaction.commit();
             }
         });
         return view;

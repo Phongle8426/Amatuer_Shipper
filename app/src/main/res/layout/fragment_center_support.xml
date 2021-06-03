@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CenterSupportFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_back"></ImageView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_marginRight="45dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Trung tâm hỗ trợ"
+                            android:textStyle="bold"
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/colorText"></TextView>
+                    </LinearLayout>
+                </Toolbar>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="230dp"
+                    android:orientation="vertical"
+                    android:background="@drawable/ic_undraw_air_support_wy1q"
+                    android:id="@+id/intro">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:layout_marginTop="44dp"
+                        android:layout_gravity="center"
+                        android:text="Trung tâm trợ giúp"></TextView>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginTop="-110dp"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <androidx.appcompat.widget.SearchView
+                        android:layout_width="200dp"
+                        android:background="@drawable/background_search"
+                        android:layout_height="35dp"></androidx.appcompat.widget.SearchView>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_marginTop="-85dp"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textColor="@color/colorText"
+                        android:layout_width="wrap_content"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_height="wrap_content"
+                        android:text="Xin chào, chúng tôi có thể giúp gì"></TextView>
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_gravity="center"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="40dp"
+                    android:textColor="@color/colorText"
+                    android:text="Bài viết phổ biến"></TextView>
+                <LinearLayout
+                    android:background="@drawable/elavation"
+                    android:paddingTop="20dp"
+                    android:paddingLeft="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bắt đầu  >  Tạo tài khoản"
+                        android:fontFamily="sans-serif-light"
+                        android:textStyle="bold"/>
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/card_manage_acc"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/ic_baseline_person_24"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:text="Tạo tài khoản"
+                                android:textColor="@color/colorText"
+                                android:fontFamily="sans-serif-light"
+                                android:textSize="15sp"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+                <LinearLayout
+                    android:background="@drawable/elavation"
+                    android:paddingTop="20dp"
+                    android:paddingLeft="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Riêng tư  >  Cài đặt quyền riêng tư tài khoản"
+                        android:fontFamily="sans-serif-light"
+                        android:textStyle="bold"/>
+                    <androidx.cardview.widget.CardView
+
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/ic_baseline_person_24"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:text="Đặt tài khaonr của bạn là công khai hoặc riêng tư"
+                                android:textColor="@color/colorText"
+                                android:fontFamily="sans-serif-light"
+                                android:textSize="15sp"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:background="@drawable/elavation"
+                    android:paddingTop="20dp"
+                    android:paddingLeft="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đăng nhập và xử lý sự cố  >  Đăng nhập"
+                        android:fontFamily="sans-serif-light"
+                        android:textStyle="bold"/>
+                    <androidx.cardview.widget.CardView
+
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/ic_baseline_person_24"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:text="Đặt lại mật khẩu"
+                                android:textColor="@color/colorText"
+                                android:fontFamily="sans-serif-light"
+                                android:textSize="15sp"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

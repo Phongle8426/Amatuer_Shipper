@@ -74,7 +74,6 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     View view;
     devs.mulham.horizontalcalendar.HorizontalCalendarView horizontalCalendarView;
     BarChart barchat;
