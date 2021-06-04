@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:id="@+id/setting_frame"
     tools:context=".Fragment.SettingFragment">
-
     <ScrollView
         android:id="@+id/layout_setting"
         android:layout_width="match_parent"
@@ -165,6 +164,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/ic_baseline_help_24"/>
                         <TextView
+                            android:id="@+id/trungtamhotro"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -234,6 +234,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="10dp"
+                            android:id="@+id/dieukhoandichvu"
                             android:text="Điều khoản Dịch vụ"
                             android:textColor="@color/colorText"
                             android:fontFamily="sans-serif-light"
