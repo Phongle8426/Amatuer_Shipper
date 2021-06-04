@@ -36,6 +36,8 @@
     <string name="user_location_permission_explanation">user location permission explanation</string>
     <string name="user_location_permission_not_granted">user location permission not granted</string>
     <string name="accept_rule">Bạn chưa đồng ý với điều khoản của chúng tôi.</string>
+    <string name="note">Lưu ý: Mật khẩu bao chứa chữ in hoa, số, kí tự đặc biệt</string>
+    <string name="note_change_password">Chúng tôi sẽ gửi một email kèm theo link đổi mật khẩu đến cho bạn.</string>
 
     <string name="disconnect">Thiết bị mất kết nối Internet</string>
     <string name="titleReasonDelete">Tại sao bạn muốn hủy đơn này?</string>

@@ -132,6 +132,7 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="50dp">
                     <LinearLayout
@@ -146,10 +147,20 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
                             android:layout_marginLeft="10dp"
                             android:text="@string/infor_password"
                             android:textColor="@color/colorText"
                             android:fontFamily="sans-serif-light"
+                            android:textSize="15sp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="10dp"
+                            android:textColor="@color/colorText"
+                            android:fontFamily="sans-serif-light"
+                            android:text="******"
                             android:textSize="15sp"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>

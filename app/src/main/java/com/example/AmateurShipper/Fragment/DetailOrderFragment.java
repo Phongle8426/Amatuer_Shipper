@@ -347,49 +347,6 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
         iDUser = user.getUid();
     }
 
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onViewCreated: chay");
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onStart() {
-        Log.i(TAG, "onStart: chay");
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        Log.i(TAG, "onResume: chay");
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        Log.i(TAG, "onPause: chay");
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        Log.i(TAG, "onStop: chay");
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroyView() {
-        Log.i(TAG, "onDestroyView: chay");
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.i(TAG, "onDestroy: chay");
-        super.onDestroy();
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();

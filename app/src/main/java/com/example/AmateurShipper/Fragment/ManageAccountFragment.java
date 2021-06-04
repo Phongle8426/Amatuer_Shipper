@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -40,7 +42,8 @@ public class ManageAccountFragment extends Fragment {
     private FirebaseFirestore mFireStore;
 
     ScrollView layout_account;
-    Button back;
+    androidx.cardview.widget.CardView changePass;
+    ImageButton back;
     TextView mEmail,mPhone;
 
     public String IdUser;
@@ -85,10 +88,18 @@ public class ManageAccountFragment extends Fragment {
         layout_account = view.findViewById(R.id.layout_manage_account);
         mEmail = view.findViewById(R.id.email);
         mPhone = view.findViewById(R.id.phone_number);
+        changePass = view.findViewById(R.id.password);
 
         mFireStore = FirebaseFirestore.getInstance();
-
+        getUid();
         getManageAccount();
+
+        changePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToChangePassword();
+            }
+        });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,7 +112,8 @@ public class ManageAccountFragment extends Fragment {
     }
 
     public void getManageAccount(){
-        mFireStore.collection("ProfileShipper").document(IdUser).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        DocumentReference docRef = mFireStore.collection("ProfileShipper").document(IdUser);
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.getResult().exists()) {
@@ -119,6 +131,15 @@ public class ManageAccountFragment extends Fragment {
     public void getUid(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         IdUser = user.getUid();
+    }
+
+    public void goToChangePassword(){
+        layout_account.setVisibility(View.GONE);
+        ChangePasswordFragment tabChangePassword= new ChangePasswordFragment();
+        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.manage_frame,tabChangePassword);
+        fragmentTransaction.commit();
     }
     public void backToSetting(){
         layout_account.setVisibility(View.GONE);

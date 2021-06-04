@@ -12,22 +12,11 @@
         android:padding="10dp"
         android:weightSum="1"
         android:background="@drawable/background_detail_post">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/name_poster_tab_nhan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/archivo_narrow"
-            android:layout_weight="1"
-            android:text="Mac Van Khoa fanpage"
-            android:textColor="@color/colorText"
-            android:textSize="18sp"/>
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_marginRight="10dp">
             <TextView
                 android:id="@+id/label_da_nhan"
@@ -62,6 +51,18 @@
                 android:textSize="7sp"
                 android:background="@drawable/background_huy"/>
         </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/name_poster_tab_nhan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/archivo_narrow"
+            android:layout_weight="1"
+            android:text="Mac Van Khoa fanpage"
+            android:textColor="@color/colorText"
+            android:textSize="18sp"/>
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
@@ -82,7 +83,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nhận hàng từ"
+                    android:text="Nhận từ"
                     android:layout_marginTop="5dp"
                     android:textStyle="bold"
                     android:textColor="#3f4254"/>

@@ -137,10 +137,10 @@ public class RegisterActivity extends AppCompatActivity {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
         if (iEmail.isEmpty()) {
-            email.setError("Field cannot be empty");
+            email.setError("Không thể để trống");
             return false;
         } else if (!iEmail.matches(emailPattern)) {
-            email.setError("Invalid email address");
+            email.setError("Không đúng định dạng");
             return false;
         } else {
             email.setError(null);
@@ -171,10 +171,10 @@ public class RegisterActivity extends AppCompatActivity {
                 "$";
         iPassword = password.getText().toString();
         if (iName.isEmpty()) {
-            password.setError("Field cannot be empty");
+            password.setError("Không thể để trống");
             return false;
         } else if (!iPassword.matches(passwordVal)) {
-            password.setError("Password is too weak");
+            password.setError("Không đúng định dạng");
             return false;
         }else {
             password.setError(null);
@@ -194,13 +194,13 @@ public class RegisterActivity extends AppCompatActivity {
                 "$";
         iRePassword = repassword.getText().toString();
         if (iRePassword.isEmpty()) {
-            repassword.setError("Field cannot be empty");
+            repassword.setError("Không thể để trống");
             return false;
         } else if (!iRePassword.matches(passwordVal)) {
-            repassword.setError("Password is too weak");
+            repassword.setError("Không đúng định dạng");
             return false;
         } else if (!iRePassword.matches(iPassword)) {
-            repassword.setError("Re-password not matches");
+            repassword.setError("Không khớp mật khẩu");
             return false;
         }else {
             repassword.setError(null);

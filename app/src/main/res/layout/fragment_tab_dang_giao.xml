@@ -21,17 +21,11 @@
             android:layout_height="match_parent"
             android:visibility="gone">
         </FrameLayout>
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/empty_view"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="30dp"
-            app:lottie_rawRes="@raw/empty"
-            app:lottie_loop="true"
-            app:lottie_autoPlay="true"
-            android:visibility="gone"/>
+            android:layout_centerInParent="true"
+            android:src="@drawable/no_data_found_vi" />
     </RelativeLayout>
     <com.facebook.shimmer.ShimmerFrameLayout
         android:layout_width="match_parent"

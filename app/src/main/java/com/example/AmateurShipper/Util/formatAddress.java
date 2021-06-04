@@ -14,6 +14,13 @@ public class formatAddress {
         ward = ward.substring(8,ward.length());
         if (distreet.contains("Quận"))
         distreet = distreet.substring(5,distreet.length());
-        return street + ", " + ward + ", "+distreet;
+        return  street + ", " + ward + ", "+distreet;
+//        if (addr.length()<40)
+////            return addr;
+////        else{
+////            String subName  = addr.substring(40,addr.length());
+////            String name1 = addr.replaceAll(subName,"..");
+////            return name1;
+////        }
     }
 }
