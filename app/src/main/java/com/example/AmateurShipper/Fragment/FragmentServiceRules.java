@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.AmateurShipper.R;
@@ -36,7 +39,8 @@ public class FragmentServiceRules extends Fragment {
     private String mParam1;
     private String mParam2;
     TextView readFile;
-
+    ImageView back;
+    ScrollView scrollView;
     public FragmentServiceRules() {
         // Required empty public constructor
     }
@@ -75,6 +79,19 @@ public class FragmentServiceRules extends Fragment {
         ViewGroup root;
         View view = inflater.inflate(R.layout.fragment_service_rules, container, false);
         readFile = view.findViewById(R.id.read_file_doc);
+        scrollView = view.findViewById(R.id.service_rules_fragment);
+        back = view.findViewById(R.id.back_service_rules);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scrollView.setVisibility(View.GONE);
+                SettingFragment  settingFragment = new SettingFragment();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.fragment_service_rules,settingFragment);
+                fragmentTransaction.commit();
+            }
+        });
         readUserData();
         return view;
     }
@@ -92,4 +109,5 @@ public class FragmentServiceRules extends Fragment {
         }
         readFile.setText(result);
     }
+
 }

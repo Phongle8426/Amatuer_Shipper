@@ -105,5 +105,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         }
         return false;
     }
+    @Override
+    public void onBackPressed(){
 
+    }
 }

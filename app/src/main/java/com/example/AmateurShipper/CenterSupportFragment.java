@@ -3,10 +3,17 @@ package com.example.AmateurShipper;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.example.AmateurShipper.Fragment.EditProfileFragment;
+import com.example.AmateurShipper.Fragment.SettingFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +28,9 @@ public class CenterSupportFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    TextView createAccount;
+    ImageView back;
+    ScrollView scrollView;
     public CenterSupportFragment() {
         // Required empty public constructor
     }
@@ -41,7 +51,6 @@ public class CenterSupportFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +59,32 @@ public class CenterSupportFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_center_support, container, false);
+        View view = inflater.inflate(R.layout.fragment_center_support, container, false);
+        createAccount = view.findViewById(R.id.sc_taotaikhoan);
+        back = view.findViewById(R.id.back_support);
+        scrollView = view.findViewById(R.id.setting_croll_view);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scrollView.setVisibility(View.GONE);
+                SettingFragment settingFragment = new SettingFragment();
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.replace(R.id.cs_fragment,settingFragment);
+                fragmentTransaction.commit();
+            }
+        });
+        createAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        return view;
+
     }
 }

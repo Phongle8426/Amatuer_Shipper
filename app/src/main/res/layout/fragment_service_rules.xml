@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/fragment_service_rules"
     tools:context=".Fragment.FragmentServiceRules">
 
     <!-- TODO: Update blank fragment layout -->
@@ -10,11 +11,34 @@
         android:id="@+id/service_rules_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="match_parent">
+            <Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
+                <ImageView
+                    android:id="@+id/back_service_rules"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_back"></ImageView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="45dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/muli_semibold"
+                        android:gravity="center_horizontal"
+                        android:text="Điều khoản dịch vụ"
+                        android:textColor="@color/colorText"
+                        android:textStyle="bold"></TextView>
+                </LinearLayout>
+            </Toolbar>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
