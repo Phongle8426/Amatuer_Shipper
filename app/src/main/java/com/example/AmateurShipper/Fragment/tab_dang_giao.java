@@ -21,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.AmateurShipper.Dialog.SecurityCodeDialog;
@@ -67,8 +69,9 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
     private String mParam1;
     private String mParam2;
     RecyclerView TabDGiaoRecyclerview;
+    RelativeLayout dangGiaoLayout;
     ShimmerFrameLayout layout_shimmer;
-    com.airbnb.lottie.LottieAnimationView empty;
+    ImageView empty;
     ShippingOrderAdapter shippingOrderAdapter;
     DatabaseReference mDatabase;
     FragmentManager fm;
@@ -112,9 +115,10 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_dang_giao,container,false);
         TabDGiaoRecyclerview = view.findViewById(R.id.rcv_tab_dang_giao);
+        dangGiaoLayout = view.findViewById(R.id.dang_giao_layout);
         framChat =view.findViewById(R.id.frag_container_detail);
         layout_shimmer = view.findViewById(R.id.shimmer_status);
-        empty = view.findViewById(R.id.empty_view);
+        empty = view.findViewById(R.id.data_not_found);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         getUid();
         fm = getActivity().getSupportFragmentManager();
@@ -127,7 +131,7 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
         MySwipeHelper mySwipeHelper = new MySwipeHelper(getActivity(), TabDGiaoRecyclerview , 200) {
             @Override
             public void instaniatMyButton(final RecyclerView.ViewHolder viewHolder, List<MyButton> buff) {
-                buff.add(new MyButton("Hoan Thanh", 30, Color.parseColor("#DC143C"), new MyButtonClickListner(){
+                buff.add(new MyButton("Hoàn thành", 30, Color.parseColor("#DC143C"), new MyButtonClickListner(){
                     @Override
                     public void onClick(final int pos) {
                         openSecurityCode(pos);
@@ -220,8 +224,8 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
     public void onItemClick(int position) {
         String idPost = mListData.get(position).getId_post();
         Log.i(TAG, "onItemClick: "+idPost);
-        //TabDGiaoRecyclerview.setVisibility(View.INVISIBLE);
-        framChat.setVisibility(View.VISIBLE);
+        dangGiaoLayout.setVisibility(View.GONE);
+        //framChat.setVisibility(View.VISIBLE);
         DetailOrderFragment detailFragment = new DetailOrderFragment();
         Bundle bundle = new Bundle();
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -255,5 +259,8 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
     public void sendInput(int position) {
         mListData.remove(position);
         shippingOrderAdapter.notifyDataSetChanged();
+        if (mListData.size()==0){
+            empty.setVisibility(View.VISIBLE);
+        }
     }
 }

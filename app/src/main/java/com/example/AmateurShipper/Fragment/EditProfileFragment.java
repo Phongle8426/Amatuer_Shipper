@@ -217,7 +217,9 @@ public class EditProfileFragment extends Fragment {
                         email.setText(document.get("email").toString());
                         phone.setText(document.get("phone").toString());
                         if(!document.get("avatar").toString().equals(null)){
-                            Glide.with(getContext()).load(document.get("avatar").toString()).into((de.hdodenhof.circleimageview.CircleImageView )avata);
+                            Glide.with(getContext()).load(document.get("avatar").toString())
+                                    .placeholder(R.drawable.progress_image).error(R.drawable.person)
+                                    .into((de.hdodenhof.circleimageview.CircleImageView )avata);
                         }
 
                     } else {

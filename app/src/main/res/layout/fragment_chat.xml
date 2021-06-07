@@ -5,9 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/frame_chat">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
     <LinearLayout
         android:id="@+id/layout_header"
         android:layout_width="match_parent"
@@ -18,7 +15,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="9dp"
-            android:src="@drawable/anhhhhh"/>
+            android:src="@drawable/thenigthowl"/>
 
         <TextView
             android:id="@+id/tv_name_shop_header"
@@ -44,13 +41,16 @@
         android:layout_height="1dp"
         android:layout_below="@+id/layout_header"
         android:background="@color/half_black"/>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="60dp">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleview_mess"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:layout_above="@id/relative_layout"
-        android:layout_below="@+id/view_line"
         android:paddingBottom="5dp"/>
     <RelativeLayout
         android:id="@+id/relative_layout"

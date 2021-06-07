@@ -1,4 +1,4 @@
-package com.example.AmateurShipper;
+package com.example.AmateurShipper.Fragment;
 
 import android.os.Bundle;
 
@@ -12,8 +12,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.example.AmateurShipper.Fragment.EditProfileFragment;
-import com.example.AmateurShipper.Fragment.SettingFragment;
+import com.example.AmateurShipper.R;
 
 /**
  * A simple {@link Fragment} subclass.

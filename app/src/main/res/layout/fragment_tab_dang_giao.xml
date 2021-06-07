@@ -8,6 +8,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
+        android:id="@+id/dang_giao_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.recyclerview.widget.RecyclerView
@@ -22,9 +23,11 @@
             android:visibility="gone">
         </FrameLayout>
         <ImageView
+            android:id="@+id/data_not_found"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:visibility="gone"
             android:src="@drawable/no_data_found_vi" />
     </RelativeLayout>
     <com.facebook.shimmer.ShimmerFrameLayout

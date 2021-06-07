@@ -254,13 +254,12 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-
                 layout_shimmer.stopShimmer();
                 layout_shimmer.hideShimmer();
                 layout_shimmer.setVisibility(View.GONE);
-                frame_shimmer.setVisibility(View.VISIBLE);;
+                frame_shimmer.setVisibility(View.VISIBLE);
             }
-        },500);
+        },700);
     }
 
     @Override

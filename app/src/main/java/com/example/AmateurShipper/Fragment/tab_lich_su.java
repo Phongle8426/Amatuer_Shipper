@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.AmateurShipper.Adapter.HistoryOrderAdapter;
@@ -54,8 +56,9 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
     private String mParam1;
     private String mParam2;
     RecyclerView TabLSuRecyclerview;
+    RelativeLayout lichSuLayout;
     ShimmerFrameLayout layout_shimmer;
-    com.airbnb.lottie.LottieAnimationView empty;
+    ImageView empty;
     DatabaseReference mDatabase;
     HistoryOrderAdapter historyOrderAdapter;
     FragmentManager fm;
@@ -100,9 +103,10 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_lich_su,container,false);
         TabLSuRecyclerview = view.findViewById(R.id.rcv_tab_lich_su);
+        lichSuLayout = view.findViewById(R.id.lich_su_layout);
         framChat =view.findViewById(R.id.frag_container_detail);
         layout_shimmer = view.findViewById(R.id.shimmer_status);
-        empty = view.findViewById(R.id.empty_view);
+        empty = view.findViewById(R.id.data_not_found);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         getUid();
 
@@ -162,7 +166,8 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
     public void onItemClick(int position) {
         String idPost = mListData.get(position).getId_post();
         Log.i(TAG, "onItemClick: "+idPost);
-         framChat.setVisibility(View.VISIBLE);
+        lichSuLayout.setVisibility(View.GONE);
+         //framChat.setVisibility(View.VISIBLE);
         DetailOrderFragment detailFragment = new DetailOrderFragment();
         Bundle bundle = new Bundle();
 
@@ -185,7 +190,7 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
                 layout_shimmer.setVisibility(View.GONE);
                 TabLSuRecyclerview.setVisibility(View.VISIBLE);
             }
-        },1000);
+        },1500);
     }
 
     @Override

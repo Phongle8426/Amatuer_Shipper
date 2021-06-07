@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -56,25 +57,29 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback{
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if(swipePosition < 0) return false;
-            Point point = new Point((int)event.getRawX(), (int)event.getRawY());
+            try{
+                Point point = new Point((int)event.getRawX(), (int)event.getRawY());
 
-            View view;
-            RecyclerView.ViewHolder swipeViewHolder = recyclerView.findViewHolderForAdapterPosition(swipePosition);
-            View swipedItem = swipeViewHolder.itemView;
-            Rect rect = new Rect();
-            swipedItem.getGlobalVisibleRect(rect);
+                View view;
+                RecyclerView.ViewHolder swipeViewHolder = recyclerView.findViewHolderForAdapterPosition(swipePosition);
+                View swipedItem = swipeViewHolder.itemView;
+                Rect rect = new Rect();
+                swipedItem.getGlobalVisibleRect(rect);
 
-            if(event.getAction() == event.ACTION_DOWN||
-            event.getAction() == event.ACTION_UP ||
-            event.getAction() == event.ACTION_MOVE){
-                if(rect.top < point.y && rect.bottom > point.y){
-                    gestureDetector.onTouchEvent(event);
+                if(event.getAction() == event.ACTION_DOWN||
+                        event.getAction() == event.ACTION_UP ||
+                        event.getAction() == event.ACTION_MOVE){
+                    if(rect.top < point.y && rect.bottom > point.y){
+                        gestureDetector.onTouchEvent(event);
+                    }
+                    else{
+                        removeQueue.add(swipePosition);
+                        swipePosition = -1;
+                        recoverSwipedItem();
+                    }
                 }
-                else{
-                    removeQueue.add(swipePosition);
-                    swipePosition = -1;
-                    recoverSwipedItem();
-                }
+            }catch (Exception ex){
+                Log.i("loi", "onTouch: "+ex);
             }
                 return false;
         }
@@ -100,9 +105,6 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback{
             }
         };
         attachSwipe();
-
-
-
     }
 
     private void attachSwipe() {

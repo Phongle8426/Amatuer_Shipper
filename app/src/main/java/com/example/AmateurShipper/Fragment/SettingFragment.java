@@ -19,7 +19,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.AmateurShipper.Activity.LoginActivity;
-import com.example.AmateurShipper.CenterSupportFragment;
 import com.example.AmateurShipper.R;
 import com.google.firebase.auth.FirebaseAuth;
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/cs_fragment"
-    tools:context=".CenterSupportFragment">
+    tools:context=".Fragment.CenterSupportFragment">
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
         android:id="@+id/setting_croll_view"

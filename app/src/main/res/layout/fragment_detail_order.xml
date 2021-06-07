@@ -7,6 +7,7 @@
     android:id="@+id/frame_detail">
     <RelativeLayout
         android:id="@+id/frame_shimmer"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 <LinearLayout
@@ -328,7 +329,6 @@ android:padding="5dp" android:id="@+id/container_chat">
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:layout_centerVertical="true"
-        android:visibility="gone"
         android:id="@+id/shimmer_detail_order">
         <LinearLayout
             android:layout_width="match_parent"

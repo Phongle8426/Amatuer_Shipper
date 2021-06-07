@@ -18,7 +18,7 @@
         android:layout_marginLeft="9dp"
         android:layout_marginRight="4dp"
         android:layout_marginTop="25dp"
-        android:src="@drawable/anhhhhh"/>
+        android:src="@drawable/thenigthowl"/>
     <TextView
         android:id="@+id/time_message"
         android:layout_width="wrap_content"

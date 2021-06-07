@@ -188,12 +188,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                             String phi_ung = postList.get(getAdapterPosition()).phi_ung;
                                             String km = postList.get(getAdapterPosition()).km;
                                             String id_post = postList.get(getAdapterPosition()).id_post;
-                                            String receiveLat = postList.get(getAdapterPosition()).receiveLat;
-                                            String receiveLng = postList.get(getAdapterPosition()).receiveLng;
-                                            String shipLat = postList.get(getAdapterPosition()).shipLat;
-                                            String shipLng = postList.get(getAdapterPosition()).shipLng;
+                                            String receiveLat = postList.get(getAdapterPosition()).getReceiveLat();
+                                            String receiveLng = postList.get(getAdapterPosition()).getReceiveLng();
+                                            String shipLat = postList.get(getAdapterPosition()).getShipLat();
+                                            String shipLng = postList.get(getAdapterPosition()).getShipLng();
                                             String estimateTime = postList.get(getAdapterPosition()).getTime_estimate();
-                                            Log.i(TAG, "AAAAAAA: "+estimateTime);
+                                            Log.i(TAG, "AAAAAAA: "+estimateTime+"\t"+receiveLat);
 
                                             //String estimateTime = postList.get(getAdapterPosition()).time_estimate;
                                             PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan,
@@ -207,6 +207,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
 
                                             NotificationWebObject noti = new NotificationWebObject(id_post, IdUser, "1", timestamp);
                                             databaseReference.child("Transaction").child(postObject.getId_post()).child("id_shipper").setValue(IdUser);
+                                            databaseReference.child("OrderStatus").child(postObject.getId_shop()).child(postObject.getId_post()).child("id_shipper").setValue(IdUser);
                                             databaseReference.child("OrderStatus").child(postObject.getId_shop()).child(postObject.getId_post()).child("status").setValue("1");
                                             databaseReference.child("OrderStatus").child(postObject.getId_shop()).child(postObject.getId_post()).child("read").setValue(0);
                                             databaseReference.child("Notification").child(id_shop).push().setValue(noti);
@@ -233,6 +234,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                             }
                         }
                     });
+
+                    for (int i =0;i< postList.size();i++){
+                        Log.i(TAG, "onClick: "+postList.get(i).getReceiveLat());
+                    }
                 }
             });
         }
@@ -291,12 +296,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
     }
     public Notification notification(String content,String id_channel){
         String title = "Đơn hàng của ";
-
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-            NotificationChannel notificationChannel = new NotificationChannel(id_channel,"n", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager manager = mContext.getApplicationContext().getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(notificationChannel);
-
+        try{
+            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+                NotificationChannel notificationChannel = new NotificationChannel(id_channel,content, NotificationManager.IMPORTANCE_DEFAULT);
+                NotificationManager manager = mContext.getApplicationContext().getSystemService(NotificationManager.class);
+                manager.createNotificationChannel(notificationChannel);
+            }
+        }catch (Exception ex){
+            Log.i(TAG, "notification: "+ex);
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext,id_channel)
                 .setSmallIcon(R.drawable.noti)

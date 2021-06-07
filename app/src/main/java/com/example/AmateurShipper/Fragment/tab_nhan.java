@@ -1,8 +1,11 @@
 package com.example.AmateurShipper.Fragment;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.AmateurShipper.Adapter.ShippingOrderAdapter;
@@ -65,9 +70,9 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     private String mParam1;
     private String mParam2;
     RecyclerView NewsRecyclerview;
-    com.airbnb.lottie.LottieAnimationView empty;
+    RelativeLayout tabNhanLayout;
+    ImageView empty;
     ShimmerFrameLayout layout_shimmer;
-    FrameLayout framChat;
     MainActivity mainActivity;
     private DatabaseReference mDatabase;
     List<PostObject> mData = new ArrayList<>();
@@ -119,9 +124,9 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_nhan,container,false);
         NewsRecyclerview = view.findViewById(R.id.rcv_tab_nhan);
-        framChat =view.findViewById(R.id.frag_container_detail);
+        tabNhanLayout = view.findViewById(R.id.tab_nhan_layout);
         layout_shimmer = view.findViewById(R.id.shimmer_status);
-        empty = view.findViewById(R.id.empty_view);
+        empty = view.findViewById(R.id.data_not_found);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         fm = getActivity().getSupportFragmentManager();
         getUid();
@@ -153,6 +158,8 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                             String idshop = mData.get(pos).id_shop;
                             String idpost = mData.get(pos).id_post;
                             PostObject post = mData.get(pos);
+                            if (mData.size()==0)
+                                empty.setVisibility(View.VISIBLE);
                             mData.remove(pos);
                             receivedOrderAdapter.notifyItemChanged(pos);
                             Long time_get_order = System.currentTimeMillis()/1000;
@@ -191,6 +198,8 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         pos = viewHolder.getAdapterPosition();
         String idshop = mData.get(pos).id_shop;
         String idpost = mData.get(pos).id_post;
+        if (mData.size()==0)
+            empty.setVisibility(View.VISIBLE);
         mData.remove(pos);
         receivedOrderAdapter.notifyItemChanged(pos);
         NotificationWebObject noti = new NotificationWebObject(idpost,iDUser,"3",timestamp);
@@ -216,6 +225,15 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
             }).setPositiveButton("Đồng ý",new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    String idestimatetime = mData.get(pos).time_estimate;
+                    Toast.makeText(getActivity(), "cancelSche" + idestimatetime, Toast.LENGTH_SHORT).show();
+                    NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                    //notificationManager.cancel(cancellSche);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        notificationManager.deleteNotificationChannel(idestimatetime);
+                    }
+                    if (reason[0]==null)
+                        reason[0]=reasonList[0];
                     deleteItem(pos,reason[0],viewHolder);
                     dialogInterface.dismiss();
                 }
@@ -269,9 +287,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     public void onItemClick(int position) {
         String idPost = mData.get(position).getId_post();
         String idShop = mData.get(position).getId_shop();
-        //Log.i(TAG, "onItemClick: "+idPost);
-        //NewsRecyclerview.setVisibility(View.INVISIBLE);
-        framChat.setVisibility(View.VISIBLE);
+        tabNhanLayout.setVisibility(View.GONE);
         DetailOrderFragment detailFragment = new DetailOrderFragment();
         Bundle bundle = new Bundle();
 

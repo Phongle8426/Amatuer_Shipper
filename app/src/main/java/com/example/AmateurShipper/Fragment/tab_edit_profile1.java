@@ -228,10 +228,14 @@ public class tab_edit_profile1 extends Fragment {
                         if (!sexual1.equals("")) sex.setText(sexual1);
                         else sex.setText(null);
                         if(!document.get("cmnd").toString().equals("")){
-                            Glide.with(getContext()).load(document.get("CMND").toString()).into((de.hdodenhof.circleimageview.CircleImageView )cmnd);
+                            Glide.with(getContext()).load(document.get("CMND").toString())
+                                    .placeholder(R.drawable.progress_image).error(R.drawable.person)
+                                    .into((de.hdodenhof.circleimageview.CircleImageView )cmnd);
                         }
                         if(!document.get("avatar").toString().equals(null)){
-                            Glide.with(getContext()).load(document.get("avatar").toString()).into((de.hdodenhof.circleimageview.CircleImageView )avatar);
+                            Glide.with(getContext()).load(document.get("avatar").toString())
+                                    .placeholder(R.drawable.progress_image).error(R.drawable.person)
+                                    .into((de.hdodenhof.circleimageview.CircleImageView )avatar);
                         }
 
                         editProfile.setOnClickListener(new View.OnClickListener() {

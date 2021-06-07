@@ -8,6 +8,7 @@
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
+        android:id="@+id/tab_nhan_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <androidx.recyclerview.widget.RecyclerView
@@ -15,23 +16,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/whiteTextColor"/>
-        <FrameLayout
-            android:id="@+id/frag_container_detail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-        </FrameLayout>
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/empty_view"
+        <ImageView
+            android:id="@+id/data_not_found"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="30dp"
-            app:lottie_rawRes="@raw/empty"
-            app:lottie_loop="true"
-            app:lottie_autoPlay="true"
-            android:visibility="gone"/>
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:src="@drawable/no_data_found_vi" />
     </RelativeLayout>
     <com.facebook.shimmer.ShimmerFrameLayout
         android:layout_width="match_parent"
