@@ -1,7 +1,7 @@
 package com.example.AmateurShipper.Model;
 
 
-public class PostObject {
+public class PostObject implements Comparable<PostObject> {
     public String ten_nguoi_gui;
     String sdt_nguoi_gui;
     public String noi_nhan;
@@ -49,6 +49,7 @@ public class PostObject {
         this.shipLng = shipLng;
         this.time_estimate = time_estimate;
     }
+
 
     public String getReceiveLat() {
         return receiveLat;
@@ -201,4 +202,10 @@ public class PostObject {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public int compareTo(PostObject postObject) {
+        return  Integer.parseInt(postObject.getThoi_gian())-Integer.parseInt(this.thoi_gian);
+    }
+
 }

@@ -36,13 +36,13 @@ public class BindDataToLineChart {
                 sun++;
         }
         mBeforeBind.clear();
-        mBeforeBind.add(new Entry(1,mon));
-        mBeforeBind.add(new Entry(2,tus));
-        mBeforeBind.add(new Entry(3,wed));
-        mBeforeBind.add(new Entry(4,thu));
-        mBeforeBind.add(new Entry(5,fri));
-        mBeforeBind.add(new Entry(6,sat));
-        mBeforeBind.add(new Entry(7,sun));
+        mBeforeBind.add(new Entry(0,mon));
+        mBeforeBind.add(new Entry(1,tus));
+        mBeforeBind.add(new Entry(2,wed));
+        mBeforeBind.add(new Entry(3,thu));
+        mBeforeBind.add(new Entry(4,fri));
+        mBeforeBind.add(new Entry(5,sat));
+        mBeforeBind.add(new Entry(6,sun));
     }
 
     public void totalCountMonthYear(ArrayList<DataStatisticObject> mlist,ArrayList<Entry> mBeforeBind){
@@ -75,18 +75,18 @@ public class BindDataToLineChart {
                 dec++;
         }
         mBeforeBind.clear();
-        mBeforeBind.add(new Entry(1,jan));
-        mBeforeBind.add(new Entry(2,feb));
-        mBeforeBind.add(new Entry(3,mar));
-        mBeforeBind.add(new Entry(4,apr));
-        mBeforeBind.add(new Entry(5,may));
-        mBeforeBind.add(new Entry(6,jun));
-        mBeforeBind.add(new Entry(7,jul));
-        mBeforeBind.add(new Entry(8,aug));
-        mBeforeBind.add(new Entry(9,sep));
-        mBeforeBind.add(new Entry(10,oct));
-        mBeforeBind.add(new Entry(11,nov));
-        mBeforeBind.add(new Entry(12,dec));
+        mBeforeBind.add(new Entry(0,jan));
+        mBeforeBind.add(new Entry(1,feb));
+        mBeforeBind.add(new Entry(2,mar));
+        mBeforeBind.add(new Entry(3,apr));
+        mBeforeBind.add(new Entry(4,may));
+        mBeforeBind.add(new Entry(5,jun));
+        mBeforeBind.add(new Entry(6,jul));
+        mBeforeBind.add(new Entry(7,aug));
+        mBeforeBind.add(new Entry(8,sep));
+        mBeforeBind.add(new Entry(9,oct));
+        mBeforeBind.add(new Entry(10,nov));
+        mBeforeBind.add(new Entry(11,dec));
     }
 
     public void totalCountDayMonth(ArrayList<DataStatisticObject> mlist,ArrayList<Entry> mBeforeBind){
@@ -159,36 +159,36 @@ public class BindDataToLineChart {
                 day31++;
         }
         mBeforeBind.clear();
-        mBeforeBind.add(new Entry(1,day1));
-        mBeforeBind.add(new Entry(2,day2));
-        mBeforeBind.add(new Entry(3,day3));
-        mBeforeBind.add(new Entry(4,day4));
-        mBeforeBind.add(new Entry(5,day5));
-        mBeforeBind.add(new Entry(6,day6));
-        mBeforeBind.add(new Entry(7,day7));
+        mBeforeBind.add(new Entry(0,day1));
+        mBeforeBind.add(new Entry(1,day2));
+        mBeforeBind.add(new Entry(2,day3));
+        mBeforeBind.add(new Entry(3,day4));
+        mBeforeBind.add(new Entry(4,day5));
+        mBeforeBind.add(new Entry(5,day6));
+        mBeforeBind.add(new Entry(6,day7));
+        mBeforeBind.add(new Entry(7,day8));
         mBeforeBind.add(new Entry(8,day8));
-        mBeforeBind.add(new Entry(9,day8));
-        mBeforeBind.add(new Entry(10,day10));
-        mBeforeBind.add(new Entry(11,day11));
-        mBeforeBind.add(new Entry(12,day12));
-        mBeforeBind.add(new Entry(13,day13));
-        mBeforeBind.add(new Entry(14,day14));
-        mBeforeBind.add(new Entry(15,day15));
-        mBeforeBind.add(new Entry(16,day16));
-        mBeforeBind.add(new Entry(17,day17));
-        mBeforeBind.add(new Entry(18,day18));
-        mBeforeBind.add(new Entry(19,day19));
-        mBeforeBind.add(new Entry(20,day20));
-        mBeforeBind.add(new Entry(21,day21));
-        mBeforeBind.add(new Entry(22,day22));
-        mBeforeBind.add(new Entry(23,day23));
-        mBeforeBind.add(new Entry(24,day24));
-        mBeforeBind.add(new Entry(25,day25));
-        mBeforeBind.add(new Entry(26,day26));
-        mBeforeBind.add(new Entry(27,day27));
-        mBeforeBind.add(new Entry(28,day28));
-        mBeforeBind.add(new Entry(29,day29));
-        mBeforeBind.add(new Entry(30,day30));
-        mBeforeBind.add(new Entry(31,day31));
+        mBeforeBind.add(new Entry(9,day10));
+        mBeforeBind.add(new Entry(10,day11));
+        mBeforeBind.add(new Entry(11,day12));
+        mBeforeBind.add(new Entry(12,day13));
+        mBeforeBind.add(new Entry(13,day14));
+        mBeforeBind.add(new Entry(14,day15));
+        mBeforeBind.add(new Entry(15,day16));
+        mBeforeBind.add(new Entry(16,day17));
+        mBeforeBind.add(new Entry(17,day18));
+        mBeforeBind.add(new Entry(18,day19));
+        mBeforeBind.add(new Entry(19,day20));
+        mBeforeBind.add(new Entry(20,day21));
+        mBeforeBind.add(new Entry(21,day22));
+        mBeforeBind.add(new Entry(22,day23));
+        mBeforeBind.add(new Entry(23,day24));
+        mBeforeBind.add(new Entry(24,day25));
+        mBeforeBind.add(new Entry(25,day26));
+        mBeforeBind.add(new Entry(26,day27));
+        mBeforeBind.add(new Entry(27,day28));
+        mBeforeBind.add(new Entry(28,day29));
+        mBeforeBind.add(new Entry(29,day30));
+        mBeforeBind.add(new Entry(30,day31));
     }
 }

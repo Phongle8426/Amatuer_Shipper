@@ -307,47 +307,57 @@ public static HomeFragment newInstance(){
     }
 
     public void getChildList(){
-        Long currentTimestamp = System.currentTimeMillis()/1000;
+        //Long currentTimestamp = System.currentTimeMillis()/1000;
         mDatabase.child("newsfeed").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 if (snapshot.exists()){
                     PostObject data = snapshot.getValue(PostObject.class);
-                    if (Long.parseLong(data.getThoi_gian())-currentTimestamp < 86400) {
-                        if (insertList1.isEmpty()) {
-                            if (filter_payment != 0) { // kiểm tra giá trị lọc theo tiền ứng có lớn hơn 0 hay ko, nếu ko thì kiểm tra điều kiện lọc vị trí
-                                if (filter_payment >= Integer.parseInt(data.getPhi_ung())) {
+                        if (insertList1.size()==0) {
+                            Log.i(TAG, "TRong: chay");
+                            if (filter_payment != 0) {
+                                // kiểm tra giá trị lọc theo tiền ứng có lớn hơn 0 hay ko, nếu ko thì kiểm tra điều kiện lọc vị trí
+                                if (filter_payment >= Integer.parseInt(data.getPhi_ung().replaceAll("\\s",""))) {
                                     insertList1.add(data);
+                                    postAdapter.addItem(0, data);
                                 }
-                            } else if (mLocationItem.size() > 0) { // kiểm tra list lọc vị trí có trống hay không, nếu k thì bỏ qua lọc
+                            } else if (mLocationItem.size() > 0) {// kiểm tra list lọc vị trí có trống hay không, nếu k thì bỏ qua lọc
                                 for (int k = 0; k < mLocationItem.size(); k++) {
-                                    if (data.getNoi_nhan().contains(mLocationItem.get(k)))
+                                    if (data.getNoi_nhan().contains(mLocationItem.get(k))){
+                                        postAdapter.addItem(0, data);
                                         insertList1.add(data);
+                                    }
                                 }
-                            } else insertList1.add(data);
-                            postAdapter.addItem(0, data);
+                            } else {
+                                insertList1.add(data);
+                                postAdapter.addItem(0, data);
+                            }
                         } else {
-                            if (filter_payment != 0) { // kiểm tra giá trị lọc theo tiền ứng có lớn hơn 0 hay ko, nếu ko thì kiểm tra điều kiện lọc vị trí
-                                if (filter_payment >= Integer.parseInt(data.getPhi_ung())) {
+                            if (filter_payment != 0) {// kiểm tra giá trị lọc theo tiền ứng có lớn hơn 0 hay ko, nếu ko thì kiểm tra điều kiện lọc vị trí
+                                if (filter_payment >= Integer.parseInt(data.getPhi_ung().replaceAll("\\s",""))) {
                                     insertList1.add(data);
+                                    postAdapter.addItem(postAdapter.getItemCount(), data);
                                 }
-                            } else if (mLocationItem.size() > 0) { // kiểm tra list lọc vị trí có trống hay không, nếu k thì bỏ qua lọc
+                            } else if (mLocationItem.size() > 0) {
+                                // kiểm tra list lọc vị trí có trống hay không, nếu k thì bỏ qua lọc
                                 for (int k = 0; k < mLocationItem.size(); k++) {
-                                    if (data.getNoi_nhan().contains(mLocationItem.get(k)))
+                                    if (data.getNoi_nhan().contains(mLocationItem.get(k))){
+                                        postAdapter.addItem(postAdapter.getItemCount(), data);
                                         insertList1.add(data);
+                                    }
                                 }
-                            } else insertList1.add(data);
-                            postAdapter.addItem(postAdapter.getItemCount(), data);
+                            } else {
+                                insertList1.add(data);
+                                postAdapter.addItem(postAdapter.getItemCount(), data);
+                            }
                             if (index == -1) {
                                 NewsRecyclerview.scrollToPosition(NewsRecyclerview.getAdapter().getItemCount() - 1);
                                 btn_notify_new_order.setVisibility(View.INVISIBLE);
                             } else if (index < NewsRecyclerview.getAdapter().getItemCount() - 2) {
                                 btn_notify_new_order.setVisibility(View.VISIBLE);
                                 Log.i(TAG, "position: " + index + "\n" + NewsRecyclerview.getAdapter().getItemCount());
-                            } else
-                                NewsRecyclerview.scrollToPosition(NewsRecyclerview.getAdapter().getItemCount() - 1);
+                            } else NewsRecyclerview.scrollToPosition(NewsRecyclerview.getAdapter().getItemCount() - 1);
                         }
-                    }
                 }
                 layout_shimmer.stopShimmer();
                 layout_shimmer.hideShimmer();
@@ -395,7 +405,7 @@ public static HomeFragment newInstance(){
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                Log.i(TAG, "onScrolled: "+mLayoutManager.findLastVisibleItemPosition());
+               // Log.i(TAG, "onScrolled: "+mLayoutManager.findLastVisibleItemPosition());
                 index = mLayoutManager.findLastVisibleItemPosition();
             }
         });
@@ -430,6 +440,9 @@ public static HomeFragment newInstance(){
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 filter_payment = 0; // xóa đi điều kiện lọc theo tiền
+                insertList1.clear();
+                mData.clear();
+                postAdapter.notifyDataSetChanged();
                 getChildList();
             }
         }).setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
@@ -451,8 +464,11 @@ public static HomeFragment newInstance(){
     @Override
     public void sendInput(String dialog_payment) {
         mLocationItem.clear(); // xóa đi điều kiện lọc theo vị trí
+        filter_payment = Integer.parseInt(dialog_payment)*1000;
+        insertList1.clear();
+        mData.clear();
+        postAdapter.notifyDataSetChanged();
         getChildList(); // lọc lại
-        filter_payment = Integer.parseInt(dialog_payment);
     }
 
     @Override

@@ -45,6 +45,7 @@ import java.util.List;
 import static android.content.ContentValues.TAG;
 import static com.example.AmateurShipper.Fragment.tab_nhan.idpostvalue;
 import static com.example.AmateurShipper.Fragment.tab_nhan.idtabvalue;
+import static com.example.AmateurShipper.Fragment.tab_nhan.idtshopvalue;
 
 
 /**
@@ -223,6 +224,7 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
     @Override
     public void onItemClick(int position) {
         String idPost = mListData.get(position).getId_post();
+        String idShop = mListData.get(position).getId_shop();
         Log.i(TAG, "onItemClick: "+idPost);
         dangGiaoLayout.setVisibility(View.GONE);
         //framChat.setVisibility(View.VISIBLE);
@@ -230,6 +232,7 @@ public class tab_dang_giao extends Fragment implements statusInterfaceRecyclerVi
         Bundle bundle = new Bundle();
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         bundle.putString(idpostvalue,idPost); // use as per your need
+        bundle.putString(idtshopvalue,idShop); // use as per your need
         bundle.putString(idtabvalue,"tabdanggiao");
         detailFragment.setArguments(bundle);
         fragmentTransaction.addToBackStack(null);

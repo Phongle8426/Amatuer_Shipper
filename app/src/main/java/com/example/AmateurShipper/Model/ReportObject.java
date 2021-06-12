@@ -2,16 +2,17 @@ package com.example.AmateurShipper.Model;
 
 public class ReportObject {
 
-    String content,email,fullName,id_post,id_report,status,time,type,by,admin;
+    String content,email, fullname,id_post,id_report,status,time,type,by,admin,id_user;
+    int read;
 
     public ReportObject() {
     }
 
     public ReportObject(String content, String email, String fullName, String id_post, String id_report,
-                        String status, String time, String type, String by, String admin) {
+                        String status, String time, String type, String by, String admin,String id_user,int read) {
         this.content = content;
         this.email = email;
-        this.fullName = fullName;
+        this.fullname = fullName;
         this.id_post = id_post;
         this.id_report = id_report;
         this.status = status;
@@ -19,6 +20,32 @@ public class ReportObject {
         this.type = type;
         this.by = by;
         this.admin = admin;
+        this.id_user = id_user;
+        this.read = read;
+    }
+
+    public String getBy() {
+        return by;
+    }
+
+    public void setBy(String by) {
+        this.by = by;
+    }
+
+    public String getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(String admin) {
+        this.admin = admin;
+    }
+
+    public String getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(String id_user) {
+        this.id_user = id_user;
     }
 
     public String getContent() {
@@ -37,12 +64,12 @@ public class ReportObject {
         this.email = email;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public String getId_post() {

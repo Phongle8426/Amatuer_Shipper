@@ -66,7 +66,7 @@ public class SecurityCodeDialog extends DialogFragment {
         verify = view.findViewById(R.id.buttonVerify);
         sharedpreferencesCountPost = this.getActivity().getSharedPreferences(countPostReceived, Context.MODE_PRIVATE);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        builder.setView(view).setTitle("Nhập Mã Xác Thực");
+        builder.setView(view).setTitle("Nhập Mã Xác Thực Tù Người Nhận");
         Bundle mArgs = getArguments();
          idpost = mArgs.getString(idpostToSecurity);
          idshop = mArgs.getString(idshopToSecurity);
@@ -86,7 +86,7 @@ public class SecurityCodeDialog extends DialogFragment {
                         || code2.getText().toString().trim().isEmpty()
                         || code3.getText().toString().trim().isEmpty()
                         || code4.getText().toString().trim().isEmpty()){
-                    Toast.makeText(getContext(), "Please enter valid code", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Hãy cung cấp mã chính xác", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String codeVerify =

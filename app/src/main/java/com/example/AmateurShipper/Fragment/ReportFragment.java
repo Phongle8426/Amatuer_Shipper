@@ -7,6 +7,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import static com.example.AmateurShipper.Fragment.tab_nhan.idpostvalue;
+import static com.example.AmateurShipper.Fragment.DetailOrderFragment.ID_POST;
 import static com.example.AmateurShipper.Fragment.tab_nhan.idtabvalue;
 import static com.example.AmateurShipper.Fragment.tab_nhan.idtshopvalue;
 
@@ -91,8 +92,7 @@ public class ReportFragment extends Fragment {
          View view = inflater.inflate(R.layout.fragment_report, container, false);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            id_cur_post = bundle.getString(idpostvalue, "1");
-            id_cur_shop = bundle.getString(idtshopvalue,"1");
+            id_cur_post = bundle.getString(ID_POST, "1");
         }
         card1 = view.findViewById(R.id.card_1);
         card2 = view.findViewById(R.id.card_2);
@@ -185,10 +185,11 @@ public class ReportFragment extends Fragment {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         document.getData();
-                        String email = document.get("Email").toString();
-                        String name = document.get("Name").toString ();
+                        String email = document.get("email").toString();
+                        String name = document.get("fullname").toString ();
+                        Log.i("OOOO", "onComplete: "+id_cur_post);
                         ReportObject report = new ReportObject(content,email,name,id_cur_post,
-                                id_report,"0",timestamp,"0","1","");
+                                id_report,"0",timestamp,"0","1","",idUser,0);
                         mDatabase.child("report").child(idUser).child(id_report).setValue(report);
                         Toast.makeText(getContext(), "Cảm ơn báo cáo của bạn", Toast.LENGTH_SHORT).show();
                     }

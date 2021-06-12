@@ -284,25 +284,29 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
     }
 
     public void renderDataLineChart() {
+        showLineChart();
         XAxis xAxis = lineChart.getXAxis();
         //xAxis.enableGridDashedLine(10f, 10f, 0f);
-        xAxis.setGranularity(1.0f);
+        //xAxis.setGranularity(1.0f);
         xAxis.setDrawGridLines(false);
+        if (labelLineName.size() > 7) {
+            lineChart.setVisibleXRange(0,7);
+        }
+        //xAxis.setLabelCount(7);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labelLineName));
         xAxis.setAxisMinimum(0.0f);
-        xAxis.setAxisMaximum(7.0f);
         xAxis.setGridLineWidth(0f);
         xAxis.setDrawAxisLine(true);//Drawing axis
         xAxis.setDrawGridLines(true);//Set the line corresponding to each point on the x-axis
         xAxis.setDrawLabels(true);//Draw a label to refer to the corresponding value on the x-axis
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);//Set the display position of the x-axis
-        xAxis.setGridLineWidth(0.5f);
+       // xAxis.setGridLineWidth(0.5f);
         xAxis.setGridColor(Color.parseColor("#9E9E9E"));
         xAxis.isDrawGridLinesEnabled();
         xAxis.setDrawGridLines(true);
         YAxis leftAxis = lineChart.getAxisLeft();
 
-        leftAxis.setAxisMaximum(50f);
+        //leftAxis.setAxisMaximum(50f);
         leftAxis.setAxisMinimum(0f);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawZeroLine(false);
@@ -311,13 +315,13 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         leftAxis.setSpaceTop(0);
         xAxis.setCenterAxisLabels(false);
 
-        showLineChart();
     }
 
 
     public void showLineChart() {
         LineDataSet lineDataSet;
         lineDataSet = new LineDataSet(lineEntryList, "Tổng số đơn");
+        lineChart.notifyDataSetChanged();
         Description des = new Description();
         des.setText("");
         lineChart.setDescription(des);
@@ -336,40 +340,28 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         ArrayList<ILineDataSet> lineDataSetsArray = new ArrayList<>();
         lineDataSetsArray.add(lineDataSet);
         LineData data = new LineData(lineDataSetsArray);
-      //  lineChart.setVisibleXRangeMaximum(7);
-       // lineChart.setDragEnabled(true);
-       // lineChart.setScaleEnabled(false);
-        //lineChart.setDrawGridBackground(false);
-
-        lineChart.moveViewToX(10.0f);
         lineChart.getAxisRight().setEnabled(false);
-        if (labelLineName.size() > 7) {
-            //lineChart.setVisibleXRangeMaximum(7);
-        }
         lineChart.getXAxis().setAxisMinimum(0.0f);
         lineChart.getAxisLeft().setAxisMinimum(0.0f);
         lineChart.fitScreen();
-        lineChart.notifyDataSetChanged();
-        lineChart.animateY(1500);
+        lineChart.animateY(1000);
         lineChart.setData(data);
         lineChart.invalidate();
-        //  }
     }
 
     public void fecthDataForLineChartWeek() {
         labelLineName.clear();
         lineEntryList.clear();
         for (int i = 0; i < listWeekCount.size(); i++) {
-            float dayy = listWeekCount.get(i).getX()-1;
             String day = String.valueOf(listWeekCount.get(i).getX());
-            //Toast.makeText(getActivity(), "line entry list" + day, Toast.LENGTH_SHORT).show();
-            if (day.equals("0.0")) day = "Mon";
-            else if (day.equals("1.0")) day = "Tus";
-            else if (day.equals("2.0")) day = "Web";
-            else if (day.equals("3.0")) day = "Thu";
-            else if (day.equals("4.0")) day = "Fri";
-            else if (day.equals("5.0")) day = "Sat";
-            else if (day.equals("6.0")) day = "Sun";
+             if (day.equals("0.0")) day = "Th2";
+            else if (day.equals("1.0")) day = "Th3";
+            else if (day.equals("2.0")) day = "Th4";
+            else if (day.equals("3.0")) day = "Th5";
+            else if (day.equals("4.0")) day = "Th6";
+            else if (day.equals("5.0")) day = "Th7";
+            else if (day.equals("6.0")) day = "CN";
+            Log.i(TAG, "fecthDataForLineChartWeek: "+day);
             labelLineName.add(day);
             lineEntryList.add(listWeekCount.get(i));
            // Log.i(TAG, "fecthDataForLineChartWeek: " + day);
@@ -381,37 +373,37 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         lineEntryList.clear();
         for (int i = 0; i < listMonthCount.size(); i++) {
             String day = String.valueOf(listMonthCount.get(i).getX());
-            if (day.equals("1.0")) day = "1";
-            else if (day.equals("2.0")) day = "2";
-            else if (day.equals("3.0")) day = "3";
-            else if (day.equals("4.0")) day = "4";
-            else if (day.equals("5.0")) day = "5";
-            else if (day.equals("6.0")) day = "6";
-            else if (day.equals("7.0")) day = "7";
-            else if (day.equals("8.0")) day = "8";
-            else if (day.equals("9.0")) day = "9";
-            else if (day.equals("10.0")) day = "10";
-            else if (day.equals("11.0")) day = "11";
-            else if (day.equals("12.0")) day = "12";
-            else if (day.equals("13.0")) day = "13";
-            else if (day.equals("14.0")) day = "14";
-            else if (day.equals("15.0")) day = "15";
-            else if (day.equals("16.0")) day = "16";
-            else if (day.equals("17.0")) day = "17";
-            else if (day.equals("18.0")) day = "18";
-            else if (day.equals("19.0")) day = "19";
-            else if (day.equals("20.0")) day = "20";
-            else if (day.equals("21.0")) day = "21";
-            else if (day.equals("22.0")) day = "22";
-            else if (day.equals("23.0")) day = "23";
-            else if (day.equals("24.0")) day = "24";
-            else if (day.equals("25.0")) day = "25";
-            else if (day.equals("26.0")) day = "26";
-            else if (day.equals("27.0")) day = "27";
-            else if (day.equals("28.0")) day = "28";
-            else if (day.equals("29.0")) day = "29";
-            else if (day.equals("30.0")) day = "30";
-            else if (day.equals("31.0")) day = "31";
+            if (day.equals("0.0")) day = "1";
+            else if (day.equals("1.0")) day = "2";
+            else if (day.equals("2.0")) day = "3";
+            else if (day.equals("3.0")) day = "4";
+            else if (day.equals("4.0")) day = "5";
+            else if (day.equals("5.0")) day = "6";
+            else if (day.equals("6.0")) day = "7";
+            else if (day.equals("7.0")) day = "8";
+            else if (day.equals("8.0")) day = "9";
+            else if (day.equals("9.0")) day = "10";
+            else if (day.equals("10.0")) day = "11";
+            else if (day.equals("11.0")) day = "12";
+            else if (day.equals("12.0")) day = "13";
+            else if (day.equals("13.0")) day = "14";
+            else if (day.equals("14.0")) day = "15";
+            else if (day.equals("15.0")) day = "16";
+            else if (day.equals("16.0")) day = "17";
+            else if (day.equals("17.0")) day = "18";
+            else if (day.equals("18.0")) day = "19";
+            else if (day.equals("19.0")) day = "20";
+            else if (day.equals("20.0")) day = "21";
+            else if (day.equals("21.0")) day = "22";
+            else if (day.equals("22.0")) day = "23";
+            else if (day.equals("23.0")) day = "24";
+            else if (day.equals("24.0")) day = "25";
+            else if (day.equals("25.0")) day = "26";
+            else if (day.equals("26.0")) day = "27";
+            else if (day.equals("27.0")) day = "28";
+            else if (day.equals("28.0")) day = "29";
+            else if (day.equals("29.0")) day = "30";
+            else if (day.equals("30.0")) day = "31";
             labelLineName.add(day);
             lineEntryList.add(listMonthCount.get(i));
             Log.i(TAG, "fecthDataForLineChartMonth: " + day + "/" + lineEntryList.size());
@@ -424,18 +416,18 @@ public class tab_statis extends Fragment implements PopupMenu.OnMenuItemClickLis
         lineEntryList.clear();
         for (int i = 0; i < listYearCount.size(); i++) {
             String day = String.valueOf(listYearCount.get(i).getX());
-            if (day.equals("1.0")) day = "T1";
-            else if (day.equals("2.0")) day = "T2";
-            else if (day.equals("3.0")) day = "T3";
-            else if (day.equals("4.0")) day = "T4";
-            else if (day.equals("5.0")) day = "T5";
-            else if (day.equals("6.0")) day = "T6";
-            else if (day.equals("7.0")) day = "T7";
-            else if (day.equals("3.0")) day = "T8";
-            else if (day.equals("4.0")) day = "T9";
-            else if (day.equals("5.0")) day = "T10";
-            else if (day.equals("6.0")) day = "T11";
-            else if (day.equals("7.0")) day = "T12";
+            if (day.equals("0.0")) day = "T1";
+            else if (day.equals("1.0")) day = "T2";
+            else if (day.equals("2.0")) day = "T3";
+            else if (day.equals("3.0")) day = "T4";
+            else if (day.equals("4.0")) day = "T5";
+            else if (day.equals("5.0")) day = "T6";
+            else if (day.equals("6.0")) day = "T7";
+            else if (day.equals("7.0")) day = "T8";
+            else if (day.equals("8.0")) day = "T9";
+            else if (day.equals("9.0")) day = "T10";
+            else if (day.equals("10.0")) day = "T11";
+            else if (day.equals("11.0")) day = "T12";
             labelLineName.add(day);
             lineEntryList.add(listYearCount.get(i));
         }

@@ -161,7 +161,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                             if (mData.size()==0)
                                 empty.setVisibility(View.VISIBLE);
                             mData.remove(pos);
-                            receivedOrderAdapter.notifyItemChanged(pos);
+                            receivedOrderAdapter.notifyDataSetChanged();;
                             Long time_get_order = System.currentTimeMillis()/1000;
                             String time_stamp = time_get_order.toString();
                             mDatabase.child("OrderStatus").child(idshop).child(idpost).child("picked_time").setValue(time_stamp);
@@ -201,7 +201,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         if (mData.size()==0)
             empty.setVisibility(View.VISIBLE);
         mData.remove(pos);
-        receivedOrderAdapter.notifyItemChanged(pos);
+        receivedOrderAdapter.notifyDataSetChanged();
         NotificationWebObject noti = new NotificationWebObject(idpost,iDUser,"3",timestamp);
         mDatabase.child("OrderStatus").child(idshop).child(idpost).child("status").setValue("3");
         mDatabase.child("OrderStatus").child(idshop).child(idpost).child("reason").setValue(reason);

@@ -54,6 +54,7 @@ public class HistoryOrderAdapter extends RecyclerView.Adapter<HistoryOrderAdapte
         viewAdapterClass.name_poster_tab_nhan.setText(postObject.getTen_nguoi_gui());
         viewAdapterClass.txt_start_place_tab_nhan.setText(faddress.formatAddress(postObject.getNoi_nhan()));
         viewAdapterClass.txt_end_place_tab_nhan.setText(faddress.formatAddress(postObject.getNoi_giao()));
+        viewAdapterClass.setIsRecyclable(false);
         if (status.equals("2")) {
             viewAdapterClass.label_hoan_thanh.setVisibility(View.VISIBLE);
             viewAdapterClass.label_huy.setVisibility(View.GONE);

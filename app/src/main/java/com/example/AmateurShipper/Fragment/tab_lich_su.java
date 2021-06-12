@@ -33,11 +33,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
 import static com.example.AmateurShipper.Fragment.tab_nhan.idpostvalue;
 import static com.example.AmateurShipper.Fragment.tab_nhan.idtabvalue;
+import static com.example.AmateurShipper.Fragment.tab_nhan.idtshopvalue;
 
 
 /**
@@ -113,9 +117,9 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
         fm = getActivity().getSupportFragmentManager();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
 
-        mLayoutManager.setReverseLayout(true);
-        mLayoutManager.setStackFromEnd(true);
-        TabLSuRecyclerview.setHasFixedSize(true);
+        //mLayoutManager.setReverseLayout(true);
+        //mLayoutManager.setStackFromEnd(true);
+        //TabLSuRecyclerview.setHasFixedSize(true);
         TabLSuRecyclerview.setLayoutManager(mLayoutManager);
         if(mListData!=null){
             mListData.clear();
@@ -125,21 +129,25 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
         return view;
     }
 
-    public void createNewAdapter(){
-        historyOrderAdapter = new HistoryOrderAdapter(mListData, tab_lich_su.this,fm,this);
+    public void createNewAdapter(List<PostObject> arrayList){
+        historyOrderAdapter = new HistoryOrderAdapter(arrayList, tab_lich_su.this,fm,this);
     }
+    ArrayList<PostObject> arrayList = new ArrayList<>();
     public void getListOrderHistory() {
+        mListData.clear();
         mDatabase.child("received_order_status").child(iDUser).orderByChild("status").startAt("2").endAt("3").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    mListData.clear();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         PostObject data = dataSnapshot.getValue(PostObject.class);
                         mListData.add(data);
                     }
-                    createNewAdapter();
-                    TabLSuRecyclerview.setAdapter(historyOrderAdapter);
+                    Collections.sort(mListData);
+                    createNewAdapter(mListData);
                     historyOrderAdapter.notifyDataSetChanged();
+                    TabLSuRecyclerview.setAdapter(historyOrderAdapter);
                 } else {
                     empty.setVisibility(View.VISIBLE);
                 }
@@ -165,6 +173,7 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
     @Override
     public void onItemClick(int position) {
         String idPost = mListData.get(position).getId_post();
+        String idShop = mListData.get(position).getId_shop();
         Log.i(TAG, "onItemClick: "+idPost);
         lichSuLayout.setVisibility(View.GONE);
          //framChat.setVisibility(View.VISIBLE);
@@ -173,6 +182,7 @@ public class tab_lich_su extends Fragment implements statusInterfaceRecyclerView
 
         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         bundle.putString(idpostvalue,idPost); // use as per your need
+        bundle.putString(idtshopvalue,idShop);
         bundle.putString(idtabvalue,"tablichsu");
         detailFragment.setArguments(bundle);
         fragmentTransaction.addToBackStack(null);

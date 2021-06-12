@@ -5,102 +5,108 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/frame_chat">
-    <LinearLayout
-        android:id="@+id/layout_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/avt_shop"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="9dp"
-            android:src="@drawable/thenigthowl"/>
-
-        <TextView
-            android:id="@+id/tv_name_shop_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorText"
-            android:text="Huỳnh Bá Thắng"/>
-        <ImageView
-            android:id="@+id/btn_close_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="30dp"
-            android:src="@drawable/ic_close"/>
-    </LinearLayout>
-    <View
-        android:id="@+id/view_line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/layout_header"
-        android:background="@color/half_black"/>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="60dp">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleview_mess"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:layout_above="@id/relative_layout"
-        android:paddingBottom="5dp"/>
     <RelativeLayout
-        android:id="@+id/relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="5dp">
-
-        <ImageButton
-            android:id="@+id/btn_mess_picture"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/ic_baseline_photo_camera_24" />
-        <RelativeLayout
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/layout_fisrt"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_chat_box"
-            android:layout_toEndOf="@+id/btn_mess_picture"
-            android:layout_toStartOf="@+id/btnSendMess">
-            <EditText
-                android:id="@+id/edtMessage"
-                android:layout_width="270dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/layout_header"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:hint="Aa"
-                android:inputType="text|textMultiLine"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:textColor="@color/black"
-                android:textColorHint="#bebebe"
-                android:textSize="15sp" />
+                android:background="@color/white">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/avt_shop"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="9dp"
+                    android:src="@drawable/thenigthowl"/>
+
+                <TextView
+                    android:id="@+id/tv_name_shop_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorText"
+                    android:text="Huỳnh Bá Thắng"/>
+                <ImageView
+                    android:id="@+id/btn_close_chat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="30dp"
+                    android:src="@drawable/ic_close"/>
+            </LinearLayout>
+            <View
+                android:id="@+id/view_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/half_black"/>
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/layout_fisrt">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycleview_mess"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:layout_above="@id/relative_layout"
+                android:paddingBottom="5dp"/>
+            <RelativeLayout
+                android:id="@+id/relative_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:padding="5dp">
+
+                <ImageButton
+                    android:id="@+id/btn_mess_picture"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/ic_baseline_photo_camera_24" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_chat_box"
+                    android:layout_toEndOf="@+id/btn_mess_picture"
+                    android:layout_toStartOf="@+id/btnSendMess">
+                    <EditText
+                        android:id="@+id/edtMessage"
+                        android:layout_width="270dp"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:drawablePadding="8dp"
+                        android:gravity="center_vertical"
+                        android:hint="Aa"
+                        android:inputType="text|textMultiLine"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/black"
+                        android:textColorHint="#bebebe"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+                <ImageButton
+                    android:id="@+id/btnSendMess"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/ic_baseline_send_24"
+                    android:onClick="sendMess"
+                    tools:ignore="OnClick" />
+            </RelativeLayout>
         </RelativeLayout>
-
-
-        <ImageButton
-            android:id="@+id/btnSendMess"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="5dp"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/ic_baseline_send_24"
-            android:onClick="sendMess"
-            tools:ignore="OnClick" />
-
     </RelativeLayout>
-</RelativeLayout>
 </FrameLayout>

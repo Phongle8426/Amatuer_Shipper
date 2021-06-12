@@ -42,7 +42,7 @@ public class FilterPaymentDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_filter_payment,null);
         dialog_payment = view.findViewById(R.id.dialog_payment);
-        dialog_payment.setFilters(new InputFilter[] {new InputFilter.LengthFilter(4)
+        dialog_payment.setFilters(new InputFilter[] {new InputFilter.LengthFilter(3)
         });
         builder.setView(view).setTitle("Hãy Nhập Số Tiền")
                 .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {

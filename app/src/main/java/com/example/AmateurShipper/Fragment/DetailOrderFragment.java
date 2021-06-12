@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.AmateurShipper.Model.PostObject;
 import com.example.AmateurShipper.R;
+import com.example.AmateurShipper.Util.formatTimeStampToDate;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,10 +57,10 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final int REQUEST_CALL = 1;
-    public static final String id_room = "123";
+    public static final String id_room = "1234";
     public static final String ten_shop = "Huynh Ba Thang";
     public static final String ID_POST = "123";
-    public static final String ID_SHOP = "123";
+    public static final String ID_SHOP = "12345";
 
 
     // TODO: Rename and change types of parameters
@@ -113,7 +114,7 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
         if (bundle != null) {
             id_cur_post = bundle.getString(idpostvalue, "1");
             id_cur_shop = bundle.getString(idtshopvalue,"1");
-            Toast.makeText(getContext(), id_cur_shop, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), id_cur_shop, Toast.LENGTH_SHORT).show();
             Log.i(TAG, "BBBBBBBBB: "+ id_cur_shop +"/"+ id_cur_post);
 
             fromTab = bundle.getString(idtabvalue,"tab");
@@ -182,12 +183,14 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
 
 
     public void getDataDetail(){
+        formatTimeStampToDate fm = new formatTimeStampToDate();
         mDatabase.child("received_order_status").child(iDUser).child(id_cur_post).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     PostObject data = snapshot.getValue(PostObject.class);
-                    if (data.getStatus().equals("2")) {
+                    String status = data.getStatus();
+                    if (status.equals("2")||status.equals("3")) {
                         message_shop.setVisibility(View.GONE);
                         callCustomer.setVisibility(View.GONE);
                         callShop.setVisibility(View.GONE);
@@ -201,7 +204,7 @@ public class DetailOrderFragment extends Fragment implements ActivityCompat.OnRe
                     sdtnguoinhan.setText(data.getSdt_nguoi_nhan());
                     tennguoinhan.setText(data.getTen_nguoi_nhan());
                     ghichu.setText(data.getGhi_chu());
-                    thoigian.setText(data.getThoi_gian());
+                    thoigian.setText(fm.convertTimeStamp(Long.parseLong(data.getThoi_gian())));
                     phigiao.setText(data.getPhi_giao());
                     phiung.setText(data.getPhi_ung());
                     tv_id_post.setText(data.getId_post());
