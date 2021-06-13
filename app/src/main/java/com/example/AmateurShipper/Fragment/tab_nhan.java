@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ import java.util.List;
 import Helper.MyButtonClickListner;
 import Helper.MySwipeHelper;
 
+import static com.example.AmateurShipper.Adapter.PostAdapter.countPostReceived;
 import static com.mapbox.services.android.navigation.ui.v5.feedback.FeedbackBottomSheet.TAG;
 
 
@@ -73,12 +75,14 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
     RelativeLayout tabNhanLayout;
     ImageView empty;
     ShimmerFrameLayout layout_shimmer;
+    SharedPreferences sharedpreferencesCountPosted;
     MainActivity mainActivity;
     private DatabaseReference mDatabase;
     List<PostObject> mData = new ArrayList<>();
     ReceivedOrderAdapter receivedOrderAdapter;
     ChatFragment chatFragment;
     String iDUser;
+    int countPost;
     FragmentManager fm;
     FragmentManager fragmentManager;
     final String[] reasonList = {"Không liên lạc được với người gửi","Bấm nhầm nhận bài đăng",
@@ -123,6 +127,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_tab_nhan,container,false);
+        sharedpreferencesCountPosted = this.getActivity().getSharedPreferences(countPostReceived, Context.MODE_PRIVATE);
         NewsRecyclerview = view.findViewById(R.id.rcv_tab_nhan);
         tabNhanLayout = view.findViewById(R.id.tab_nhan_layout);
         layout_shimmer = view.findViewById(R.id.shimmer_status);
@@ -130,6 +135,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         mDatabase = FirebaseDatabase.getInstance().getReference();
         fm = getActivity().getSupportFragmentManager();
         getUid();
+        loadData();
         mainActivity = (MainActivity) getActivity();
         mainActivity.setCountOrder(0);
         mainActivity.disableNotification();
@@ -226,7 +232,7 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     String idestimatetime = mData.get(pos).time_estimate;
-                    Toast.makeText(getActivity(), "cancelSche" + idestimatetime, Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(getActivity(), "cancelSche" + idestimatetime, Toast.LENGTH_SHORT).show();
                     NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
                     //notificationManager.cancel(cancellSche);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -235,6 +241,8 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
                     if (reason[0]==null)
                         reason[0]=reasonList[0];
                     deleteItem(pos,reason[0],viewHolder);
+                    saveData(String.valueOf(countPost-1));
+                    Log.i(TAG, "COUNTPOST: "+(countPost-1));
                     dialogInterface.dismiss();
                 }
             }).setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
@@ -299,6 +307,22 @@ public class tab_nhan extends Fragment implements statusInterfaceRecyclerView, R
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.replace(R.id.frame_cart,detailFragment);
         fragmentTransaction.commit();
+    }
+
+    public void saveData(String count){
+        SharedPreferences.Editor editor = sharedpreferencesCountPosted.edit();
+        editor.putString(countPostReceived, count);
+        editor.commit();
+    }
+    private void clearData() {
+        SharedPreferences.Editor editor = sharedpreferencesCountPosted.edit();
+        editor.clear();
+        editor.commit();
+    }
+
+    private void loadData() {
+        countPost = Integer.parseInt(sharedpreferencesCountPosted.getString(countPostReceived, "0"));
+        Log.i(TAG, "loadDataTabNhan: "+countPost);
     }
 
     public void loadshimer(){

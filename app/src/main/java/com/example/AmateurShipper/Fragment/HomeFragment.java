@@ -273,16 +273,16 @@ public static HomeFragment newInstance(){
                         countRate++;
                     }
                     if (sumPoint < 50){
-                        mlevel =2;
+                        mlevel =0;
                     }
                     if (sumPoint >= 50 && sumPoint < 100){
-                        mlevel =3;
+                        mlevel =1;
                     }
                     if (sumPoint >= 100 && sumPoint < 150){
-                        mlevel =4;
+                        mlevel =2;
                     }
                     if (sumPoint >= 150){
-                        mlevel =5;
+                        mlevel =3;
                     }
                     star=sumStar/countRate;
                     star = Math.ceil((star * 10.0))/10.0;

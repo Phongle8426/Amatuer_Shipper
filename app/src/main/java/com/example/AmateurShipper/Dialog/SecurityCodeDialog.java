@@ -66,7 +66,7 @@ public class SecurityCodeDialog extends DialogFragment {
         verify = view.findViewById(R.id.buttonVerify);
         sharedpreferencesCountPost = this.getActivity().getSharedPreferences(countPostReceived, Context.MODE_PRIVATE);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        builder.setView(view).setTitle("Nhập Mã Xác Thực Tù Người Nhận");
+        builder.setView(view).setTitle("Mã Xác Thực Từ Người Nhận");
         Bundle mArgs = getArguments();
          idpost = mArgs.getString(idpostToSecurity);
          idshop = mArgs.getString(idshopToSecurity);
@@ -77,7 +77,7 @@ public class SecurityCodeDialog extends DialogFragment {
         getUid();
         loadData();
         setupOTPInputs();
-        Toast.makeText(getContext(), code, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getContext(), code, Toast.LENGTH_SHORT).show();
         Log.i(TAG, "onCreateDialog: "+ idpost +"/ "+idshop +"/ "+code);
         verify.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -128,7 +128,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
         return postList.size();
     }
     public class ViewAdapterClass extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView name_poster, time, start_post, end_post, distance, fee, payment, note,tvcount;
+        TextView name_poster, time, start_post, end_post, distance, fee, payment, note;
         CircleImageView image_poster;
         Button get_order, attach_image;
         OnPostListener onPostListener;
@@ -147,13 +147,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
             fee = itemView.findViewById(R.id.txt_fee);
             payment = itemView.findViewById(R.id.txt_payment);
             note = itemView.findViewById(R.id.txt_note);
-            tvcount = itemView.findViewById(R.id.tv_count);
+            //tvcount = itemView.findViewById(R.id.tv_count);
             image_poster = itemView.findViewById(R.id.img_poster);
             get_order = itemView.findViewById(R.id.img_getOrder);
             // attach_image = itemView.findViewById(R.id.img_attachment_image);
             getUid();
             loadData();
-            clearData();
+            //clearData();
 
             this.onPostListener = onPostListener;
             itemView.setOnClickListener(this);
@@ -174,6 +174,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                     if (role.equals("1")) {
                                         loadData();
                                         level =Integer.parseInt(document.get("level").toString())+2;
+                                        Log.i(TAG, "POSTTTT: "+level+"\t"+countPost);
                                         if (countPost < level) {
                                             String ten_nguoi_gui = postList.get(getAdapterPosition()).ten_nguoi_gui;
                                             String sdt_nguoi_gui = postList.get(getAdapterPosition()).getSdt_nguoi_gui();
@@ -193,7 +194,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                             String shipLat = postList.get(getAdapterPosition()).getShipLat();
                                             String shipLng = postList.get(getAdapterPosition()).getShipLng();
                                             String estimateTime = postList.get(getAdapterPosition()).getTime_estimate();
-                                            Log.i(TAG, "AAAAAAA: "+estimateTime+"\t"+receiveLat);
+                                            //Log.i(TAG, "AAAAAAA: "+estimateTime+"\t"+receiveLat);
 
                                             //String estimateTime = postList.get(getAdapterPosition()).time_estimate;
                                             PostObject postObject = new PostObject(ten_nguoi_gui, sdt_nguoi_gui, noi_nhan, noi_giao, sdt_nguoi_nhan,
@@ -220,10 +221,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                                                 estimated = 0;
                                             }
                                             scheduleNotification(notification(ten_nguoi_gui,estimateTime),20000 ,estimateTime,id, id);
-                                            Log.i(TAG, "onComplete: estimated " + estimated);
-                                            Log.i(TAG, "onComplete: schedule  created" + estimateTime);
-                                            //countPost++;
-                                            //saveData(String.valueOf(countPost));
+                                           // Log.i(TAG, "onComplete: estimated " + estimated);
+                                           // Log.i(TAG, "onComplete: schedule  created" + estimateTime);
+                                            countPost++;
+                                            saveData(String.valueOf(countPost));
                                         } else {
                                             Toast.makeText(mContext.getApplicationContext(), "Bạn không thể nhận thêm", Toast.LENGTH_LONG).show();
                                         }
@@ -236,7 +237,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewAdapterCla
                     });
 
                     for (int i =0;i< postList.size();i++){
-                        Log.i(TAG, "onClick: "+postList.get(i).getReceiveLat());
+                        //Log.i(TAG, "onClick: "+postList.get(i).getReceiveLat());
                     }
                 }
             });
